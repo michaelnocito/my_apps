@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Cut Back Coach</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#0d9488;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.nav{display:flex;gap:6px;margin-bottom:8px}.nav button{margin:0;padding:8px;background:var(--code);color:var(--tx);font-size:14px}.nav button.on{background:var(--pr);color:#fff}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);font-weight:500;margin-top:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}.opt.sel{border-color:var(--pr);background:rgba(13,148,136,.12)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cats button{width:auto;margin:0;padding:6px 12px;font-size:14px}.cats button.sel{background:var(--pr);color:#fff}
+input,select,textarea{font:15px system-ui,sans-serif;background:var(--code);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;width:100%}
+label{display:block;font-size:13px;font-weight:700;margin-top:10px;color:var(--mu)}
+.win{border:2px solid var(--ok)}.f{margin:12px 0;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}.fb div{margin:4px 0}
+.br{display:flex;align-items:center;gap:8px;font-size:12px;margin:3px 0}.br i{display:block;height:10px;background:var(--pr);border-radius:5px}
+.big{font-size:44px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+</style></head><body><div id="app"></div>
+<script>
+const KEY="cutBack",TABS=["Learn","Track","Urge","Plan"];
+const M=[
+{t:"Wanting vs liking",ty:"mc",br:`A craving isn't proof that something is rewarding. Habit research separates <b>wanting</b> (a cue-driven pull) from <b>liking</b> (real enjoyment). With long-term use, wanting can stay strong while liking fades. Urges also tend to rise, peak, and fade, often within minutes, if you don't feed them.`,Q:[
+{q:`You feel a strong urge, but you know you barely enjoy the effect anymore. What does that suggest?`,o:[`Something is wrong with you`,`The habit pull (wanting) is outlasting the enjoyment (liking)`,`You need more`,`Your reasoning is mistaken`],a:1,e:`That gap is exactly what habits do.`},
+{q:`What usually happens to an urge you don't act on?`,o:[`It grows forever`,`It tends to rise, peak, and fade, often within minutes`,`It becomes permanent`,`It doubles`],a:1,e:`Urges are waves, not walls.`},
+{q:`Best way to treat an urge?`,o:[`Obey it`,`Notice it as a signal, let it be there, and do something else for a few minutes`,`Argue with yourself for hours`,`Ignore all feelings`],a:1,e:`Don't fight it and don't hand it the wheel.`}],why:`An urge is a signal, not an instruction.`},
+{t:"What to expect",ty:"mc",br:`When regular heavy use drops, some people notice <b>irritability, anxiety, restlessness, trouble sleeping, vivid dreams, and lower appetite</b>. These are common, usually start within days, and often ease over a couple of weeks, though everyone differs. Sleep is often the first thing to feel off. If you feel persistently low, unsafe, or unable to function, talk to a doctor. In the US you can call or text 988 anytime.`,Q:[
+{q:`Which is a common early effect of cutting back?`,o:[`Sleep trouble and irritability`,`Instant superpowers`,`Permanent anxiety`,`Nothing, ever`],a:0,e:`Common, temporary, and manageable for most people.`},
+{q:`You feel anxious about not using, even though you feel clearer. What's likely?`,o:[`You're failing`,`Anticipatory anxiety about losing a familiar buffer. It's common and often settles`,`A medical emergency`,`Proof you must use more`],a:1,e:`Clear thinking and a nervous system that hasn't caught up can coexist.`},
+{q:`Sleep is rough in week one. Smart response?`,o:[`Use to fix it`,`Keep a steady bedtime, cut late caffeine, get daylight and exercise, and expect it to improve`,`Give up`,`Stay up all night`],a:1,e:`Sleep habits help while your body adjusts.`},
+{q:`When should you talk to a doctor?`,o:[`Never`,`If symptoms are severe, your mood drops a lot, or you can't function or feel unsafe`,`Only at the end`,`If you feel sharp`],a:1,e:`This course is education, not medical advice.`}],why:`Expect some bumps in the first couple of weeks, plan for sleep, and get help if things feel severe.`},
+{t:"Tolerance timeline",ty:"mc",br:`Tolerance falls gradually. A use-free daytime helps your day, but <b>tolerance reset typically takes days to weeks, not hours</b>. Brain-imaging studies suggest cannabinoid receptors recover over roughly a month without use. A few weeks off is the fastest route to a big change. Cutting back works too, just more slowly.`,Q:[
+{q:`Does skipping use during the day instantly reset tolerance?`,o:[`Yes, in hours`,`No. Tolerance changes over days to weeks`,`It never changes`,`Only with supplements`],a:1,e:`Daytime gaps help, but the reset takes longer.`},
+{q:`What's the fastest way to lower tolerance and spending?`,o:[`Use more at night`,`A break of a few weeks, or steadily reducing how often you use`,`Switch products daily`,`Nothing works`],a:1,e:`Less frequent use means lower tolerance.`},
+{q:`If you use occasionally later, why does a break help?`,o:[`It doesn't`,`Lower tolerance means smaller amounts go further, saving money`,`It makes it free`,`It removes effects forever`],a:1,e:`Benefits and savings both come back.`}],why:`Tolerance is a dial that turns over weeks. Frequency matters most.`},
+{t:"Know your cues",ty:"tri",br:`Habits run on <b>cues</b>: a time, a place, an emotion, or a person. Spot yours and you can plan for them instead of being surprised.`,C:["Time","Place","Emotion","Social"],I:[
+{x:`Right after finishing the workday`,a:0,e:`A routine moment.`},
+{x:`Sitting on the couch scrolling my phone`,a:1,e:`A location cue.`},
+{x:`Feeling stressed before something big`,a:2,e:`An emotional cue.`},
+{x:`A friend offers`,a:3,e:`A social cue.`},
+{x:`Bored with nothing planned`,a:2,e:`Boredom is an emotion cue.`},
+{x:`Right after dinner, every night`,a:0,e:`Time-of-day routine.`},
+{x:`Walking into the room where I usually smoke`,a:1,e:`Place cues are powerful.`}],why:`Name the cue, and you can write a plan for it.`},
+{t:"If-then plans",ty:"mc",br:`Research on <b>implementation intentions</b> shows that "If X happens, then I'll do Y" beats vague goals like "try to cut back". Make Y specific, easy, and available right at that moment.`,Q:[
+{q:`Best plan?`,o:[`I'll try to use less`,`If I finish work, then I'll walk for 10 minutes before anything else`,`I'll use willpower`,`I'll see how I feel`],a:1,e:`Specific trigger, specific action.`},
+{q:`A good "then" action is…`,o:[`Vague`,`Specific, easy, and available in the moment`,`Complicated`,`Expensive`],a:1,e:`Easy actions get done.`},
+{q:`Which trigger most needs a plan?`,o:[`The moments your cues hit hardest, like right after work`,`Random events`,`Nothing`,`Holidays only`],a:0,e:`Plan for your hardest moments first.`}],why:`Write your if-then plans in the Plan tab.`},
+{t:"Rules that work",ty:"multi",br:`Clear, simple rules beat in-the-moment decisions, because you only decide once.`,pr:`Select the rules that tend to help you cut back.`,I:[
+{x:`A clock-based rule, like "no use before 6 pm"`,c:1,e:`Clear and hard to negotiate with.`},
+{x:`A weekly spending cap, tracked`,c:1,e:`Money is a visible measure.`},
+{x:`Buying less at a time and keeping supply out of easy reach`,c:1,e:`A little friction interrupts autopilot.`},
+{x:`Telling one trusted person your plan`,c:1,e:`Accountability helps.`},
+{x:`Tracking sessions and how you feel each day`,c:1,e:`Real data shows what's changing.`},
+{x:`Using extra at night to make up for skipping the day`,c:0,e:`Rebounding keeps tolerance and spending high.`},
+{x:`Relying on willpower alone with no plan`,c:0,e:`Willpower runs out at your hardest moments.`},
+{x:`Not tracking, so you don't feel bad`,c:0,e:`What you don't measure, you can't adjust.`}],why:`Pick a few simple rules, track them, and tell someone.`},
+{t:"Slips happen",ty:"mc",br:`A <b>lapse</b> (one slip) isn't failure. The risk is the "what-the-hell" effect: deciding the whole plan is blown. Treat a slip as data: what was the cue, and what needs adjusting?`,Q:[
+{q:`You used during work hours after a stressful meeting. Best response?`,o:[`Everything's ruined, quit the plan`,`Note the cue, move on, and get back on plan today with a stress-specific if-then`,`Hide it`,`Use more`],a:1,e:`Learn from it and continue.`},
+{q:`Why log slips?`,o:[`For shame`,`To find patterns and improve the plan`,`To punish yourself`,`No reason`],a:1,e:`Patterns point to fixable cues.`},
+{q:`The "what-the-hell" effect is…`,o:[`Anger`,`Abandoning the whole plan after one slip`,`A craving`,`A reward`],a:1,e:`One slip is not a relapse.`}],why:`One slip doesn't erase progress. The next choice matters most.`}];
+let S={xp:0,done:{},log:[],urges:[],plan:{},base:0};try{S={...S,...JSON.parse(localStorage.getItem(KEY))}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},$=id=>document.getElementById(id),A=$("app"),esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+let tab=0,tm=null,cur=0,won=false,mi=0,msc=0,sel=new Set(),ch=[],fo=3,mo=3,end=0,st=0;
+function shell(){A.innerHTML=`<div class=top><h1>Cut Back Coach</h1><span class=xp>⚡ ${S.xp}</span></div><div class=nav>${TABS.map((t,i)=>`<button class="${i==tab?"on":""}" onclick="go(${i})">${t}</button>`).join("")}</div><div id=v></div>`;[learn,track,urge,plan][tab]()}
+function go(i){if(tm)clearInterval(tm);tab=i;shell()}
+function learn(){const n=Object.keys(S.done).length;let h=`<div class=mu>Support for cutting back on cannabis: learn how habits work, track what changes, ride out urges, and build your plan. Educational only, not medical advice. ${n} of ${M.length} lessons done.</div>`;
+M.forEach((m,i)=>{h+=`<div class="card les ${S.done[i]?"done":""}" onclick="openM(${i})"><div class=dot>${S.done[i]?"✓":i+1}</div><div><b>${m.t}</b></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset ALL data on this device?')){S={xp:0,done:{},log:[],urges:[],plan:{},base:0};save();go(0)}">Reset all data</button>`;$("v").innerHTML=h}
+function openM(i){if(i>=M.length)return learn();cur=i;won=false;mi=0;msc=0;sel=new Set();ch=[];const m=M[i];
+let h=`<button class=back onclick="learn()">← Lessons</button><h2>${m.t}</h2><div class=card>${m.br}</div>`;
+if(m.ty=="multi")h+=`<div class=card><div class=mu>${m.pr}</div>${m.I.map((it,k)=>`<button class=opt id=i${k} onclick="tg(${k})">${it.x}</button>`).join("")}<button onclick="ckm()">Check</button><div id=fb></div></div>`;
+else if(m.ty=="tri")h+=`<div class=card>${m.I.map((it,k)=>`<div class=f>${it.x}<div class=cats>${m.C.map((c,j)=>`<button class=g id=c${k}_${j} onclick="tr(${k},${j})">${c}</button>`).join("")}</div></div>`).join("")}<button onclick="ckt()">Check</button><div id=fb></div></div>`;
+else h+=`<div id=mq></div>`;
+$("v").innerHTML=h+`<div id=win></div>`;if(m.ty=="mc")mq()}
+function tg(k){sel.has(k)?sel.delete(k):sel.add(k);$("i"+k).classList.toggle("sel")}
+function ckm(){const m=M[cur];let ok=true,o="";m.I.forEach((it,k)=>{const s=sel.has(k),c=!!it.c;if(s!=c)ok=false;o+=`<div>${s&&c?"✅ Right:":s?"❌ Shouldn't be selected:":c?"⚠ Missed:":"✓ Correctly left out:"} ${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function tr(k,j){ch[k]=j;M[cur].C.forEach((c,x)=>$(`c${k}_${x}`).classList.toggle("sel",x==j))}
+function ckt(){const m=M[cur];if(m.I.some((_,k)=>ch[k]==null)){$("fb").innerHTML=`<div class=fb>Pick a category for every item.</div>`;return}
+let ok=true,o="";m.I.forEach((it,k)=>{const r=ch[k]==it.a;if(!r)ok=false;o+=`<div>${r?"✅":"❌"} ${r?"":"Should be "+m.C[it.a]+". "}${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function mq(){const m=M[cur];if(mi>=m.Q.length){$("mq").innerHTML=`<div class=card>You got ${msc}/${m.Q.length}.</div>`;return win()}
+const q=m.Q[mi];$("mq").innerHTML=`<div class=card><div class=mu>Question ${mi+1} of ${m.Q.length}</div><h2>${q.q}</h2>${q.o.map((o,k)=>`<button class=opt onclick="mp(${k},this)">${o}</button>`).join("")}<div id=fb></div></div>`}
+function mp(k,el){const q=M[cur].Q[mi];if(document.querySelector(".opt.ok,.opt.no"))return;const ok=k==q.a;if(ok)msc++;el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");$("fb").innerHTML=`<div class=fb>${ok?"✅ Correct.":"❌ Not quite."} ${q.e}</div><button onclick="mi++;mq()">Next</button>`}
+function win(){if(won)return;won=true;const first=!S.done[cur];if(first){S.done[cur]=1;S.xp+=20}save();
+$("win").innerHTML=`<div class="card win"><b>✅ Lesson complete${first?" +20 XP":""}</b><p>${M[cur].why}</p><button onclick="openM(${cur+1})">${cur+1<M.length?"Next lesson":"Back to lessons"}</button></div>`;$("win").scrollIntoView({behavior:"smooth"})}
+function rate(k,v){if(k=="f")fo=v;else mo=v;document.querySelectorAll(".r"+k+" button").forEach((b,i)=>b.classList.toggle("sel",i+1==v))}
+const rb=k=>`<div class="cats r${k}">${[1,2,3,4,5].map(v=>`<button class="g ${v==3?"sel":""}" onclick="rate('${k}',${v})">${v}</button>`).join("")}</div>`;
+function addLog(){const d=$("dt").value;if(!d)return;S.log=S.log.filter(e=>e.d!=d);S.log.push({d,s:+$("ss").value||0,p:+$("sp").value||0,f:fo,m:mo});S.xp+=5;save();fo=3;mo=3;track()}
+function track(){const L=[...S.log].sort((a,b)=>a.d<b.d?-1:1),l7=L.slice(-7),mx=Math.max(1,...l7.map(e=>e.s)),av=(a,k)=>a.length?(a.reduce((t,e)=>t+e[k],0)/a.length).toFixed(1):"–",z=L.filter(e=>e.s==0),u=L.filter(e=>e.s>0),today=new Date().toISOString().slice(0,10);
+let h=`<div class=card><h2>Daily check-in</h2><label>Date</label><input type=date id=dt value="${today}"><label>Sessions today</label><input type=number id=ss min=0 value=0><label>Spent today ($)</label><input type=number id=sp min=0 step=0.5 value=0><label>Focus (1 low to 5 high)</label>${rb("f")}<label>Mood (1 low to 5 high)</label>${rb("m")}<button onclick="addLog()">Save check-in</button></div>`;
+h+=`<div class=card><h2>Your data</h2>`;
+if(!L.length)h+=`<div class=mu>Log a few days to see your trends. Honest numbers only: this is for you.</div>`;
+else{h+=`<div class=mu>Sessions, last ${l7.length} logged days</div>`+l7.map(e=>`<div class=br><span style="width:42px">${e.d.slice(5)}</span><i style="width:${e.s/mx*70+2}%"></i>${e.s}</div>`).join("")+`<p>Use-free days logged: <b>${z.length}</b><br>Average focus: use-free days <b>${av(z,"f")}</b> vs use days <b>${av(u,"f")}</b><br>Average mood: use-free <b>${av(z,"m")}</b> vs use days <b>${av(u,"m")}</b></p>`;
+if(S.base>0)h+=`<p>Saved vs your usual spend: <b>$${L.reduce((t,e)=>t+(S.base-e.p),0).toFixed(0)}</b></p>`;else h+=`<div class=mu>Set your usual daily spend in Plan to see savings.</div>`}
+$("v").innerHTML=h+`</div>`}
+const tips=[`Name it: "This is an urge, not a need."`,`Drink a full glass of water.`,`Stand up and move for two minutes.`,`Notice where you feel it in your body. Just observe.`,`Text or call someone, or step outside.`,`Do one small task: wash a dish or tidy a surface.`,`Breathe in for 4, out for 6, five times.`,`Remember your why.`,`Urges rise and fall like waves. Keep riding it.`,`Almost there. Pick your next small activity.`];
+const sc=i=>`<select id=${i}>${Array.from({length:11},(_,k)=>`<option>${k}</option>`).join("")}</select>`;
+function urge(){const U=S.urges,n=U.length,ab=k=>(U.reduce((t,e)=>t+e[k],0)/n).toFixed(1);
+$("v").innerHTML=`<div class=card><h2>Ride the urge</h2><p class=mu>Urges often rise, peak, and fade within minutes. Rate it, start the timer, and do something else until it passes.</p><label>How strong is it right now? (0 to 10)</label>${sc("ua")}<button onclick="ustart()">Start 10-minute timer</button></div><div id=ut></div><div class=card><h2>Your urges</h2>${n?`Ridden out: <b>${n}</b><br>Average strength: <b>${ab("a")}</b> at the start → <b>${ab("b")}</b> after`:`<span class=mu>Nothing logged yet.</span>`}</div>`}
+function ustart(){st=+$("ua").value;end=Date.now()+600000;tick();tm=setInterval(tick,1000)}
+function tick(){const left=Math.max(0,Math.round((end-Date.now())/1000)),el=600-left,m=Math.floor(left/60),s=String(left%60).padStart(2,"0");
+$("ut").innerHTML=`<div class=card><div class=big>${m}:${s}</div><p style="text-align:center">${tips[Math.min(9,Math.floor(el/60))]}</p>${S.plan.why?`<div class=mu style="text-align:center">My why: ${esc(S.plan.why)}</div>`:""}<button onclick="end+=300000">Add 5 minutes</button><button class=g onclick="uend()">I'm done</button></div>`;if(!left)uend()}
+function uend(){clearInterval(tm);$("ut").innerHTML=`<div class=card><label>How strong is the urge now? (0 to 10)</label>${sc("ub")}<button onclick="usave()">Save</button></div>`}
+function usave(){S.urges.push({a:st,b:+$("ub").value});S.xp+=10;save();urge()}
+function plan(){const p=S.plan||{};$("v").innerHTML=`<div class=card><h2>My why</h2><textarea id=pw rows=3 oninput="sp2()" placeholder="Why am I cutting back? Focus, money, clarity...">${esc(p.why)}</textarea></div><div class=card><h2>My rules</h2><label>No use before</label><select id=pt onchange="sp2()">${["No rule","5 pm","6 pm","7 pm","8 pm"].map(o=>`<option ${p.t==o?"selected":""}>${o}</option>`).join("")}</select><label><input type=checkbox id=pk onchange="sp2()" ${p.k?"checked":""} style="width:auto"> No use during work hours</label><label>Weekly spending cap ($)</label><input type=number id=pc oninput="sp2()" value="${esc(p.c)}"><label>My usual daily spend before ($)</label><input type=number id=pb oninput="sp2()" value="${S.base||""}"><label>One person I'll tell</label><input id=pp oninput="sp2()" value="${esc(p.p)}"></div><div class=card><h2>If-then plans</h2>${[0,1,2].map(i=>`<label>If (trigger ${i+1})</label><input id=tr${i} oninput="sp2()" placeholder="I finish work..." value="${esc(p.i&&p.i[i]&&p.i[i][0])}"><label>Then I will</label><input id=ac${i} oninput="sp2()" placeholder="walk for 10 minutes" value="${esc(p.i&&p.i[i]&&p.i[i][1])}">`).join("")}<div class=mu style="margin-top:8px">Saved automatically on this device.</div></div>`}
+function sp2(){S.plan={why:$("pw").value,t:$("pt").value,k:$("pk").checked,c:$("pc").value,p:$("pp").value,i:[0,1,2].map(i=>[$("tr"+i).value,$("ac"+i).value])};S.base=+$("pb").value||0;save()}
+shell();
+</script></body></html>

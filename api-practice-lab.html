@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>API Practice Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#059669;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:19px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}button.t{width:auto;padding:6px 12px;margin:0 6px 0 0}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);font-weight:500}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}
+pre,code{background:var(--code);border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+code{padding:1px 5px;word-break:break-word}pre{padding:10px;overflow-x:auto;margin:8px 0;white-space:pre-wrap;word-break:break-word}
+input,select,textarea{font:14px ui-monospace,Menlo,monospace;background:var(--code);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;width:100%}
+.row{display:flex;gap:8px}.row select{width:110px;flex:none}label{display:block;font-size:13px;font-weight:700;margin-top:8px;color:var(--mu)}
+table{border-collapse:collapse;width:100%;font-size:13px}td{border-bottom:1px solid var(--bd);padding:5px 3px;vertical-align:top}
+.st{display:inline-block;border-radius:8px;padding:3px 10px;font-weight:700;color:#fff}.s2{background:var(--ok)}.s4{background:var(--bad)}
+.win{border:2px solid var(--ok)}.f{margin:10px 0}.res{font-size:13px;margin-top:4px}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+</style></head><body><div id="app"></div>
+<script>
+const KEY="apiLab",TOK="Bearer dealer-key-123",AUTH="Authorization: "+TOK+"\nContent-Type: application/json";
+const C=[{id:310,firstName:"Dana",lastName:"Ortiz",email:"dana@example.com",phone:"856-555-0142"},{id:311,firstName:"Luis",lastName:"Vega",email:"luis@example.com",phone:"856-555-0177"},{id:312,firstName:"Priya",lastName:"Shah",email:"priya@example.com",phone:"609-555-0108"}];
+const V=Array.from({length:25},(_,i)=>({vin:"VIN"+String(i+1).padStart(3,"0"),customerId:310+i%3,make:["Honda","Toyota","Ford"][i%3],year:2018+i%7,status:i%4?"active":"sold"}));
+let ex=0;const E=(s,m)=>({s,b:{error:m}}),NA=a=>({s:405,h:{Allow:a},b:{error:"method_not_allowed"}});
+function api(m,u,hd,bt){let U;try{U=new URL(u,"https://api.dealerco.com")}catch(e){return E(0,"invalid_url")}
+if(U.host!="api.dealerco.com")return{s:0,b:{error:"could_not_connect",message:"Unknown host. The base URL is api.dealerco.com"}};
+const p=U.pathname.replace(/\/$/,""),Q=Object.fromEntries(U.searchParams);
+if(hd.authorization!=TOK)return E(401,hd.authorization?"invalid_token":"missing_token");
+const J=()=>{try{return{v:JSON.parse(bt)}}catch(e){return{e:e.message}}};let a;
+if(a=p.match(/^\/v2\/customers\/(\d+)\/vehicles$/)){if(m!="GET")return NA("GET");const c=C.find(x=>x.id==a[1]);if(!c)return E(404,"customer_not_found");return{s:200,b:{data:V.filter(v=>v.customerId==c.id)}}}
+if(a=p.match(/^\/v2\/customers\/(\d+)$/)){const c=C.find(x=>x.id==a[1]);if(!c)return E(404,"customer_not_found");
+if(m=="GET")return{s:200,b:c};if(m=="DELETE")return{s:204,b:null};
+if(m=="PATCH"){const j=J();if(j.e||typeof j.v!="object")return{s:400,b:{error:"invalid_json",message:j.e||"Body must be an object"}};return{s:200,b:{...c,...j.v}}}return NA("GET, PATCH, DELETE")}
+if(p=="/v2/customers"){if(m!="GET")return NA("GET");return{s:200,b:{total:3,data:C}}}
+if(p=="/v2/vehicles"){if(m!="GET")return NA("GET");let d=V.filter(v=>(!Q.status||v.status==Q.status)&&(!Q.make||v.make==Q.make));
+const lim=Math.min(+Q.limit||10,50),pg=+Q.page||1,s=d.slice((pg-1)*lim,pg*lim);
+return{s:200,b:{total:d.length,page:pg,count:s.length,next:pg*lim<d.length?"/v2/vehicles?page="+(pg+1):null,data:s}}}
+if(p=="/v2/leads"){if(m!="POST")return NA("POST");if(!/application\/json/i.test(hd["content-type"]||""))return E(415,"unsupported_media_type");
+const j=J();if(j.e)return{s:400,b:{error:"invalid_json",message:j.e}};const d=j.v||{};
+if(typeof d.firstName!="string")return{s:422,b:{error:"validation_failed",message:"firstName is required and must be text"}};
+if(typeof d.phone!="string")return{s:422,b:{error:"validation_failed",message:"phone is required and must be text"}};
+if(d.vehicle&&typeof d.vehicle.year!="number")return{s:422,b:{error:"validation_failed",message:"vehicle.year must be a number"}};
+return{s:201,b:{id:9001,status:"created",...d}}}
+if(p=="/v2/export"){if(m!="GET")return NA("GET");ex++;return ex>3?{s:429,h:{"Retry-After":"30"},b:{error:"rate_limited"}}:{s:200,b:{rows:100}}}
+return E(404,"route_not_found")}
+function ev(o,p){let v=o;for(const t of p.trim().replace(/\[/g,".[").split(".").filter(Boolean)){if(v==null)return;let a;
+if(a=t.match(/^\[(\d+)\]$/))v=Array.isArray(v)?v[+a[1]]:undefined;else if(a=t.match(/^\[(\w+)=(\w+)\]$/))v=Array.isArray(v)?v.find(x=>x&&x[a[1]]==a[2]):undefined;else v=v[t]}return v}
+const DOCS=`<p>Base URL: <code>https://api.dealerco.com</code><br>Auth: <code>Authorization: Bearer dealer-key-123</code><br>JSON bodies need <code>Content-Type: application/json</code></p><table><tr><td>GET /v2/customers</td><td>List (ids 310 to 312)</td></tr><tr><td>GET /v2/customers/{id}</td><td>One customer. PATCH updates.</td></tr><tr><td>GET /v2/customers/{id}/vehicles</td><td>Their vehicles</td></tr><tr><td>GET /v2/vehicles</td><td>Params: status (active, sold), make (Honda, Toyota, Ford), page, limit</td></tr><tr><td>POST /v2/leads</td><td>firstName (text), phone (text), vehicle.year (number)</td></tr><tr><td>GET /v2/export</td><td>Rate limited</td></tr></table>`;
+const M=[
+{g:"API console",t:"Your first GET",ty:"req",br:`Fetch customer <b>310</b> (Dana Ortiz). Add the ID to the path, then Send.`,m:"GET",u:"/v2/customers/",h:AUTH,b:"",hint:"The path is /v2/customers/310",why:`The path identifies the resource, and GET reads it. A 200 plus the right record confirms the call.`,ck:(q,r)=>r.s==200&&q.m=="GET"&&q.path=="/v2/customers/310"},
+{g:"API console",t:"Fix the 404",ty:"req",br:`Get <b>Luis Vega's</b> vehicles (customer 311). This request fails. Read the error body and fix it.`,m:"GET",u:"/v2/customer/311/vehicles",h:AUTH,b:"",hint:"route_not_found means the path is wrong. Compare it to the docs: plural?",why:`A 404 can mean a bad route or a missing record. Reading the error body told you it was the route (singular vs plural).`,ck:(q,r)=>r.s==200&&q.path=="/v2/customers/311/vehicles"},
+{g:"API console",t:"Fix the 401",ty:"req",br:`List all customers. The request has no credentials. Add the key from the docs.`,m:"GET",u:"/v2/customers",h:"",b:"",hint:"Add a header line: Authorization: Bearer dealer-key-123",why:`401 means not authenticated. Credentials go in the Authorization header, never the URL or body.`,ck:(q,r)=>r.s==200&&q.path=="/v2/customers"},
+{g:"API console",t:"Wrong method (405)",ty:"req",br:`Update Dana's phone number to <code>856-555-0199</code>. This request fails with a 405. Check the <code>Allow</code> header.`,m:"POST",u:"/v2/customers/310",h:AUTH,b:'{"phone":"856-555-0199"}',hint:"Allow lists GET, PATCH, DELETE. Which one updates?",why:`405 means the URL is right and the method is wrong. The Allow header told you which verbs work: PATCH updates.`,ck:(q,r)=>r.s==200&&q.m=="PATCH"&&q.path=="/v2/customers/310"},
+{g:"API console",t:"Malformed JSON (400)",ty:"req",br:`Create a lead. The body has a typo that makes it invalid JSON. Find it and fix it.`,m:"POST",u:"/v2/leads",h:AUTH,b:'{\n "firstName":"Sam",\n "phone":"856-555-0100",\n}',hint:"Look after the last field.",why:`A trailing comma is invalid JSON, which gives a 400 before any business rules run. Validate hand-edited JSON.`,ck:(q,r)=>r.s==201},
+{g:"API console",t:"Wrong data type (422)",ty:"req",br:`Create a lead with a vehicle. The JSON is valid but the server rejects the data. Read the message.`,m:"POST",u:"/v2/leads",h:AUTH,b:'{\n "firstName":"Sam",\n "phone":"856-555-0100",\n "vehicle":{"year":"2022"}\n}',hint:"Numbers have no quotes.",why:`422 means valid JSON, invalid data. The year was text instead of a number, a type mismatch to catch in mapping.`,ck:(q,r)=>r.s==201},
+{g:"API console",t:"Missing Content-Type (415)",ty:"req",br:`This body is valid but the server refuses it. Compare the headers to the docs.`,m:"POST",u:"/v2/leads",h:"Authorization: "+TOK,b:'{"firstName":"Sam","phone":"856-555-0100"}',hint:"Tell the server the body is JSON.",why:`Without Content-Type: application/json the server doesn't know how to read the body.`,ck:(q,r)=>r.s==201},
+{g:"API console",t:"Filter with a query string",ty:"req",br:`Find all <b>sold Honda</b> vehicles using query parameters.`,m:"GET",u:"/v2/vehicles",h:AUTH,b:"",hint:"/v2/vehicles?status=sold&make=Honda",why:`Query strings filter results: start with ?, join pairs with &. Check that the count matches what you expect.`,ck:(q,r)=>r.s==200&&q.query.status=="sold"&&q.query.make=="Honda"},
+{g:"API console",t:"Pagination",ty:"req",br:`There are 25 vehicles but each call returns 10. Use the <code>next</code> link to reach the <b>last page</b> (page 3).`,m:"GET",u:"/v2/vehicles",h:AUTH,b:"",hint:"Add ?page=2 and then ?page=3",why:`The response told you total and next. Follow pages until next is null, then reconcile the count to total.`,ck:(q,r)=>r.s==200&&q.path=="/v2/vehicles"&&q.query.page=="3"},
+{g:"API console",t:"Hit the rate limit",ty:"req",br:`Send this request repeatedly until the API pushes back with a 429. Then read the <code>Retry-After</code> header.`,m:"GET",u:"/v2/export",h:AUTH,b:"",hint:"Tap Send 4 times.",why:`429 means slow down. Retry-After says how long to wait. Throttle, don't hammer, and re-run only failed items.`,ck:(q,r)=>r.s==429},
+{g:"Field mapping",t:"Flatten nested data",ty:"map",br:`Map each destination field to a path in the source JSON. Use dots for nesting, like <code>vehicle.model</code>.`,P:[{first_name:"Dana",last_name:"Ortiz",contact:{cell:"856-555-0142",email:"dana@example.com"},vehicle:{model:"CR-V",year:2022},zip:"08028"}],F:[["First Name",["Dana"]],["Phone",["856-555-0142"]],["Email",["dana@example.com"]],["Vehicle Interest",["CR-V"]]],why:`Each dot steps into an object. Reading the path aloud makes long ones easy.`},
+{g:"Field mapping",t:"Arrays: pick by type",ty:"map",br:`Map <b>Mobile Phone</b> so it works for <i>all three</i> payloads (A, B, C). Position paths like <code>phones[0].number</code> break when order changes. In this lab, select by an attribute: <code>phones[type=mobile].number</code> (real tools use their own syntax, such as JSONPath filters).`,P:[{name:"Dana",phones:[{type:"home",number:"555-0100"},{type:"mobile",number:"555-0142"}]},{name:"Luis",phones:[{type:"mobile",number:"555-0177"},{type:"home",number:"555-0150"}]},{name:"Priya",phones:[]}],F:[["Customer Name",["Dana","Luis","Priya"]],["Mobile Phone",["555-0142","555-0177",""]]],why:`Select by a stable attribute, not position, and make sure the empty array yields a blank rather than an error.`},
+{g:"Diagnose",t:"What's going on?",ty:"mc",br:`Four quick diagnoses, like a real ticket queue.`,Q:[
+{q:`<code>POST /v2/leads → 201 Created</code>, but the dealer sees a blank phone. Most likely?`,o:[`Auth failure`,`A mapping mismatch`,`Rate limit`,`Server down`],a:1,e:`The call worked, so it's a data/mapping problem.`},
+{q:`A valid key returns <code>403 Forbidden</code>. What does it mean?`,o:[`Key missing`,`Authenticated, but not permitted`,`Wrong URL`,`Server crashed`],a:1,e:`401 = who are you? 403 = I know you, but no.`},
+{q:`During a bulk load you get <code>429</code> with <code>Retry-After: 30</code>. Best action?`,o:[`Retry instantly`,`Wait and slow the pace`,`Restart from record 1`,`Change the key`],a:1,e:`Honor Retry-After, throttle, and retry only failures.`},
+{q:`<code>GET /v2/vehicles</code> shows count 10, total 25. What now?`,o:[`Nothing`,`Follow the next link until it's null`,`Ask for a bigger server`,`Call page 1 again`],a:1,e:`It's paginated. Fetch every page and reconcile to total.`}],why:`Classify first: auth, request, data, or server. Then trace one record.`}];
+let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},$=id=>document.getElementById(id),A=$("app");
+let cur=0,won=false,mi=0,msc=0;
+function home(){const n=Object.keys(S.done).length;let h=`<div class=top><h1>API Practice Lab</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>A simulated dealership API. Send real-style requests, fix broken ones, and practice mapping. Nothing here touches a real system. ${n} of ${M.length} missions done.</div>`;
+let last="";M.forEach((m,i)=>{if(m.g!=last){h+=`<div class=day>${m.g}</div>`;last=m.g}h+=`<div class="card les ${S.done[i]?"done":""}" onclick="openM(${i})"><div class=dot>${S.done[i]?"✓":i+1}</div><div><b>${m.t}</b></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset progress?')){S={xp:0,done:{}};save();home()}">Reset progress</button>`;A.innerHTML=h}
+function openM(i){if(i>=M.length)return home();cur=i;won=false;ex=0;const m=M[i];
+let h=`<button class=back onclick="home()">← Missions</button><h2>${m.t}</h2><div class=card>${m.br}</div>`;
+if(m.ty=="req"){h+=`<details class=card><summary><b>API docs</b></summary>${DOCS}</details><div class=card><div class=row><select id=me>${["GET","POST","PATCH","DELETE"].map(x=>`<option>${x}</option>`).join("")}</select><input id=ur autocapitalize=off autocorrect=off></div><label>Headers (one per line)</label><textarea id=hd rows=3 autocapitalize=off></textarea><label>Body (JSON)</label><textarea id=bd rows=5 autocapitalize=off></textarea><button onclick="send()">Send</button><button class=g onclick="openM(cur)">Reset request</button><button class=g onclick="$('hn').textContent=M[cur].hint">Hint</button><div id=hn class=mu></div></div><div id=out></div><div id=win></div>`;A.innerHTML=h;$("me").value=m.m;$("ur").value=m.u;$("hd").value=m.h;$("bd").value=m.b}
+else if(m.ty=="map"){mi=0;h+=`<div class=card><div>${m.P.map((p,k)=>`<button class="t g" onclick="tab(${k})">${m.P.length>1?"Payload "+"ABC"[k]:"Source JSON"}</button>`).join("")}</div><pre id=pl></pre></div><div class=card>${m.F.map((f,k)=>`<div class=f><b>${f[0]}</b><input class=pi oninput="chk()" placeholder="path, e.g. contact.cell" autocapitalize=off autocorrect=off><div class=res></div></div>`).join("")}</div><div id=win></div>`;A.innerHTML=h;tab(0)}
+else{mi=0;msc=0;A.innerHTML=h+`<div id=mq></div><div id=win></div>`;mq()}}
+function tab(k){$("pl").textContent=JSON.stringify(M[cur].P[k],null,1)}
+function chk(){const m=M[cur],ins=document.querySelectorAll(".pi"),rs=document.querySelectorAll(".res");let all=true;
+m.F.forEach((f,k)=>{const p=ins[k].value;let o="";m.P.forEach((P,j)=>{const v=p.trim()?ev(P,p):undefined,ok=p.trim()&&String(v==null?"":typeof v=="object"?JSON.stringify(v):v)===f[1][j];if(!ok)all=false;o+=`${ok?"✅":"❌"} ${m.P.length>1?"ABC"[j]+": ":""}${v==null?"(empty)":typeof v=="object"?"(object)":v} &nbsp;`});rs[k].innerHTML=o});if(all)win()}
+function send(){const hd={};$("hd").value.split("\n").forEach(l=>{const i=l.indexOf(":");if(i>0)hd[l.slice(0,i).trim().toLowerCase()]=l.slice(i+1).trim()});
+const m=$("me").value,u=$("ur").value.trim(),r=api(m,u,hd,$("bd").value);let U;try{U=new URL(u,"https://api.dealerco.com")}catch(e){U=new URL("https://api.dealerco.com/")}
+const q={m,path:U.pathname.replace(/\/$/,"")||"/",query:Object.fromEntries(U.searchParams),h:hd};
+const T={0:"Network error",200:"OK",201:"Created",204:"No Content",400:"Bad Request",401:"Unauthorized",404:"Not Found",405:"Method Not Allowed",415:"Unsupported Media Type",422:"Unprocessable Entity",429:"Too Many Requests"};
+$("out").innerHTML=`<div class=card><span class="st ${r.s>=200&&r.s<300?"s2":"s4"}">${r.s} ${T[r.s]||""}</span><pre id=ro></pre></div>`;
+$("ro").textContent=Object.entries(r.h||{}).map(([k,v])=>k+": "+v).join("\n")+(r.h?"\n\n":"")+(r.b==null?"(no body)":JSON.stringify(r.b,null,1));
+if(M[cur].ck(q,r))win()}
+function win(){if(won)return;won=true;const first=!S.done[cur];if(first){S.done[cur]=1;S.xp+=50}save();
+$("win").innerHTML=`<div class="card win"><b>✅ Mission complete!${first?" +50 XP":""}</b><p>${M[cur].why}</p><button onclick="openM(${cur+1})">${cur+1<M.length?"Next mission":"Back to missions"}</button></div>`;$("win").scrollIntoView({behavior:"smooth"})}
+function mq(){const m=M[cur];if(mi>=m.Q.length){$("mq").innerHTML=`<div class=card>You got ${msc}/${m.Q.length}.</div>`;return win()}
+const q=m.Q[mi];$("mq").innerHTML=`<div class=card><h2>${q.q}</h2>${q.o.map((o,k)=>`<button class="opt" style="margin-top:8px" onclick="mpick(${k},this)">${o}</button>`).join("")}<div id=fb></div></div>`}
+function mpick(k,el){const q=M[cur].Q[mi];if(document.querySelector(".opt.ok,.opt.no"))return;const ok=k==q.a;if(ok)msc++;el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");$("fb").innerHTML=`<div class=fb>${ok?"✅ Correct.":"❌ Not quite."} ${q.e}</div><button onclick="mi++;mq()">Next</button>`}
+home();
+</script></body></html>

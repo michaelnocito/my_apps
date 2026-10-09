@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Endpoints Deep Dive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#0891b2;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:19px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:10px 0}
+.tk{border-left:5px solid var(--pr)}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+.bar{height:8px;background:var(--code);border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--pr);transition:width .3s}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);margin-top:8px;font-weight:500}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}
+pre,code{background:var(--code);border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+code{padding:1px 5px;word-break:break-word}pre{padding:10px;overflow-x:auto;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:14px}td{border-bottom:1px solid var(--bd);padding:6px 4px;vertical-align:top}
+.say{margin-top:10px;padding:10px;border-left:4px solid var(--ok);background:var(--code);border-radius:0 10px 10px 0;font-size:15px}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+.fc{min-height:130px;display:grid;place-items:center;text-align:center;cursor:pointer}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+</style></head><body><div id="app"></div>
+<script>
+const TITLE="Endpoints Deep Dive",SUB="Everything about the address half of an API call: how URLs are built, where data goes, and what breaks. Four lessons, then four tickets.",KEY="endpDD";
+const T=(h,b)=>[`🎫 `+h,b,1];
+const L=[
+{d:"Foundations",t:"Anatomy of an endpoint",s:[
+[`One URL, many parts`,`<pre>https://api.dealerco.com/v2/customers/310/vehicles?status=active&amp;limit=50</pre><table><tr><td><code>https://</code></td><td>Secure protocol</td></tr><tr><td><code>api.dealerco.com</code></td><td>Host: which server</td></tr><tr><td><code>/v2</code></td><td>API version</td></tr><tr><td><code>/customers</code></td><td>Resource: the kind of thing</td></tr><tr><td><code>/310</code></td><td>ID: which one</td></tr><tr><td><code>/vehicles</code></td><td>Sub-resource</td></tr><tr><td><code>?status=active&amp;limit=50</code></td><td>Query string: options</td></tr></table>`],
+[`Base URL vs endpoint`,`The <b>base URL</b> is the server plus version (<code>https://api.dealerco.com/v2</code>). The <b>endpoint</b> is the path after it. Docs usually list endpoints relative to the base, so you combine the two. Think building and room.`],
+[`Small details matter`,`Paths are often case-sensitive. A trailing slash can matter. Spaces aren't allowed. Use https, not http.`],
+{q:`Which part is the API version?`,o:[`<code>/customers</code>`,`<code>/v2</code>`,`<code>/310</code>`,`<code>?limit=50</code>`],a:1,e:`Version usually sits right after the host.`},
+{q:`What does <code>310</code> identify?`,o:[`A page number`,`One specific customer record`,`The version`,`The server`],a:1,e:`An ID in the path points to a single resource.`},
+{q:`What character begins the query string?`,o:[`/`,`&`,`?`,`#`],a:2,e:`The question mark starts it. Ampersands separate the pairs.`}]},
+{d:"Foundations",t:"Resources and methods",s:[
+[`Nouns in the path, verbs in the method`,`Paths name <b>resources</b> (usually plural nouns). The HTTP method is the action:<table><tr><td><code>GET /customers</code></td><td>List customers</td></tr><tr><td><code>POST /customers</code></td><td>Create one</td></tr><tr><td><code>GET /customers/310</code></td><td>Read one</td></tr><tr><td><code>PATCH /customers/310</code></td><td>Update one</td></tr><tr><td><code>DELETE /customers/310</code></td><td>Remove one</td></tr></table>`],
+[`Nesting shows ownership`,`<code>/customers/310/vehicles</code> means the vehicles that belong to customer 310. The docs tell you which nested routes exist. Don't guess.`],
+[`Same URL, different action`,`The URL alone doesn't say what happens. The method does. Using a method the endpoint doesn't support returns <b>405 Method Not Allowed</b>.`],
+{q:`<code>GET /customers</code> returns…`,o:[`A new customer`,`A list of customers`,`Nothing`,`A deletion`],a:1,e:`GET on a collection lists its items.`},
+{q:`How would you create a new appointment?`,o:[`<code>GET /appointments</code>`,`<code>POST /appointments</code>`,`<code>DELETE /appointments</code>`,`<code>PATCH /appointments</code>`],a:1,e:`POST on the collection creates a record.`},
+{q:`<code>/customers/310/vehicles</code> means…`,o:[`All vehicles`,`Vehicles belonging to customer 310`,`Customer 310's address`,`A version`],a:1,e:`Nested path = child of that parent.`}]},
+{d:"Foundations",t:"Where does the data go?",s:[
+[`Four places`,`<table><tr><td><b>Path</b></td><td>Which resource: <code>/customers/310</code></td></tr><tr><td><b>Query string</b></td><td>Filter, sort, paginate: <code>?status=active&amp;page=2</code></td></tr><tr><td><b>Headers</b></td><td>Metadata and auth: <code>Authorization</code>, <code>Content-Type</code></td></tr><tr><td><b>Body</b></td><td>Data you send with POST/PATCH (JSON)</td></tr></table>`],
+[`URL encoding`,`Query values can't contain raw special characters. Encode them: space is <code>%20</code>, <code>&amp;</code> is <code>%26</code>, <code>#</code> is <code>%23</code>, <code>+</code> is <code>%2B</code>. So "Smith &amp; Sons" becomes <code>Smith%20%26%20Sons</code>. Use ISO dates like <code>2026-10-04</code>.`],
+[`Content-Type`,`When you send a JSON body, include <code>Content-Type: application/json</code>. Without it the server may reject the body or misread it (often 415 or a parse error).`],
+{q:`Where does an API key normally go?`,o:[`In the path`,`In a header`,`In the body of GETs`,`In the version`],a:1,e:`Typically the Authorization header or a key header.`},
+{q:`Where does a filter like "status=active" go?`,o:[`Query string`,`Body of a GET`,`Host`,`Version`],a:0,e:`Filters and paging live in the query string.`},
+{q:`A dealer name contains "&". In a query string you should…`,o:[`Leave it`,`Encode it as %26`,`Delete it`,`Use two names`],a:1,e:`An unencoded & splits the parameter.`}]},
+{d:"Foundations",t:"Environments, versions, and docs",s:[
+[`Sandbox vs production`,`Providers offer separate base URLs: for example <code>api-sandbox.dealerco.com</code> for testing and <code>api.dealerco.com</code> for live. Keys are usually separate too. Mixing them gives 401s, or worse, successful calls that land in the wrong place.`],
+[`Versions`,`<code>/v1</code> becomes <code>/v2</code> when the provider changes things like field names or structure. Old versions get deprecated and eventually shut off (sometimes <code>410 Gone</code>). Plan migrations, and retest your field mapping.`],
+[`Reading API docs in 60 seconds`,`1) Base URL and auth. 2) Find the endpoint. 3) Required vs optional parameters. 4) Example request and response. 5) Error codes and rate limits. 6) Changelog.`],
+{q:`Biggest risk of mixing up sandbox and production?`,o:[`Slower calls`,`Data going to the wrong environment while calls look successful`,`Larger payloads`,`Nothing`],a:1,e:`A 200 from sandbox doesn't mean the live system got it.`},
+{q:`The provider is retiring v1. What do you review?`,o:[`Only the key`,`Field and endpoint differences, then test in sandbox`,`Nothing`,`The logo`],a:1,e:`New versions often rename or restructure fields.`},
+{q:`First thing to check in new API docs?`,o:[`The changelog`,`Base URL and authentication`,`The pricing page`,`The FAQ`],a:1,e:`You can't call anything without those two.`}]},
+{d:"Tickets",t:"Ticket 1: Two kinds of 404",s:[
+T(`Both calls return 404`,`<pre>GET /v1/customer/310\n→ 404 {"error":"route_not_found"}\n\nGET /v1/customers/99999\n→ 404 {"error":"customer_not_found"}</pre>`),
+{q:`What's the difference?`,o:[`None`,`The first path doesn't exist; the second path is fine but the record doesn't`,`Both are auth errors`,`The second is a server crash`],a:1,e:`Read the body, not just the number. One is a bad route, one is a missing record.`},
+{q:`Fix for the first call?`,o:[`Retry`,`Use the plural: <code>/customers/310</code>`,`New key`,`Switch to POST`],a:1,e:`A typo or singular/plural mistake in the path.`},
+{q:`For the second, what do you check?`,o:[`That ID 99999 exists in this environment (IDs differ between sandbox and production)`,`The mapping`,`The rate limit`,`The color theme`],a:0,e:`Wrong ID, or the right ID in the wrong environment.`},
+[`Say it in the interview`,`"A 404 can mean the route or the record. I read the error body, check the path against the docs, then confirm the ID exists in that environment."`]]},
+{d:"Tickets",t:"Ticket 2: Method not allowed",s:[
+T(`Updates fail with 405`,`The integration updates a customer's phone:<pre>POST /v2/customers/310\n→ 405 Method Not Allowed\nAllow: GET, PATCH, DELETE</pre>`),
+{q:`What does 405 mean?`,o:[`The endpoint doesn't exist`,`The endpoint exists but not for that method`,`Bad key`,`Rate limit`],a:1,e:`Right URL, wrong verb.`},
+{q:`Correct fix?`,o:[`Use <code>PATCH /v2/customers/310</code>`,`Use DELETE`,`Add a header`,`Change version`],a:0,e:`The Allow header lists valid methods. PATCH updates a record.`},
+{q:`Where can you confirm allowed methods?`,o:[`The Allow header and the docs`,`Guessing`,`The dealer`,`Logs only`],a:0,e:`Check both.`},
+[`Say it in the interview`,`"A 405 told me the URL was right but the method wasn't. The Allow header listed PATCH, so I switched from POST."`]]},
+{d:"Tickets",t:"Ticket 3: Sandbox go-live",s:[
+T(`"Everything succeeds" but nothing is live`,`Go-live was yesterday. The dealer's live CRM shows no new leads, yet logs are green:<pre>POST https://api-sandbox.dealerco.com/v2/leads\n→ 201 Created</pre>`),
+{q:`What's wrong?`,o:[`The mapping`,`The integration still points at the sandbox base URL`,`Pagination`,`Case`],a:1,e:`201s from sandbox are real responses from the wrong place.`},
+{q:`How do you confirm and fix?`,o:[`Reboot`,`Check the config's base URL and keys, switch both to production, test one live record, and verify in the live UI`,`Retry`,`Wait`],a:1,e:`Switch URL and credentials together, then verify end to end.`},
+{q:`What about leads sent to sandbox since go-live?`,o:[`Forget them`,`Re-send them from the source, watching for duplicates`,`Delete the dealer`,`Edit sandbox`],a:1,e:`Recover the missed records and reconcile counts.`},
+[`Say it in the interview`,`"I never trust a 2xx alone. I verify the base URL is production and confirm the record in the live system."`]]},
+{d:"Tickets",t:"Ticket 4: Broken query string",s:[
+T(`Dealer lookup returns the wrong results`,`<pre>GET /v2/dealers?name=Smith &amp; Sons&amp;created_after=10/04/2026</pre>Result: hundreds of unrelated dealers.`),
+{q:`What happened to the name filter?`,o:[`Nothing`,`The & split it: name became "Smith" and " Sons" became its own parameter`,`The key expired`,`It's a POST issue`],a:1,e:`An unencoded ampersand ends the parameter.`},
+{q:`Correct encoding of the name?`,o:[`<code>Smith &amp; Sons</code>`,`<code>Smith%20%26%20Sons</code>`,`<code>Smith&&Sons</code>`,`<code>"Smith"</code>`],a:1,e:`Space is %20 and & is %26.`},
+{q:`What about the date?`,o:[`Fine as is`,`Use ISO: <code>2026-10-04</code>`,`Use words`,`Remove it`],a:1,e:`APIs usually expect ISO 8601 dates.`},
+[`Say it in the interview`,`"The ampersand in the dealer name broke the query string. I URL-encoded it and switched the date to ISO format."`]]},
+{d:"Interview",t:"Rapid-fire flashcards",fc:[
+[`Base URL vs endpoint?`,`Base URL: server plus version. Endpoint: the path to one resource or collection.`],
+[`Path vs query parameter?`,`Path identifies the resource (/customers/310). Query refines the request (?status=active).`],
+[`404 vs 405?`,`404: not found (route or record). 405: the method isn't allowed on that endpoint.`],
+[`Why use https?`,`Encrypts traffic. An http call may be redirected (301), and redirects can change a POST into a GET, so start with https.`],
+[`How are special characters handled in URLs?`,`URL-encoded: space %20, & %26, # %23.`],
+[`What's a deprecated version?`,`An older API version the provider plans to retire. Migrate before the sunset date, and retest mappings.`],
+[`Common pagination parameters?`,`page, limit, offset, or a cursor/next link. Check the docs.`],
+[`What do you check first when an endpoint call fails?`,`Status code and error body, then the URL (spelling, version, environment), then method, then auth, then the payload.`],
+[`Question: explain an endpoint to a non-technical customer.`,`"It's the specific address in the other system where a certain kind of data lives, like customers or appointments."`],
+[`Ask them`,`Which endpoints do you use most in setups? How do you handle versions and sandbox testing? Where do customers usually get stuck?`]]}
+];
+let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=document.getElementById("app"),nq=l=>l.s.filter(x=>!Array.isArray(x)).length;
+function home(){let h=`<div class=top><h1>${TITLE}</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>${SUB}</div>`;
+const n=Object.keys(S.done).length;h+=`<div class=bar><i style="width:${n/L.length*100}%"></i></div><div class=mu>${n} of ${L.length} complete</div>`;
+let last="";L.forEach((l,i)=>{if(l.d!=last){h+=`<div class=day>${l.d}</div>`;last=l.d}
+h+=`<div class="card les ${S.done[i]!=null?"done":""}" onclick="start(${i})"><div class=dot>${S.done[i]!=null?"✓":i+1}</div><div><b>${l.t}</b><div class=mu>${l.fc?l.fc.length+" flashcards":nq(l)+" questions"}${S.done[i]!=null?" · best "+S.done[i]+"%":""}</div></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset progress?')){S={xp:0,done:{}};save();home()}">Reset progress</button>`;$.innerHTML=h}
+let cur,step,score,ans;
+function start(i){cur=i;step=0;score=0;ans=false;card()}
+function card(){const l=L[cur];if(l.fc)return fc(0);if(step>=l.s.length)return fin();
+const c=l.s[step],bar=`<button class=back onclick="home()">← Back</button><div class=bar><i style="width:${step/l.s.length*100}%"></i></div>`;
+if(Array.isArray(c)){const last=step==l.s.length-1;
+$.innerHTML=bar+`<div class="card ${c[2]?"tk":""}"><h2>${c[0]}</h2>${last?`<div class=say>${c[1]}</div>`:c[1]}</div><button onclick="step++;card()">${last?"Finish":"Continue"}</button>`;return}
+ans=false;$.innerHTML=bar+`<div class=card><div class=mu>Your call</div><h2>${c.q}</h2>${c.o.map((o,k)=>`<button class=opt onclick="pick(${k},this)">${o}</button>`).join("")}<div id=fb></div></div>`}
+function pick(k,el){if(ans)return;ans=true;const q=L[cur].s[step];
+const ok=k==q.a;if(ok){score++;S.xp+=10}el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");
+document.getElementById("fb").innerHTML=`<div class=fb>${ok?"✅ Correct! +10 XP":"❌ Not quite."} ${q.e}</div><button onclick="step++;card()">Next</button>`;save()}
+function fin(){const l=L[cur],t=nq(l),p=Math.round(score/t*100);S.done[cur]=Math.max(S.done[cur]||0,p);S.xp+=20;save();
+$.innerHTML=`<div class=card style="text-align:center"><h1>${p==100?"🏆":"🎉"} Complete</h1><p>You got ${score}/${t} right (${p}%). +20 XP bonus.</p>${p<100?`<p class=mu>Retry it and explain each answer aloud.</p>`:""}</div><button onclick="start(${cur})" class=g>Retry</button><button onclick="home()">Back to course</button>`}
+function fc(i,flip){const l=L[cur],c=l.fc[i];if(i>=l.fc.length){S.done[cur]=100;S.xp+=30;save();return $.innerHTML=`<div class=card style="text-align:center"><h1>🏆 Course finished</h1><p>Open any API doc page and break one endpoint into host, version, resource, ID, and query parts out loud.</p></div><button onclick="home()">Back to course</button>`}
+$.innerHTML=`<button class=back onclick="home()">← Back</button><div class=bar><i style="width:${i/l.fc.length*100}%"></i></div><div class="card fc" onclick="fc(${i},${!flip})">${flip?`<div>${c[1]}</div>`:`<h2>${c[0]}</h2>`}</div><div class=mu style="text-align:center">${flip?"Did you answer first?":"Answer aloud, then tap to reveal."} Card ${i+1}/${l.fc.length}</div><button onclick="fc(${i+1})">${flip?"Next card":"Skip"}</button>`}
+home();
+</script></body></html>

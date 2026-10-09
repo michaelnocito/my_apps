@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Anticipation Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#4f46e5;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.nav{display:flex;gap:6px;margin-bottom:8px}.nav button{margin:0;padding:8px;background:var(--code);color:var(--tx);font-size:14px}.nav button.on{background:var(--pr);color:#fff}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);font-weight:500;margin-top:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}.opt.sel{border-color:var(--pr);background:rgba(79,70,229,.12)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cats button{width:auto;margin:0;padding:6px 12px;font-size:14px}.cats button.sel{background:var(--pr);color:#fff}
+input,select,textarea{font:15px system-ui,sans-serif;background:var(--code);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px;width:100%}
+label{display:block;font-size:13px;font-weight:700;margin-top:10px;color:var(--mu)}
+.win{border:2px solid var(--ok)}.f{margin:12px 0;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}.fb div{margin:4px 0}
+.big{font-size:40px;font-weight:700;text-align:center}
+</style></head><body><div id="app"></div>
+<script>
+const KEY="anticipLab",TABS=["Learn","Predict","Ladder","Toolkit"];
+const M=[
+{t:"What anticipation is",ty:"mc",br:`<b>Anticipatory anxiety</b> is worry, dread, or tension about something that hasn't happened yet. Your body is preparing: faster heart, tight muscles, racing thoughts. It often peaks <i>before</i> the event and tends to ease once you're in it. It can attach to bad events, good ones, or an urge you're trying not to follow. (This is education, not a diagnosis.)`,Q:[
+{q:`When does anticipatory anxiety often peak?`,o:[`During the event`,`Before the event, while you're waiting for it`,`Long after`,`It never changes`],a:1,e:`The waiting is often harder than the doing.`},
+{q:`Can good events trigger it?`,o:[`No, never`,`Yes. Your body gets aroused for exciting things too`,`Only bad events`,`Only at work`],a:1,e:`High arousal doesn't know if the event is good or bad.`},
+{q:`The feeling of dread is…`,o:[`Proof something bad will happen`,`A signal your body is preparing, not a prediction you must trust`,`Always accurate`,`Permanent`],a:1,e:`A feeling is not a forecast.`}],why:`Anticipation is preparation. It's uncomfortable, but it's not evidence of danger.`},
+{t:"The avoidance loop",ty:"mc",br:`The loop: <b>feel anticipation → avoid or buffer → instant relief → your brain learns "avoiding worked" → the next anticipation is bigger</b>. Relief teaches avoidance. Over time life can shrink, including the good parts. A buffer (anything used to take the edge off) works the same way: it brings relief now and teaches your brain you couldn't have handled it without it.`,Q:[
+{q:`Why does avoiding make anticipation grow?`,o:[`It doesn't`,`Relief teaches your brain that avoidance was necessary, so the fear returns stronger`,`It builds confidence`,`It removes the event`],a:1,e:`Short-term relief, long-term cost.`},
+{q:`What's a "buffer"?`,o:[`A cushion`,`Anything used to take the edge off a feeling so you can face or skip it`,`A calendar`,`A fear`],a:1,e:`Buffers keep the loop going quietly.`},
+{q:`What breaks the loop?`,o:[`Waiting until you feel ready`,`Doing the thing (or a small step) with the feeling present, and seeing what happens`,`Avoiding harder`,`Distraction forever`],a:1,e:`Your brain updates through experience, not reassurance.`}],why:`The way out is through, in small steps.`},
+{t:"Spot your avoidance",ty:"tri",br:`Avoidance isn't only "not going". It shows up as <b>Skip</b> (decline or cancel), <b>Delay</b> (later, later), <b>Buffer</b> (take the edge off first), or <b>Over-prepare</b> (rehearse or check endlessly).`,C:["Skip","Delay","Buffer","Over-prepare"],I:[
+{x:`Declining an invitation I actually want to accept`,a:0,e:`Skipping a good thing to avoid the feeling.`},
+{x:`"I'll RSVP later" for the fifth time`,a:1,e:`Delay.`},
+{x:`Needing something to calm me down before I can go`,a:2,e:`A buffer.`},
+{x:`Rehearsing a conversation twenty times`,a:3,e:`Over-preparing to feel safe.`},
+{x:`Cancelling the day of`,a:0,e:`Skip.`},
+{x:`Waiting until the last minute to book something I'm excited about`,a:1,e:`Delay.`},
+{x:`Checking the details again and again before an event`,a:3,e:`Checking is over-preparation.`}],why:`Name the pattern, and you can choose differently.`},
+{t:"Nervous or excited?",ty:"mc",br:`Anxiety and excitement feel almost identical in the body: both are high arousal. Some studies suggest that relabeling the feeling as <b>"I'm excited / I'm getting ready"</b> can work better than forcing yourself to "calm down", because it moves you from threat toward challenge. It's not magic, but it's a useful experiment.`,Q:[
+{q:`Why can "I'm excited" sometimes help?`,o:[`It removes all feelings`,`It matches the body's high arousal and shifts you toward a challenge mindset`,`It's a lie`,`It stops the event`],a:1,e:`You work with the energy instead of fighting it.`},
+{q:`Which reframe fits?`,o:[`"I must calm down right now"`,`"My body is getting ready. I can feel this and still take the first step."`,`"This is awful"`,`"I can't do this"`],a:1,e:`Allow it, label it, act.`},
+{q:`If the reframe doesn't land perfectly, you should…`,o:[`Give up`,`Treat it as one tool and keep acting anyway`,`Avoid the event`,`Fight the feeling`],a:1,e:`The action matters more than the feeling.`}],why:`The feeling doesn't have to vanish. It just doesn't get a veto.`},
+{t:"Act before you feel ready",ty:"mc",br:`Motivation and calm usually <b>follow</b> action, not the other way around. Shrink the first step until it's almost easy, and do it <i>with</i> the feeling present. Staying in the situation long enough teaches your brain that you can tolerate it, and that the feared outcome is often less likely than predicted.`,Q:[
+{q:`Best way to begin something you're dreading?`,o:[`Wait until you feel calm`,`Pick the smallest first step and do it with the feeling present`,`Do the hardest version first`,`Use a buffer`],a:1,e:`Small, doable, and soon.`},
+{q:`When should you wait until you feel ready?`,o:[`Always`,`Usually not. Readiness often arrives after starting`,`Never plan`,`Only for good things`],a:1,e:`Waiting for readiness feeds the loop.`},
+{q:`What lowers anticipation long-term?`,o:[`Reassurance from others`,`Repeatedly doing things and noticing your predictions were too high`,`Avoiding`,`Distraction only`],a:1,e:`Evidence changes expectations.`}],why:`Start small, start soon, and keep the feeling with you.`},
+{t:"Building a ladder",ty:"multi",br:`An <b>exposure ladder</b> is a list of avoided things ordered from easier to harder. You climb one rung at a time. It's the standard way to rebuild confidence gradually.`,pr:`Select what makes a good ladder.`,I:[
+{x:`Start with a step that feels moderate (around 30 to 50 out of 100)`,c:1,e:`Challenging but doable.`},
+{x:`Repeat a step until it feels easier, then move up`,c:1,e:`Repetition is what rewires expectation.`},
+{x:`Break big items into smaller steps`,c:1,e:`Small steps keep you moving.`},
+{x:`Plan the time and place in advance`,c:1,e:`Vague plans get avoided.`},
+{x:`Include good things you've been avoiding`,c:1,e:`Joy counts as part of recovery.`},
+{x:`Jump straight to the hardest item`,c:0,e:`Too big, so it backfires.`},
+{x:`Only do a step once you feel calm`,c:0,e:`Calm usually follows action.`},
+{x:`Use a buffer first so it doesn't feel as bad`,c:0,e:`It keeps the loop alive.`}],why:`Gradual, repeated, planned steps, including the good things.`},
+{t:"When to get support",ty:"mc",br:`Self-help tools work for many people, and support makes them stronger. A therapist can help if anticipation keeps you from work, relationships, or things you want, if panic shows up, or if you rely on substances to cope. <b>CBT</b> and exposure-based approaches have strong evidence for anxiety and avoidance. If you ever feel hopeless or unsafe, contact a doctor or a crisis line (in the US, call or text 988).`,Q:[
+{q:`Which is a good reason to see a professional?`,o:[`Never`,`Avoidance is limiting your work, relationships, or enjoyment, or you rely on substances to cope`,`Only in emergencies`,`If you feel fine`],a:1,e:`Early help is easier than late help.`},
+{q:`Which therapy approach has strong evidence for anxiety and avoidance?`,o:[`Cognitive behavioral therapy (CBT) and exposure-based methods`,`Avoidance training`,`Nothing`,`Only medication`],a:0,e:`They target exactly the loop you learned about.`}],why:`Asking for help is a smart move, not a failure.`}];
+let S={xp:0,done:{},pred:[],lad:[],go:{}};try{S={...S,...JSON.parse(localStorage.getItem(KEY))}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},$=id=>document.getElementById(id),A=$("app"),esc=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+let tab=0,tm=null,cur=0,won=false,mi=0,msc=0,sel=new Set(),ch=[],lr=0,b0=0;
+function shell(){A.innerHTML=`<div class=top><h1>Anticipation Lab</h1><span class=xp>⚡ ${S.xp}</span></div><div class=nav>${TABS.map((t,i)=>`<button class="${i==tab?"on":""}" onclick="go(${i})">${t}</button>`).join("")}</div><div id=v></div>`;[learn,pred,ladder,kit][tab]()}
+function go(i){if(tm)clearInterval(tm);tab=i;shell()}
+function learn(){const n=Object.keys(S.done).length;let h=`<div class=mu>A deeper dive into anticipatory anxiety and avoidance: why it happens, how it keeps itself going, and practical ways to handle it. Educational only, not therapy or medical advice. ${n} of ${M.length} lessons done.</div>`;
+M.forEach((m,i)=>{h+=`<div class="card les ${S.done[i]?"done":""}" onclick="openM(${i})"><div class=dot>${S.done[i]?"✓":i+1}</div><div><b>${m.t}</b></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset ALL data on this device?')){S={xp:0,done:{},pred:[],lad:[],go:{}};save();go(0)}">Reset all data</button>`;$("v").innerHTML=h}
+function openM(i){if(i>=M.length)return learn();cur=i;won=false;mi=0;msc=0;sel=new Set();ch=[];const m=M[i];
+let h=`<button class=back onclick="learn()">← Lessons</button><h2>${m.t}</h2><div class=card>${m.br}</div>`;
+if(m.ty=="multi")h+=`<div class=card><div class=mu>${m.pr}</div>${m.I.map((it,k)=>`<button class=opt id=i${k} onclick="tg(${k})">${it.x}</button>`).join("")}<button onclick="ckm()">Check</button><div id=fb></div></div>`;
+else if(m.ty=="tri")h+=`<div class=card>${m.I.map((it,k)=>`<div class=f>${it.x}<div class=cats>${m.C.map((c,j)=>`<button class=g id=c${k}_${j} onclick="tr(${k},${j})">${c}</button>`).join("")}</div></div>`).join("")}<button onclick="ckt()">Check</button><div id=fb></div></div>`;
+else h+=`<div id=mq></div>`;
+$("v").innerHTML=h+`<div id=win></div>`;if(m.ty=="mc")mq()}
+function tg(k){sel.has(k)?sel.delete(k):sel.add(k);$("i"+k).classList.toggle("sel")}
+function ckm(){const m=M[cur];let ok=true,o="";m.I.forEach((it,k)=>{const s=sel.has(k),c=!!it.c;if(s!=c)ok=false;o+=`<div>${s&&c?"✅ Right:":s?"❌ Shouldn't be selected:":c?"⚠ Missed:":"✓ Correctly left out:"} ${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function tr(k,j){ch[k]=j;M[cur].C.forEach((c,x)=>$(`c${k}_${x}`).classList.toggle("sel",x==j))}
+function ckt(){const m=M[cur];if(m.I.some((_,k)=>ch[k]==null)){$("fb").innerHTML=`<div class=fb>Pick a category for every item.</div>`;return}
+let ok=true,o="";m.I.forEach((it,k)=>{const r=ch[k]==it.a;if(!r)ok=false;o+=`<div>${r?"✅":"❌"} ${r?"":"Should be "+m.C[it.a]+". "}${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function mq(){const m=M[cur];if(mi>=m.Q.length){$("mq").innerHTML=`<div class=card>You got ${msc}/${m.Q.length}.</div>`;return win()}
+const q=m.Q[mi];$("mq").innerHTML=`<div class=card><div class=mu>Question ${mi+1} of ${m.Q.length}</div><h2>${q.q}</h2>${q.o.map((o,k)=>`<button class=opt onclick="mp(${k},this)">${o}</button>`).join("")}<div id=fb></div></div>`}
+function mp(k,el){const q=M[cur].Q[mi];if(document.querySelector(".opt.ok,.opt.no"))return;const ok=k==q.a;if(ok)msc++;el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");$("fb").innerHTML=`<div class=fb>${ok?"✅ Correct.":"❌ Not quite."} ${q.e}</div><button onclick="mi++;mq()">Next</button>`}
+function win(){if(won)return;won=true;const first=!S.done[cur];if(first){S.done[cur]=1;S.xp+=20}save();
+$("win").innerHTML=`<div class="card win"><b>✅ Lesson complete${first?" +20 XP":""}</b><p>${M[cur].why}</p><button onclick="openM(${cur+1})">${cur+1<M.length?"Next lesson":"Back to lessons"}</button></div>`;$("win").scrollIntoView({behavior:"smooth"})}
+const sc=(i,n=10,s=1)=>`<select id=${i}>${Array.from({length:n/s+1},(_,k)=>`<option>${k*s}</option>`).join("")}</select>`;
+function pred(){const P=S.pred,dn=P.filter(e=>e.aa!=null),wt=P.filter(e=>e.aa==null),av=k=>(dn.reduce((t,e)=>t+e[k],0)/dn.length).toFixed(1);
+let h=`<div class=card><h2>Predict, then check</h2><p class=mu>Before an event you're dreading or avoiding, write your prediction. Afterward, log what really happened. Over time you'll see how accurate your anticipation is.</p><label>Event</label><input id=pe placeholder="e.g. dinner with friends"><label>Predicted anxiety peak (0 to 10)</label>${sc("pa")}<label>What I fear will happen</label><input id=pf placeholder="e.g. I'll freeze and feel awful"><button onclick="padd()">Save prediction</button></div>`;
+wt.forEach(e=>{h+=`<div class=card><b>${esc(e.e)}</b><div class=mu>Predicted ${e.pa}/10 · Fear: ${esc(e.f)}</div>`+(lr==e.id?`<label>Actual anxiety peak (0 to 10)</label>${sc("aa")}<label>How it went (0 awful to 10 great)</label>${sc("ao")}<label>What actually happened</label><input id=ah><button onclick="plog(${e.id})">Save result</button>`:`<button class=g onclick="lr=${e.id};pred()">Log what happened</button>`)+`</div>`});
+if(dn.length){const pa=+av("pa"),aa=+av("aa");h+=`<div class=card><h2>Your results</h2>Events checked: <b>${dn.length}</b><br>Average predicted anxiety: <b>${pa}</b> → actual: <b>${aa}</b><br>Went okay or better (5+): <b>${dn.filter(e=>e.ao>=5).length}</b> of ${dn.length}<p>${aa<pa?"Your anticipation runs bigger than the real thing. That's the evidence your brain needs.":"Real anxiety matched your predictions. That's useful too: plan extra support for events like these, and notice how it went overall."}</p></div>`}
+$("v").innerHTML=h}
+function padd(){const e=$("pe").value.trim();if(!e)return;S.pred.push({id:Date.now(),e,pa:+$("pa").value,f:$("pf").value.trim()});S.xp+=5;save();pred()}
+function plog(id){const e=S.pred.find(x=>x.id==id);e.aa=+$("aa").value;e.ao=+$("ao").value;e.h=$("ah").value;S.xp+=15;lr=0;save();pred()}
+function ladder(){const L=S.lad.map((e,i)=>({...e,i})).sort((a,b)=>a.d-b.d),nx=L.find(e=>!e.done);
+let h=`<div class=card><h2>My avoidance ladder</h2><p class=mu>List things you avoid or delay, including good things. Rate how hard each feels (10 to 100), then climb from the easiest.</p><label>Item</label><input id=lt placeholder="e.g. reply to the invitation"><label>Difficulty (10 to 100)</label>${sc("ld",100,10)}<button onclick="ladd()">Add to ladder</button></div>`;
+if(nx)h+=`<div class="card win"><b>Next step: ${esc(nx.t)}</b> (${nx.d})<p class=mu>Do it with the feeling present. Stay until it eases a bit, then repeat it until it feels easier.</p></div>`;
+if(L.length)h+=`<div class=card>${L.map(e=>`<div class=f><b>${esc(e.t)}</b> <span class=mu>difficulty ${e.d}</span><div class=cats><button class="${e.done?"":"g"} ${e.done?"sel":""}" onclick="ldone(${e.i})">${e.done?"✓ Done (undo)":"Mark done"}</button><button class=g onclick="ldel(${e.i})">Remove</button></div></div>`).join("")}</div>`;
+$("v").innerHTML=h}
+function ladd(){const t=$("lt").value.trim();if(!t)return;S.lad.push({t,d:+$("ld").value,done:0});save();ladder()}
+function ldone(i){const e=S.lad[i];e.done=e.done?0:1;if(e.done)S.xp+=15;save();ladder()}
+function ldel(i){S.lad.splice(i,1);save();ladder()}
+const RF=[`This is anticipation: my body is getting ready.`,`I can feel this and still take the first step.`,`The feeling usually peaks before the event, not during it.`,`My prediction is a guess, not a fact.`,`I'm nervous and excited. They feel almost the same.`];
+function kit(){const g=S.go||{};$("v").innerHTML=`<div class=card><h2>Slow exhale breathing</h2><p class=mu>Breathe in for 4, out for 6, for 2 minutes. Longer exhales help the body settle.</p><div id=bt class=big>Ready</div><button onclick="bstart()">Start 2 minutes</button></div>
+<div class=card><h2>Reframes to try</h2>${RF.map(r=>`<div class=f>${r}</div>`).join("")}</div>
+<div class=card><h2>Before, during, after</h2><b>Days before:</b> put it on the calendar, tell one person, give worry a 15-minute window.<br><b>Hours before:</b> move your body, eat, keep busy, no buffer.<br><b>Minutes before:</b> breathe out slowly, then start the first step.<br><b>During:</b> aim your attention outward at the people or task, not at your heartbeat.<br><b>After:</b> log prediction vs. reality in Predict, and do something kind for yourself.</div>
+<div class=card><h2>Go-time plan</h2><label>The event or thing I've been avoiding</label><input id=ge oninput="spg()" value="${esc(g.e)}"><label>My smallest first step</label><input id=gs oninput="spg()" value="${esc(g.s)}"><label>When or what cue I'll start on</label><input id=gt oninput="spg()" value="${esc(g.t)}"><label>If the feeling spikes, I will</label><input id=gi oninput="spg()" placeholder="breathe out slowly for 1 minute, then do the step anyway" value="${esc(g.i)}"><div class=mu style="margin-top:8px">Saved automatically on this device.</div></div>`}
+function spg(){S.go={e:$("ge").value,s:$("gs").value,t:$("gt").value,i:$("gi").value};save()}
+function bstart(){b0=Date.now();btick();tm=setInterval(btick,500)}
+function btick(){const e=Math.floor((Date.now()-b0)/1000);if(e>=120){clearInterval(tm);$("bt").textContent="Done";S.xp+=5;save();return}const p=e%10;$("bt").textContent=p<4?"In "+(4-p):"Out "+(10-p)}
+shell();
+</script></body></html>

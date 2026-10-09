@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>API Crash Course</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#4f46e5;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:19px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+.bar{height:8px;background:var(--code);border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--pr);transition:width .3s}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);margin-top:8px;font-weight:500}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}
+pre,code{background:var(--code);border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+code{padding:1px 5px}pre{padding:10px;overflow-x:auto;margin:8px 0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+.fc{min-height:130px;display:grid;place-items:center;text-align:center;cursor:pointer}
+table{border-collapse:collapse;width:100%;font-size:14px}td{border-bottom:1px solid var(--bd);padding:6px 4px;vertical-align:top}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+</style></head><body><div id="app"></div>
+<script>
+const L=[
+{d:"Day 1 · Sunday — Foundations",t:"What an API is",s:[
+["The big idea","An <b>API</b> (Application Programming Interface) is a set of rules that lets one piece of software ask another for data or actions. Think of a restaurant: you (the <b>client</b>) order from the menu, the kitchen (the <b>server</b>) does the work, and the waiter (the API) carries requests and responses back and forth."],
+["Why it matters for BizzyCar","Dealership software lives in many systems: CRM, DMS (dealer management system), inventory, texting/communication tools. APIs are how those systems share customer, vehicle, and appointment data without anyone retyping it. A Technical Setup Specialist connects a dealer's systems and makes sure data flows correctly. <span class=mu>(Check BizzyCar's site tonight for exactly which systems they integrate with.)</span>"],
+["Endpoints","An <b>endpoint</b> is a specific URL where one kind of data lives.<pre>https://api.example.com/v1/customers\nhttps://api.example.com/v1/customers/123</pre>The base URL is the building; the endpoint path is the room. <code>/customers</code> = the list, <code>/customers/123</code> = one customer."],
+["Requests & responses","Every call has two halves.<br><b>Request:</b> method + endpoint + headers (metadata like your auth key) + optional body (data you send).<br><b>Response:</b> status code + headers + body (usually JSON)."]],
+q:[{q:"In the restaurant analogy, what is the API?",o:["The kitchen","The waiter carrying requests and responses","The customer","The menu prices"],a:1,e:"The API is the go-between. The kitchen is the server."},
+{q:"<code>/v1/customers/123</code> is an example of a(n)…",o:["Header","Status code","Endpoint","Payload"],a:2,e:"An endpoint is the specific URL path for a resource."},
+{q:"Which is part of the <i>response</i>?",o:["Status code","Endpoint URL","Auth key header you send","HTTP method"],a:0,e:"The server answers with a status code and a body."}]},
+{d:"Day 1 · Sunday — Foundations",t:"HTTP methods",s:[
+["The four verbs","Methods say what you want to do. They map to CRUD:<table><tr><td><b>GET</b></td><td>Read data</td></tr><tr><td><b>POST</b></td><td>Create something new</td></tr><tr><td><b>PUT / PATCH</b></td><td>Update (PUT replaces all, PATCH changes some fields)</td></tr><tr><td><b>DELETE</b></td><td>Remove</td></tr></table>"],
+["Examples","<pre>GET    /customers/123   → fetch customer 123\nPOST   /customers       → create a customer\nPATCH  /customers/123   → change their phone number\nDELETE /customers/123   → remove them</pre>GET never changes data, which is why it's the safe one to use when troubleshooting."],
+["Interview tip","If asked <i>\"what's the difference between GET and POST?\"</i>: GET retrieves data and sends no body; POST sends data in a body to create something. Add that you'd use GET to verify what a system holds before and after a sync."]],
+q:[{q:"Which method creates a new record?",o:["GET","POST","DELETE","HEAD"],a:1,e:"POST = create."},
+{q:"A dealer's customer changed only their email. Best method?",o:["POST","GET","PATCH","DELETE"],a:2,e:"PATCH updates just the changed fields."},
+{q:"You want to check what the other system holds without risking changes. Use…",o:["GET","PUT","POST","DELETE"],a:0,e:"GET is read-only."}]},
+{d:"Day 2 · Monday — Data & Access",t:"JSON & field mapping",s:[
+["Reading JSON","You already read JSON well. The rules: <code>{}</code> object, <code>[]</code> list, keys in quotes, values are text, numbers, true/false, null, or more objects.<pre>{\n \"firstName\": \"Dana\",\n \"phone\": \"856-555-0142\",\n \"vehicle\": {\"make\":\"Honda\",\"year\":2022},\n \"tags\": [\"service\",\"vip\"]\n}</pre>"],
+["Field mapping","Two systems name things differently. <b>Mapping</b> says which source field feeds which destination field.<pre>{\n \"mappings\": [\n  {\"source\":\"first_name\",\"target\":\"firstName\"},\n  {\"source\":\"cell\",\"target\":\"phone\"}\n ]\n}</pre>This is the same skill you used at RLDatix with the sister-product integration."],
+["Where mappings break","Common causes: a field name typo or changed name, wrong data type (text vs number), date formats (<code>10/04/2026</code> vs <code>2026-10-04</code>), required field missing or null, a value too long, and extra/missing nesting levels."],
+["Troubleshooting habit","Compare <b>source value → mapping → destination value</b> for one real record. Find the first place it goes wrong. That's the same reconcile-against-source discipline from your migration work, and it's a great thing to say in the interview."]],
+q:[{q:"Source sends <code>cell</code>, destination expects <code>phone</code>. What fixes it?",o:["Change the status code","A mapping from cell → phone","Use DELETE","Nothing, it's automatic"],a:1,e:"That's exactly what a mapping does."},
+{q:"Destination rejects a date. Source is <code>10/04/2026</code>. Likely issue?",o:["Date format mismatch","Wrong HTTP method","Server is down","Missing API key"],a:0,e:"Formats must match what the destination expects, often ISO <code>YYYY-MM-DD</code>."},
+{q:"A record syncs with an empty phone. First step?",o:["Restart everything","Trace that one record: source → mapping → destination","Delete the record","Ask for a new API key"],a:1,e:"Trace one record end to end to find where it's lost."}]},
+{d:"Day 2 · Monday — Data & Access",t:"Authentication",s:[
+["Proving who you are","APIs aren't open to everyone. <b>Authentication</b> proves who's calling; <b>authorization</b> decides what they may do. Mixing those up is a classic mistake."],
+["Common types","<table><tr><td><b>API key</b></td><td>A secret string sent in a header. Simple.</td></tr><tr><td><b>Bearer token</b></td><td>Short-lived token sent as <code>Authorization: Bearer …</code></td></tr><tr><td><b>OAuth 2.0</b></td><td>User approves access; app gets a token (and often a refresh token) with limited scopes.</td></tr><tr><td><b>SSO</b></td><td>Log in once via an identity provider; you set this up with clients at RLDatix.</td></tr></table>"],
+["Typical auth problems","Expired token, key pasted with a trailing space, key for the wrong environment (test vs live), missing <b>scope</b>/permission, wrong user. Keys are secrets: never post them in email or screenshots."]],
+q:[{q:"Authentication vs authorization?",o:["Same thing","Who you are vs what you're allowed to do","What you're allowed vs who you are","Speed vs security"],a:1,e:"Authn = identity. Authz = permissions."},
+{q:"Integration worked yesterday and fails today with an auth error. Likely culprit?",o:["Expired token or changed key","JSON has brackets","GET was used","Too many fields"],a:0,e:"Tokens expire. Check that first."},
+{q:"Where should API keys be shared?",o:["Email","Screenshot in chat","A secure channel / password manager","A public doc"],a:2,e:"Treat keys like passwords."}]},
+{d:"Day 2 · Monday — Data & Access",t:"Status codes",s:[
+["Read the first digit","<table><tr><td><b>2xx</b></td><td>Success. <code>200</code> OK, <code>201</code> Created, <code>204</code> No Content</td></tr><tr><td><b>3xx</b></td><td>Redirect</td></tr><tr><td><b>4xx</b></td><td>The <i>request</i> is wrong (client's fault)</td></tr><tr><td><b>5xx</b></td><td>The <i>server</i> failed (not your fault)</td></tr></table>"],
+["The ones to memorize","<table><tr><td><code>400</code></td><td>Bad Request: malformed JSON, wrong field/type</td></tr><tr><td><code>401</code></td><td>Unauthorized: not authenticated (bad/missing key or token)</td></tr><tr><td><code>403</code></td><td>Forbidden: authenticated, but no permission</td></tr><tr><td><code>404</code></td><td>Not Found: wrong endpoint or ID</td></tr><tr><td><code>409</code></td><td>Conflict: duplicate record</td></tr><tr><td><code>422</code></td><td>Unprocessable: valid JSON, but data fails validation</td></tr><tr><td><code>429</code></td><td>Too Many Requests: rate limit, slow down and retry</td></tr><tr><td><code>500</code></td><td>Server error</td></tr><tr><td><code>502/503/504</code></td><td>Bad gateway / unavailable / timeout, often temporary</td></tr></table>"],
+["Memory trick","<b>401 = \"who are you?\"</b> and <b>403 = \"I know you, but no.\"</b> 4xx: fix your request. 5xx: report to the provider or retry later."]],
+q:[{q:"Valid key, but the user lacks permission for that endpoint:",o:["401","403","404","500"],a:1,e:"403: known but not allowed."},
+{q:"Missing API key entirely:",o:["401","403","429","503"],a:0,e:"401: not authenticated."},
+{q:"Sync fires 10,000 calls a minute and fails:",o:["404","422","429","201"],a:2,e:"429 = rate limited."},
+{q:"A 500 error means…",o:["Your JSON is wrong","The server had a problem","Wrong password","Duplicate record"],a:1,e:"5xx = server-side."},
+{q:"Syntax is valid but the phone number fails validation:",o:["422","301","204","401"],a:0,e:"422: understood, but data is invalid."}]},
+{d:"Day 3 · Tuesday — Interview Ready",t:"Troubleshooting scenarios",s:[
+["A repeatable method","1) <b>Reproduce</b> with one record. 2) <b>Read</b> the status code and error message. 3) <b>Classify</b>: auth, request, data, or server? 4) <b>Check</b> endpoint, keys, mapping. 5) <b>Fix</b> and retest with that record. 6) <b>Document</b> and tell the customer what happened."],
+["Say it out loud","\"I start with the status code to see whether it's my side or theirs. Then I trace one record from source through the mapping to the destination.\" That answer shows process, not just terminology."]],
+q:[{q:"A dealer's leads aren't appearing in the CRM. Status is 200 but fields are blank. Most likely?",o:["Auth failure","Mapping/field-name mismatch","Server outage","Rate limit"],a:1,e:"200 means the call worked, so look at the mapping."},
+{q:"Everything returns 401 right after a dealer rotated their password/key.",o:["Update credentials in the integration","Rewrite the mapping","Switch to DELETE","Wait for 5xx to clear"],a:0,e:"Stale credentials. Update and retest."},
+{q:"Intermittent 503 errors for 10 minutes, then fine. Best response?",o:["Rebuild mapping","Retry with backoff, check the provider's status, document","Delete the integration","Blame the customer"],a:1,e:"503 is usually temporary. Retry, verify, document."},
+{q:"A call to <code>/v1/custmers</code> returns 404. What first?",o:["Re-issue keys","Check the endpoint spelling","Restart the server","Add fields"],a:1,e:"A typo in the path gives a 404."}]},
+{d:"Day 3 · Tuesday — Interview Ready",t:"Flashcards & mock interview",fc:[
+["What is an API?","A set of rules letting one system request data or actions from another, e.g. a CRM sending customer records to another tool."],
+["What is an endpoint?","A specific URL for one resource, like /customers or /appointments/42."],
+["401 vs 403?","401: not authenticated (bad or missing credentials). 403: authenticated but not permitted."],
+["What is a payload?","The data in a request or response body, usually JSON."],
+["REST vs SOAP (briefly)?","REST: lightweight, URLs and HTTP methods, usually JSON. SOAP: older, XML-based, stricter. You're mostly in REST."],
+["What is a webhook?","The reverse of a call: the source system pushes you an event (like a new lead) to a URL instead of you polling."],
+["What is rate limiting?","A cap on requests per minute. Exceed it and you get 429; slow down and retry."],
+["Walk me through troubleshooting a failed integration.","Reproduce with one record, read the status code, classify auth/request/data/server, check endpoint, keys, mapping, fix, retest, document, tell the customer."],
+["Your API experience?","SSO setups with endpoints and keys, troubleshooting bulk loader error codes, and a field-mapping integration between sister products read from JSON. Be honest: strong concepts and troubleshooting, growing hands-on tooling (Postman)."],
+["Questions to ask them","Which systems do dealers most often integrate? What does a typical setup look like in week one? Which errors do you see most? How is a new hire trained on the APIs?"]]}
+];
+let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem("apiC"))||S}catch(e){}
+const save=()=>{try{localStorage.setItem("apiC",JSON.stringify(S))}catch(e){}};
+const $=document.getElementById("app");
+function home(){let h=`<div class=top><h1>API Crash Course</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>For your BizzyCar interview. Do a day at a time: tap a lesson, read the cards, answer the quiz.</div>`;
+const n=Object.keys(S.done).length;h+=`<div class=bar><i style="width:${n/L.length*100}%"></i></div><div class=mu>${n} of ${L.length} lessons complete</div>`;
+let last="";L.forEach((l,i)=>{if(l.d!=last){h+=`<div class=day>${l.d}</div>`;last=l.d}
+h+=`<div class="card les ${S.done[i]!=null?"done":""}" onclick="start(${i})"><div class=dot>${S.done[i]!=null?"✓":i+1}</div><div><b>${l.t}</b><div class=mu>${l.fc?l.fc.length+" flashcards":l.s.length+" cards · "+l.q.length+" questions"}${S.done[i]!=null?" · best "+S.done[i]+"%":""}</div></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset progress?')){S={xp:0,done:{}};save();home()}">Reset progress</button>`;$.innerHTML=h}
+let cur,step,score,ans;
+function start(i){cur=i;step=0;score=0;ans=false;card()}
+function card(){const l=L[cur];if(l.fc)return fc(0);
+if(step<l.s.length){const c=l.s[step];$.innerHTML=`<button class=back onclick="home()">← Back</button><div class=bar><i style="width:${step/(l.s.length+l.q.length)*100}%"></i></div><div class=card><h2>${c[0]}</h2>${c[1]}</div><button onclick="step++;card()">Continue</button>`;return}
+const qi=step-l.s.length;if(qi>=l.q.length)return fin();
+const q=l.q[qi];ans=false;
+$.innerHTML=`<button class=back onclick="home()">← Quit</button><div class=bar><i style="width:${step/(l.s.length+l.q.length)*100}%"></i></div><div class=card><div class=mu>Question ${qi+1} of ${l.q.length}</div><h2>${q.q}</h2>${q.o.map((o,k)=>`<button class=opt onclick="pick(${k},this)">${o}</button>`).join("")}<div id=fb></div></div>`}
+function pick(k,el){if(ans)return;ans=true;const q=L[cur].q[step-L[cur].s.length];
+const ok=k==q.a;if(ok){score++;S.xp+=10}el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");
+document.getElementById("fb").innerHTML=`<div class=fb>${ok?"✅ Correct! +10 XP":"❌ Not quite."} ${q.e}</div><button onclick="step++;card()">Next</button>`;save()}
+function fin(){const l=L[cur],p=Math.round(score/l.q.length*100);S.done[cur]=Math.max(S.done[cur]||0,p);S.xp+=20;save();
+$.innerHTML=`<div class=card style="text-align:center"><h1>${p==100?"🏆":"🎉"} Lesson complete</h1><p>You scored ${score}/${l.q.length} (${p}%). +20 XP bonus.</p>${p<100?`<p class=mu>Retake it to lock it in.</p>`:""}</div><button onclick="start(${cur})" class=g>Retry</button><button onclick="home()">Back to course</button>`}
+function fc(i,flip){const l=L[cur],c=l.fc[i];if(i>=l.fc.length){S.done[cur]=100;S.xp+=30;save();return $.innerHTML=`<div class=card style="text-align:center"><h1>🏆 Course finished</h1><p>You've covered the whole course. Read the cards aloud once more tomorrow morning, then go in confident.</p></div><button onclick="home()">Back to course</button>`}
+$.innerHTML=`<button class=back onclick="home()">← Back</button><div class=bar><i style="width:${i/l.fc.length*100}%"></i></div><div class="card fc" onclick="fc(${i},${!flip})">${flip?`<div>${c[1]}</div>`:`<h2>${c[0]}</h2>`}</div><div class=mu style="text-align:center">${flip?"Answer it aloud first, then compare.":"Say your answer aloud, then tap to reveal."} Card ${i+1}/${l.fc.length}</div><button onclick="fc(${i+1})">${flip?"Next card":"Skip"}</button>`}
+home();
+</script></body></html>

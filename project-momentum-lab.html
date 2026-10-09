@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Project Momentum Lab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#ea580c;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);font-weight:500;margin-top:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}.opt.sel{border-color:var(--pr);background:rgba(234,88,12,.1)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cats button{width:auto;margin:0;padding:6px 10px;font-size:13px}.cats button.sel{background:var(--pr);color:#fff}
+code{background:var(--code);border-radius:6px;font-size:13px;padding:1px 5px}
+.win{border:2px solid var(--ok)}.f{margin:12px 0;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+.fb div{margin:4px 0}.pl{padding:8px;margin:6px 0;border-radius:10px;background:var(--code);font-size:15px}
+</style></head><body><div id="app"></div>
+<script>
+const KEY="momLab";
+const M=[
+{g:"Momentum",t:"Why projects stall",ty:"mc",br:`In most implementations, the customer's contact has another full-time job. The project is rarely their first hat. So momentum is something <b>you manage on purpose</b>. Industry terms: <b>stalled-project management</b>, <b>client engagement cadence</b>, and <b>dependency management</b> (customer tasks that block your tasks).`,Q:[
+{q:`Why do many projects stall right after kickoff?`,o:[`Customers don't care`,`The project isn't the contact's main job, and asks are often big or unclear`,`The software is too hard`,`Bad luck`],a:1,e:`Understanding this changes your approach: make acting on your ask easy.`},
+{q:`Best way to end a kickoff call?`,o:[`"Let me know when you can"`,`Agree owners, due dates, and the next touchpoint, then send a recap within 24 hours`,`Wait a week`,`Send a long manual`],a:1,e:`A recap turns a conversation into a written commitment.`},
+{q:`A big data request is overwhelming the customer. Best move?`,o:[`Resend the request`,`Break it into smaller steps with a template, an example, and an offered working session`,`Do nothing`,`Escalate immediately`],a:1,e:`Reduce effort before you escalate.`},
+{q:`Who drives project momentum?`,o:[`Only the customer`,`Shared, but the implementer drives the cadence and follow-up`,`Nobody`,`Sales`],a:1,e:`You can't control their schedule, but you control your cadence.`}],why:`Momentum is a managed process: clear next steps, owners, dates, and follow-through.`},
+{g:"Momentum",t:"Make the ask easy",ty:"multi",br:`People respond to asks that are <b>small, clear, and easy to start</b>. Vague asks sit in inboxes.`,pr:`Select everything that makes an ask easier to act on.`,I:[
+{x:`One clear ask per message`,c:1,e:`Focus gets action.`},
+{x:`A named owner and a due date`,c:1,e:`Without them, nobody owns it.`},
+{x:`A template or example`,c:1,e:`Shows exactly what "done" looks like.`},
+{x:`An effort estimate ("about 20 minutes")`,c:1,e:`Makes starting less intimidating.`},
+{x:`What the delay affects ("needed Friday to keep the go-live date")`,c:1,e:`Gives a reason to prioritize.`},
+{x:`An offer of a short working session`,c:1,e:`Lowers the barrier for big asks.`},
+{x:`"Let me know when you can!"`,c:0,e:`No owner, no date, no urgency.`},
+{x:`Six unrelated asks in one long email`,c:0,e:`Overwhelms and gets postponed.`},
+{x:`An attachment with "see attached"`,c:0,e:`Unexplained, so it's easy to ignore.`}],why:`One ask, an owner, a date, an example, an effort estimate, and the impact of delay. That's the formula.`},
+{g:"Momentum",t:"Diagnose the stall",ty:"tri",br:`Different stalls need different fixes. <b>Capacity</b>: too busy. <b>Clarity</b>: the ask isn't understood. <b>Ownership</b>: wrong or missing person or approval. <b>Priority</b>: the project isn't important to them right now. Match the cause, then match the response.`,C:["Capacity","Clarity","Ownership","Priority"],I:[
+{x:`The contact has asked "what exactly do you need?" three times.`,a:1,e:`Clarity: simplify with a template and a short walkthrough.`},
+{x:`The data export needs IT approval, and IT hasn't been looped in.`,a:2,e:`Ownership: identify and involve the right person.`},
+{x:`The contact says "swamped" on every call but is engaged when you talk.`,a:0,e:`Capacity: shrink asks and offer working sessions.`},
+{x:`The sponsor admits this isn't a priority this quarter.`,a:3,e:`Priority: agree a pause or revised plan in writing.`},
+{x:`The data file has arrived in the wrong format three times.`,a:1,e:`Clarity: provide a strict template and an example.`},
+{x:`The only admin is on leave and no backup was named.`,a:2,e:`Ownership: ask the sponsor to name a backup.`}],why:`Diagnose before you chase. Repeating the same email doesn't fix a clarity or ownership problem.`},
+{g:"Momentum",t:"The escalation ladder",ty:"order",br:`An <b>escalation ladder</b> is a planned sequence of increasingly visible steps. Each rung is calm, factual, and documented. It protects the relationship and your record.`,o:[`Recap email within 24 hours: owners, asks, due dates`,`Friendly check-in 2 days before the due date`,`Day after the due date: follow up on a second channel and offer a working session`,`Loop in the sponsor or a backup contact with a factual status`,`Send a formal at-risk notice with options and a decision date`,`Apply the pause policy and document the new status`],perm:[3,0,5,2,4,1],why:`Start light, add visibility with each step, and give a clear decision point before pausing.`},
+{g:"Momentum",t:"30-day simulation",ty:"mc",br:`<b>Scenario:</b> kickoff is done. You need the customer's data export by Day 7. Make the call at each stage.`,Q:[
+{q:`Day 0, right after kickoff. Best action?`,o:[`Wait for them to send it`,`Send a recap: the ask, owner, due date, template, and your contact`,`Call daily`,`Mark them unresponsive`],a:1,e:`Set expectations in writing immediately.`},
+{q:`Day 5: no reply. Best action?`,o:[`Escalate to their CEO`,`Friendly reminder: restate the ask, attach the template, offer a 15-minute working session`,`Say nothing until Day 7`,`Do their work silently`],a:1,e:`Reduce friction before escalating.`},
+{q:`Day 8: due date missed. Best action?`,o:[`Resend the same email`,`Call, then follow up in writing, log both attempts, and offer a working session`,`Pause the project`,`Complain internally`],a:1,e:`Switch channels and keep a written trail.`},
+{q:`Day 14: still silent. Best action?`,o:[`Keep waiting`,`Loop in the sponsor or backup contact with a neutral status and a clear ask`,`Blame the contact`,`Close the project`],a:1,e:`Visibility, not blame.`},
+{q:`Day 21: silent. Best action?`,o:[`Quietly stop work`,`Send a formal at-risk notice: impact on go-live, options, and a decision date`,`Delete the project`,`Wait another month`],a:1,e:`Give them clear choices and a deadline to decide.`},
+{q:`Day 30: no decision. Best action?`,o:[`Ignore it`,`Apply the pause policy: update the status, set restart expectations in writing, and log it`,`Go live without data`,`Invent the data`],a:1,e:`Follow the policy and record it.`}],why:`Every step is proportionate, timed, and documented. That's what keeps both the project and your record healthy.`},
+{g:"Records",t:"What goes in the record",ty:"multi",br:`Your <b>audit trail</b> is a dated, factual record of actions and communications kept in the official system of record (not personal notes). If anyone asks why a project took so long, this is your answer.`,pr:`Select what belongs in every outreach record.`,I:[
+{x:`Date and time of the attempt`,c:1,e:`Establishes the timeline.`},
+{x:`Channel (email, call, chat)`,c:1,e:`Shows you varied your approach.`},
+{x:`Who you contacted`,c:1,e:`Proves the right people were reached.`},
+{x:`What you asked for and the due date`,c:1,e:`Shows the ask was clear.`},
+{x:`Their response, or "no response"`,c:1,e:`The outcome of the attempt.`},
+{x:`The next step and its date`,c:1,e:`Shows continuity.`},
+{x:`Your opinion of the contact ("they're lazy")`,c:0,e:`Keep records factual and professional.`},
+{x:`Edits to older entries without noting the change`,c:0,e:`Never rewrite history. Add a dated correction instead.`}],why:`Date, channel, person, ask, outcome, next step. Facts only, and corrections added as new entries.`},
+{g:"Records",t:"Strong vs weak entries",ty:"mc",br:`Strong records are <b>specific, dated, and factual</b>. They let a stranger reconstruct what happened a year later.`,Q:[
+{q:`Which log entry holds up best?`,o:[`Chased client again. No luck.`,`Oct 3, 2:10 pm: Called J. Reyes (IT lead), voicemail. Emailed same day re: data export due Oct 5. Follow-up set for Oct 6.`,`Client is ignoring us.`,`Sent email.`],a:1,e:`Time, person, channel, ask, due date, and next step.`},
+{q:`Which project status wording is best?`,o:[`Delayed because client is slow`,`Delayed: awaiting customer data export (requested Sep 12, due Sep 19, 3 follow-ups logged)`,`Stuck`,`Customer problem`],a:1,e:`Specific, neutral, and evidence-backed.`},
+{q:`After a phone call where dates were agreed, what's best?`,o:[`Remember it`,`Send a same-day recap email confirming decisions, dates, and owners, and log it`,`Text a thumbs up`,`Wait for them to remember`],a:1,e:`Calls leave no record unless you create one.`}],why:`Specific beats vague, and a recap turns spoken agreements into proof.`},
+{g:"Records",t:"Documenting delay and accountability",ty:"mc",br:`Common tools: a <b>RAID log</b> (Risks, Assumptions, Issues, Dependencies), a <b>communication log</b>, and status reports that name customer dependencies and due dates. The goal isn't blame. It's a clear, shared understanding of what's blocking progress.`,Q:[
+{q:`How do you document that a delay is customer-side without sounding accusatory?`,o:[`Write "client is lazy"`,`State the dependency, the request and due dates, and the follow-ups made, in neutral language`,`Don't mention it`,`Tell their boss privately`],a:1,e:`Facts and dates speak for themselves.`},
+{q:`Where should records live?`,o:[`Personal notes only`,`The official project system, with emails linked or attached`,`Your memory`,`A private spreadsheet`],a:1,e:`If it isn't in the system of record, it's hard to prove.`},
+{q:`The customer finally responds after three weeks. What now?`,o:[`Pretend nothing happened`,`Log the response, confirm new dates in writing, update the plan, and assess the timeline impact`,`Criticize them`,`Wait`],a:1,e:`Re-establish momentum and reset expectations in writing.`},
+{q:`Should customers see status reports that show their open dependencies?`,o:[`Never`,`Yes. Regular, neutral reports keep everyone aligned and are part of your record`,`Only when angry`,`Only at the end`],a:1,e:`Transparency prevents surprises.`}],why:`Neutral language, dated facts, a system of record, and regular visible status. That's accountability without blame.`},
+{g:"Communication",t:"Write the right message",ty:"mc",br:`The best follow-ups are <b>short, specific, and helpful</b>. Escalation messages are <b>neutral and factual</b>.`,Q:[
+{q:`Best first reminder?`,o:[`"Hi, just checking in. Let me know!"`,`"Hi Sam, quick reminder: we need the user list (template attached, about 20 minutes) by Friday to keep the Oct 20 go-live. Happy to do a 15-minute working session. Does Thursday 2pm work?"`,`"This is the third time I'm asking."`,`"Please advise."`],a:1,e:`One ask, a date, the impact, and an easy offer of help.`},
+{q:`Best second attempt?`,o:[`Resend the same email`,`Call, plus a short email summarizing the ask, prior dates, and the impact`,`A long, urgent email in caps`,`Ask a colleague to ping them`],a:1,e:`Change channel and summarize the history.`},
+{q:`Best message when looping in a sponsor?`,o:[`Complain about the contact`,`A neutral, factual status: the ask, dates, impact, and a request for help unblocking it`,`CC the whole company`,`Hide it`],a:1,e:`Ask for help, don't assign blame.`}],why:`Specific, polite, and easy to act on. Tone stays neutral at every rung.`},
+{g:"Communication",t:"Escalation and pausing",ty:"mc",br:`A <b>pause (hold) policy</b> protects both sides: it frees your capacity, sets clear restart expectations, and records why the work stopped. Escalate <b>early with options</b>, not late with surprises.`,Q:[
+{q:`Who do you tell internally first when a project is at risk?`,o:[`Nobody`,`Your manager or project lead, early, with facts and proposed options`,`Only the customer`,`After it fails`],a:1,e:`No surprises internally.`},
+{q:`A formal at-risk notice should include…`,o:[`Threats`,`Impact on the date, options (revised date, hold, reduced scope), and a decision date`,`Blame`,`Only "please respond"`],a:1,e:`Clear options and a deadline to choose.`},
+{q:`Why have a pause policy?`,o:[`To punish customers`,`To reallocate capacity, set restart expectations, and record why work stopped`,`To hide delays`,`It's optional`],a:1,e:`It's fair, predictable, and documented.`},
+{q:`The customer returns after a pause. Best step?`,o:[`Restart silently`,`Re-kickoff: reconfirm goals, owners, and timeline, and update the plan`,`Skip planning`,`Refuse`],a:1,e:`Reset expectations before resuming.`}],why:`Early visibility, clear options, and documented pauses protect everyone.`},
+{g:"Communication",t:"Vocabulary and interview",ty:"mc",br:`Terms and an interview-style question to practice.`,Q:[
+{q:`A RAID log tracks…`,o:[`Risks, Assumptions, Issues, Dependencies`,`Revenue and costs`,`Releases and deployments`,`Roles and permissions`],a:0,e:`A standard project-management log.`},
+{q:`A dependency is…`,o:[`A required task that must finish before another can proceed (often a customer deliverable)`,`A software bug`,`A contract`,`A meeting`],a:0,e:`Customer tasks are often your critical dependencies.`},
+{q:`An at-risk project is…`,o:[`One that's finished`,`One likely to miss its date, scope, or budget without intervention`,`A cancelled project`,`A new project`],a:1,e:`Flag early.`},
+{q:`Re-baselining means…`,o:[`Starting over`,`Formally resetting plan dates after a major change`,`Deleting tasks`,`Changing teams`],a:1,e:`Agree new dates in writing.`},
+{q:`Interview: "What do you do when a client goes quiet?" Best answer?`,o:[`Wait`,`Diagnose why, make the ask easier, follow an escalation ladder, and document every step`,`Escalate to the CEO`,`Close the project`],a:1,e:`Diagnose, simplify, escalate in steps, and keep the record.`}],why:`Plain-language answers with a clear process are what interviewers look for.`}];
+let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},$=id=>document.getElementById(id),A=$("app");
+let cur=0,won=false,mi=0,msc=0,sel=new Set(),pl=[],ch=[];
+function home(){const n=Object.keys(S.done).length;let h=`<div class=top><h1>Project Momentum Lab</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>How to keep implementation projects moving, especially with unresponsive customers, and how to keep records that prove your due diligence. Industry terms: stalled-project management, engagement cadence, dependency management, audit trail. ${n} of ${M.length} missions done.</div>`;
+let last="";M.forEach((m,i)=>{if(m.g!=last){h+=`<div class=day>${m.g}</div>`;last=m.g}h+=`<div class="card les ${S.done[i]?"done":""}" onclick="openM(${i})"><div class=dot>${S.done[i]?"✓":i+1}</div><div><b>${m.t}</b></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset progress?')){S={xp:0,done:{}};save();home()}">Reset progress</button>`;A.innerHTML=h}
+function openM(i){if(i>=M.length)return home();cur=i;won=false;mi=0;msc=0;sel=new Set();pl=[];ch=[];const m=M[i];
+let h=`<button class=back onclick="home()">← Missions</button><h2>${m.t}</h2><div class=card>${m.br}</div>`;
+if(m.ty=="order")h+=`<div class=card><div class=mu>Tap the steps in the order you'd take them.</div><div id=pl></div><div id=ol></div><div id=fb></div></div>`;
+else if(m.ty=="multi")h+=`<div class=card><div class=mu>${m.pr}</div>${m.I.map((it,k)=>`<button class=opt id=i${k} onclick="tg(${k})">${it.x}</button>`).join("")}<button onclick="ckm()">Check</button><div id=fb></div></div>`;
+else if(m.ty=="tri")h+=`<div class=card>${m.I.map((it,k)=>`<div class=f>${it.x}<div class=cats>${m.C.map((c,j)=>`<button class=g id=c${k}_${j} onclick="tr(${k},${j})">${c}</button>`).join("")}</div></div>`).join("")}<button onclick="ckt()">Check</button><div id=fb></div></div>`;
+else h+=`<div id=mq></div>`;
+A.innerHTML=h+`<div id=win></div>`;if(m.ty=="order")ord();if(m.ty=="mc")mq()}
+function ord(){const m=M[cur];$("pl").innerHTML=pl.map((j,k)=>`<div class=pl>${k+1}. ${m.o[j]}</div>`).join("");
+$("ol").innerHTML=m.perm.filter(j=>!pl.includes(j)).map(j=>`<button class=opt onclick="po(${j})">${m.o[j]}</button>`).join("");if(pl.length==m.o.length)win()}
+function po(j){if(j==pl.length){pl.push(j);$("fb").innerHTML="";ord()}else $("fb").innerHTML=`<div class=fb>Not yet. What should come before that step?</div>`}
+function tg(k){sel.has(k)?sel.delete(k):sel.add(k);$("i"+k).classList.toggle("sel")}
+function ckm(){const m=M[cur];let ok=true,o="";m.I.forEach((it,k)=>{const s=sel.has(k),c=!!it.c;if(s!=c)ok=false;o+=`<div>${s&&c?"✅ Right:":s?"❌ Shouldn't be selected:":c?"⚠ Missed:":"✓ Correctly left out:"} ${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function tr(k,j){ch[k]=j;M[cur].C.forEach((c,x)=>$(`c${k}_${x}`).classList.toggle("sel",x==j))}
+function ckt(){const m=M[cur];if(m.I.some((_,k)=>ch[k]==null)){$("fb").innerHTML=`<div class=fb>Pick a category for every item.</div>`;return}
+let ok=true,o="";m.I.forEach((it,k)=>{const r=ch[k]==it.a;if(!r)ok=false;o+=`<div>${r?"✅":"❌"} ${r?"":"Should be "+m.C[it.a]+". "}${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function mq(){const m=M[cur];if(mi>=m.Q.length){$("mq").innerHTML=`<div class=card>You got ${msc}/${m.Q.length}.</div>`;return win()}
+const q=m.Q[mi];$("mq").innerHTML=`<div class=card><div class=mu>Question ${mi+1} of ${m.Q.length}</div><h2>${q.q}</h2>${q.o.map((o,k)=>`<button class=opt onclick="mp(${k},this)">${o}</button>`).join("")}<div id=fb></div></div>`}
+function mp(k,el){const q=M[cur].Q[mi];if(document.querySelector(".opt.ok,.opt.no"))return;const ok=k==q.a;if(ok)msc++;el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");$("fb").innerHTML=`<div class=fb>${ok?"✅ Correct.":"❌ Not quite."} ${q.e}</div><button onclick="mi++;mq()">Next</button>`}
+function win(){if(won)return;won=true;const first=!S.done[cur];if(first){S.done[cur]=1;S.xp+=50}save();
+$("win").innerHTML=`<div class="card win"><b>✅ Mission complete!${first?" +50 XP":""}</b><p>${M[cur].why}</p><button onclick="openM(${cur+1})">${cur+1<M.length?"Next mission":"Back to missions"}</button></div>`;$("win").scrollIntoView({behavior:"smooth"})}
+home();
+</script></body></html>
