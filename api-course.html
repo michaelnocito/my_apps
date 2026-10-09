@@ -33,7 +33,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td{border-bottom:1px so
 const L=[
 {d:"Day 1 · Sunday — Foundations",t:"What an API is",s:[
 ["The big idea","An <b>API</b> (Application Programming Interface) is a set of rules that lets one piece of software ask another for data or actions. Think of a restaurant: you (the <b>client</b>) order from the menu, the kitchen (the <b>server</b>) does the work, and the waiter (the API) carries requests and responses back and forth."],
-["Why it matters for BizzyCar","Dealership software lives in many systems: CRM, DMS (dealer management system), inventory, texting/communication tools. APIs are how those systems share customer, vehicle, and appointment data without anyone retyping it. A Technical Setup Specialist connects a dealer's systems and makes sure data flows correctly. <span class=mu>(Check BizzyCar's site tonight for exactly which systems they integrate with.)</span>"],
+["Why it matters for our example Car Dealership","Dealership software lives in many systems: CRM, DMS (dealer management system), inventory, texting/communication tools. APIs are how those systems share customer, vehicle, and appointment data without anyone retyping it. A Technical Setup Specialist connects a dealer's systems and makes sure data flows correctly. <span class=mu>(Check the organization's site tonight for exactly which systems they integrate with.)</span>"],
 ["Endpoints","An <b>endpoint</b> is a specific URL where one kind of data lives.<pre>https://api.example.com/v1/customers\nhttps://api.example.com/v1/customers/123</pre>The base URL is the building; the endpoint path is the room. <code>/customers</code> = the list, <code>/customers/123</code> = one customer."],
 ["Requests & responses","Every call has two halves.<br><b>Request:</b> method + endpoint + headers (metadata like your auth key) + optional body (data you send).<br><b>Response:</b> status code + headers + body (usually JSON)."]],
 q:[{q:"In the restaurant analogy, what is the API?",o:["The kitchen","The waiter carrying requests and responses","The customer","The menu prices"],a:1,e:"The API is the go-between. The kitchen is the server."},
@@ -92,7 +92,7 @@ q:[{q:"A dealer's leads aren't appearing in the CRM. Status is 200 but fields ar
 let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem("apiC"))||S}catch(e){}
 const save=()=>{try{localStorage.setItem("apiC",JSON.stringify(S))}catch(e){}};
 const $=document.getElementById("app");
-function home(){let h=`<div class=top><h1>API Crash Course</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>For your BizzyCar interview. Do a day at a time: tap a lesson, read the cards, answer the quiz.</div>`;
+function home(){let h=`<div class=top><h1>API Crash Course</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>For interview prep and optimal learning. Do a day at a time: tap a lesson, read the cards, answer the quiz.</div>`;
 const n=Object.keys(S.done).length;h+=`<div class=bar><i style="width:${n/L.length*100}%"></i></div><div class=mu>${n} of ${L.length} lessons complete</div>`;
 let last="";L.forEach((l,i)=>{if(l.d!=last){h+=`<div class=day>${l.d}</div>`;last=l.d}
 h+=`<div class="card les ${S.done[i]!=null?"done":""}" onclick="start(${i})"><div class=dot>${S.done[i]!=null?"✓":i+1}</div><div><b>${l.t}</b><div class=mu>${l.fc?l.fc.length+" flashcards":l.s.length+" cards · "+l.q.length+" questions"}${S.done[i]!=null?" · best "+S.done[i]+"%":""}</div></div></div>`});
