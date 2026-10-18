@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>SQL Fundamentals</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#e11d74;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);font-weight:500;margin-top:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}.opt.sel{border-color:var(--pr);background:rgba(225,29,116,.1)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cats button{width:auto;margin:0;padding:6px 10px;font-size:13px}.cats button.sel{background:var(--pr);color:#fff}
+.win{border:2px solid var(--ok)}.f{margin:12px 0;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+.fb div{margin:4px 0}.pl{padding:8px;margin:6px 0;border-radius:10px;background:var(--code);font-size:15px}
+.say{margin-top:8px;padding:10px;border-radius:10px;background:rgba(22,163,74,.14);border:1px solid var(--ok);font-size:15px}
+pre{background:var(--code);padding:8px;border-radius:8px;font-size:13px;overflow-x:auto;white-space:pre-wrap;margin:6px 0}code{background:var(--code);padding:1px 5px;border-radius:5px}table{width:100%;border-collapse:collapse;font-size:14px}td,th{border:1px solid var(--bd);padding:5px;text-align:left}
+</style></head><body><div id="app"></div>
+<script>
+const KEY="sqlFundamentals";
+const T=`<table><tr><th>id</th><th>name</th><th>region</th><th>status</th><th>mrr</th></tr><tr><td>1</td><td>Birch Dental</td><td>East</td><td>active</td><td>400</td></tr><tr><td>2</td><td>Cedar Clinic</td><td>West</td><td>active</td><td>650</td></tr><tr><td>3</td><td>Dune Labs</td><td>East</td><td>paused</td><td>0</td></tr><tr><td>4</td><td>Elm Care</td><td>West</td><td>active</td><td>NULL</td></tr><tr><td>5</td><td>Fox Health</td><td>East</td><td>active</td><td>900</td></tr></table>`;
+const M=[
+{g:"Foundation",t:"Start here: what is SQL?",ty:"mc",br:`<b>SQL</b> is a language for asking a database questions. Think of a database as a workbook of spreadsheets.<ul><li><b>Table</b>: one spreadsheet tab, such as <code>accounts</code></li><li><b>Row</b>: one entry, such as one account</li><li><b>Column</b>: one kind of info, such as region</li><li><b>Query</b>: a question you ask, written in SQL</li></ul>Reading data is safe. You only change data when you use UPDATE or DELETE.`,Q:[
+{q:`A query is…`,o:[`A question you ask the database`,`A column`],a:0,e:`A query asks for data.`},
+{q:`One account in the accounts table is a…`,o:[`Row`,`Table`],a:0,e:`A row is one entry.`}],why:`SQL asks questions of tables, which are like spreadsheet tabs.`},
+{g:"Foundation",t:"Tables, rows, columns",ty:"mc",br:`A database table is a grid. Each <b>row</b> is one record, each <b>column</b> is one field. SQL reads that grid. All practice data here is fictional. Table <code>accounts</code>:${T}`,Q:[
+{q:`In <code>accounts</code>, what is one row?`,o:[`One field such as region`,`One account record`,`The whole table`,`A query`],a:1,e:`A row is one record.`},
+{q:`What is <code>mrr</code> in this table?`,o:[`A row`,`A column`,`A table`,`A database`],a:1,e:`A column holds one field for every row.`}],why:`Rows are records, columns are fields.`},
+{g:"Foundation",t:"SELECT and FROM",ty:"mc",br:`<code>SELECT</code> picks columns. <code>FROM</code> picks the table. Avoid <code>SELECT *</code> in saved work, because the column list can change.<p><b>Worked example:</b> <code>SELECT name, status FROM accounts;</code> reads: "show the name and status columns from the accounts table."</p>${T}`,Q:[
+{q:`Show only name and status for every account.`,o:[`SELECT * FROM accounts;`,`SELECT name, status FROM accounts;`,`FROM accounts SELECT name, status;`,`GET name, status accounts;`],a:1,e:`SELECT columns, then FROM table.`,r:`Birch Dental | active\nCedar Clinic | active\nDune Labs | paused\nElm Care | active\nFox Health | active`},
+{q:`Why avoid <code>SELECT *</code> in a saved report?`,o:[`It's slower to type`,`New or reordered columns can silently change the output`,`It deletes data`,`It's not allowed`],a:1,e:`Name the columns you need.`}],why:`SELECT columns FROM table, and name the columns.`},
+{g:"Foundation",t:"WHERE filters rows",ty:"mc",br:`<code>WHERE</code> keeps only rows that match. Text goes in single quotes. <code>AND</code> needs both conditions, <code>OR</code> needs either.<p><b>Worked example:</b> <code>SELECT name FROM accounts WHERE region='West';</code> reads: "names of accounts whose region is West." Result: Cedar Clinic, Elm Care.</p>${T}`,Q:[
+{q:`Names of active accounts in the East.`,o:[`SELECT name FROM accounts WHERE status='active' OR region='East';`,`SELECT name FROM accounts WHERE status='active' AND region='East';`,`SELECT name FROM accounts WHERE status=active AND region=East;`,`SELECT name FROM accounts WHERE status=='active';`],a:1,e:`AND requires both. Quote the text.`,r:`Birch Dental\nFox Health`},
+{q:`Accounts with mrr over 500.`,o:[`WHERE mrr > 500`,`WHERE mrr = 500+`,`WHERE mrr over 500`,`WHERE 500 < mrr AND mrr`],a:0,e:`Elm Care (NULL) is excluded, since NULL isn't greater than anything.`,r:`Cedar Clinic | 650\nFox Health | 900`}],why:`WHERE filters rows before anything else.`},
+{g:"Foundation",t:"Clause order",ty:"order",br:`SQL clauses must be written in a fixed order. Tap them in order.<p><b>Worked example:</b> <code>SELECT name FROM accounts WHERE status='active' ORDER BY name;</code> uses the clauses in the fixed order.</p>`,o:["SELECT","FROM","WHERE","GROUP BY","ORDER BY","LIMIT"],perm:[2,5,0,4,1,3],why:`SELECT, FROM, WHERE, GROUP BY, ORDER BY, LIMIT.`},
+{g:"Foundation",t:"NULL: the missing value",ty:"multi",br:`<code>NULL</code> means unknown or missing. It is not zero and not an empty string.<p><b>Worked example:</b> Elm Care has mrr NULL, so <code>SELECT name FROM accounts WHERE mrr IS NULL;</code> returns Elm Care.</p>`,pr:`Select every true statement.`,I:[
+{x:`NULL means missing or unknown, not zero`,c:1,e:`True.`},
+{x:`WHERE mrr = NULL finds rows with no mrr`,c:0,e:`False. Use IS NULL.`},
+{x:`WHERE mrr IS NULL finds rows with no mrr`,c:1,e:`True.`},
+{x:`WHERE mrr > 500 skips NULL rows`,c:1,e:`True. NULL fails every comparison.`},
+{x:`COUNT(mrr) skips NULLs but COUNT(*) does not`,c:1,e:`True. This explains many count mismatches.`},
+{x:`An empty string and NULL are always the same`,c:0,e:`False. They are different and often mixed up after loads.`}],why:`Use IS NULL, and remember aggregates skip NULLs.`},
+{g:"Foundation",t:"Counting and grouping",ty:"mc",br:`Aggregates (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>) summarize rows. <code>GROUP BY</code> makes one result row per group.<p><b>Worked example:</b> <code>SELECT region, COUNT(*) FROM accounts GROUP BY region;</code> reads: "count the accounts in each region." Result: East 3, West 2.</p>${T}`,Q:[
+{q:`Total mrr per region.`,o:[`SELECT region, SUM(mrr) FROM accounts;`,`SELECT region, SUM(mrr) FROM accounts GROUP BY region;`,`SELECT SUM(mrr) GROUP BY region;`,`GROUP BY region SELECT SUM(mrr);`],a:1,e:`Every non-aggregate column goes in GROUP BY.`,r:`East | 1300\nWest | 650`},
+{q:`How many accounts per status?`,o:[`SELECT status, COUNT(*) FROM accounts GROUP BY status;`,`SELECT COUNT(status) FROM accounts;`,`SELECT status FROM accounts COUNT;`,`SELECT status, SUM(*) FROM accounts;`],a:0,e:`COUNT(*) plus GROUP BY.`,r:`active | 4\npaused | 1`}],why:`GROUP BY gives one row per group.`},
+{g:"Foundation",t:"WHERE vs HAVING",ty:"tri",br:`<code>WHERE</code> filters rows <b>before</b> grouping. <code>HAVING</code> filters groups <b>after</b> aggregating.<p><b>Worked example:</b> <code>SELECT region, COUNT(*) FROM accounts GROUP BY region HAVING COUNT(*) &gt; 2;</code> keeps only East (3 accounts).</p>`,C:["WHERE","HAVING"],I:[
+{x:`Only active accounts`,a:0,e:`A per-row condition.`},
+{x:`Regions with total mrr over 1000`,a:1,e:`Condition on an aggregate.`},
+{x:`Accounts in the East`,a:0,e:`A per-row condition.`},
+{x:`Statuses with more than 2 accounts`,a:1,e:`Condition on COUNT.`},
+{x:`Accounts with mrr over 500`,a:0,e:`A per-row condition.`}],why:`Rows use WHERE. Aggregates use HAVING.`},
+{g:"Foundation",t:"JOINs",ty:"mc",br:`A <b>join</b> combines tables on a shared key. <code>INNER JOIN</code> keeps matches only. <code>LEFT JOIN</code> keeps every left row, with NULL when there's no match. Table <code>tickets</code> (id, account_id, topic): (1,1,login) (2,1,billing) (3,2,login) (4,9,export).<p><b>Worked example:</b> <code>SELECT a.name, t.topic FROM accounts a INNER JOIN tickets t ON a.id=t.account_id;</code> matches each account to its tickets by id and returns only accounts that have tickets.</p>`,Q:[
+{q:`Every account with its tickets, including accounts with none.`,o:[`FROM accounts a INNER JOIN tickets t ON a.id=t.account_id`,`FROM accounts a LEFT JOIN tickets t ON a.id=t.account_id`,`FROM accounts a, tickets t`,`FROM tickets t LEFT JOIN accounts a`],a:1,e:`LEFT JOIN keeps accounts that have no tickets.`,r:`Birch | login\nBirch | billing\nCedar | login\nDune | NULL\nElm | NULL\nFox | NULL`},
+{q:`Which tickets point to an account that doesn't exist?`,o:[`SELECT t.id FROM tickets t INNER JOIN accounts a ON a.id=t.account_id WHERE a.id IS NULL;`,`SELECT t.id FROM tickets t LEFT JOIN accounts a ON a.id=t.account_id WHERE a.id IS NULL;`,`SELECT id FROM tickets WHERE account_id=NULL;`,`SELECT t.id FROM tickets t, accounts a;`],a:1,e:`LEFT JOIN then IS NULL finds orphans. INNER JOIN can't return them.`,r:`4`}],why:`LEFT JOIN plus IS NULL finds missing matches.`},
+{g:"Foundation",t:"Safe habits",ty:"multi",br:`Educational practice: before any <code>UPDATE</code> or <code>DELETE</code>, run a <code>SELECT</code> with the same <code>WHERE</code> and check the row count. Without a WHERE, every row changes.<p><b>Worked example:</b> <code>SELECT * FROM accounts WHERE status='paused';</code> should return the 1 row you expect. Only then change the first word.</p>`,pr:`Select the good habits.`,I:[
+{x:`Preview with SELECT before UPDATE or DELETE`,c:1,e:`Check the rows first.`},
+{x:`Compare counts to the source before sign-off`,c:1,e:`Counts catch dropped rows.`},
+{x:`Trust a result without checking NULLs and stray spaces`,c:0,e:`Hidden NULLs and spaces cause mismatches.`},
+{x:`Use SELECT * everywhere`,c:0,e:`Name the columns you need.`},
+{x:`Alias tables in joins (a, t) for readability`,c:1,e:`Clear and shorter.`}],why:`Preview, count, and check NULLs.`},
+{g:"Tickets",t:"Ticket: Duplicate records",ty:"mc",br:`<b>Scenario:</b> A customer says some accounts appear twice after a load. Table <code>accounts</code> has a <code>name</code> column.`,Q:[
+{q:`First query?`,o:[`DELETE FROM accounts;`,`SELECT name, COUNT(*) FROM accounts GROUP BY name HAVING COUNT(*) > 1;`,`SELECT * FROM accounts LIMIT 1;`,`UPDATE accounts SET name=NULL;`],a:1,e:`Find duplicates without changing data.`},
+{q:`Two "Birch Dental" rows differ only by a trailing space. What's the cause?`,o:[`A server error`,`Whitespace in the source data, so the values aren't equal`,`A SQL bug`,`NULLs`],a:1,e:`Compare with TRIM() to confirm.`},
+{q:`Before removing any row?`,o:[`Delete both`,`Preview with SELECT, confirm which row to keep, and get sign-off`,`Run DELETE without WHERE`,`Hope`],a:1,e:`Preview, decide, confirm.`}],say:`I find duplicates with GROUP BY and HAVING, confirm the cause, and preview before I change anything.`,why:`Ticket done: find, explain, preview.`},
+{g:"Tickets",t:"Ticket: Missing matches",ty:"mc",br:`<b>Scenario:</b> After a load, some tickets show no account name in the report.`,Q:[
+{q:`Which join shows them?`,o:[`INNER JOIN`,`LEFT JOIN from tickets to accounts, then WHERE a.id IS NULL`,`CROSS JOIN`,`SELECT *`],a:1,e:`LEFT JOIN plus IS NULL lists orphans.`},
+{q:`Ticket 4 points to account 9, which doesn't exist. Likely cause?`,o:[`The report is wrong`,`The account wasn't loaded, or the key was mapped wrongly`,`SQL error`,`Nothing`],a:1,e:`Orphans usually mean a missing record or a bad key mapping.`},
+{q:`What do you tell the customer?`,o:[`Nothing yet`,`Which rows, the likely cause, and the fix plan`,`Blame the source`,`Delete the tickets`],a:1,e:`Specific rows, cause, plan.`}],say:`I use a LEFT JOIN with IS NULL to find orphaned records, then trace the key mapping.`,why:`Ticket done: find orphans, trace the key.`},
+{g:"Tickets",t:"Ticket: Counts don't match",ty:"mc",br:`<b>Scenario:</b> The source file has 1,000 rows. The table shows 988 after the load.`,Q:[
+{q:`First check?`,o:[`Assume it's fine`,`Count rows, then compare keys to find which 12 are missing`,`Reload everything`,`Delete rows`],a:1,e:`Find the specific missing rows.`},
+{q:`A report uses COUNT(mrr) and shows fewer rows than COUNT(*). Why?`,o:[`Bug`,`COUNT(mrr) skips NULLs`,`Sorting`,`Permissions`],a:1,e:`Aggregates on a column ignore NULLs.`},
+{q:`All 12 rejected rows had a bad date format. Next?`,o:[`Ignore`,`Fix the date rule, re-run the rehearsal, and reconcile again`,`Remove the date field`,`Sign off`],a:1,e:`Fix the rule, re-verify.`}],say:`I reconcile counts, find the exact missing keys, fix the rule, and reconcile again before sign-off.`,why:`Ticket done: count, compare keys, fix, recount.`},
+{g:"Review",t:"Flashcards",ty:"fc",br:`Say the answer aloud first, then tap to flip.`,F:[
+{f:`SELECT vs FROM?`,b:`SELECT picks columns. FROM picks the table.`},
+{f:`WHERE vs HAVING?`,b:`WHERE filters rows before grouping. HAVING filters groups after.`},
+{f:`How do you test for missing values?`,b:`IS NULL. Never = NULL.`},
+{f:`COUNT(*) vs COUNT(col)?`,b:`COUNT(*) counts rows. COUNT(col) skips NULLs.`},
+{f:`INNER vs LEFT JOIN?`,b:`INNER keeps matches only. LEFT keeps every left row with NULL if no match.`},
+{f:`How do you find orphan records?`,b:`LEFT JOIN, then WHERE right-key IS NULL.`},
+{f:`How do you find duplicates?`,b:`GROUP BY the key, HAVING COUNT(*) > 1.`},
+{f:`Before UPDATE or DELETE?`,b:`Run SELECT with the same WHERE and check the count.`}],why:`If you can say these cold, you're fluent in SQL basics.`}];
+let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},$=id=>document.getElementById(id),A=$("app");
+let cur=0,won=false,mi=0,msc=0,fi=0,sel=new Set(),pl=[],ch=[];
+const INT=[1,3,7,14,30,60],dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),td=()=>dk(new Date()),ad=n=>{const d=new Date();d.setDate(d.getDate()+n);return dk(d)};
+S.rv=S.rv||{};Object.keys(S.done).forEach(i=>{if(!S.rv[i])S.rv[i]={s:0,d:ad(1)}});
+const due=()=>Object.keys(S.rv).filter(i=>S.rv[i].d<=td()).map(Number).sort((a,b)=>a-b);
+function dl(i){const r=S.rv[i];if(!r)return"";const n=Math.round((new Date(r.d+"T00:00")-new Date(td()+"T00:00"))/864e5);return n<=0?"🔁 review due":"review in "+n+"d"}
+function rev(i){cur=i;const m=M[i];A.innerHTML=`<button class=back onclick="home()">← Missions</button><h2>🔁 Review: ${m.t}</h2><div class=card><b>Recall first.</b> Write or say everything you remember about this mission. Then reveal.<button onclick="$('rb').hidden=false;this.remove()">Reveal the brief</button><div id=rb hidden><p><b>Takeaway:</b> ${m.why||""}</p>${m.br}${m.say?`<div class=say>🎤 ${m.say}</div>`:""}</div></div><div class=card>How did it go?<button onclick="rg(${i},1)">✅ Got it</button><button class=g onclick="rg(${i},0)">❌ Missed some</button></div><div id=rr></div>`}
+function rg(i,ok){const r=S.rv[i]||{s:0};if(ok){r.s=Math.min(r.s+1,INT.length-1);r.d=ad(INT[r.s])}else{r.s=0;r.d=ad(1)}S.rv[i]=r;save();
+$("rr").innerHTML=ok?`<div class="card win"><b>Next review in ${INT[r.s]} days.</b><button onclick="home()">Done</button></div>`:`<div class=card><b>Back to tomorrow.</b> Redo the parts you missed now?<button onclick="openM(${i})">Redo this mission</button><button class=g onclick="home()">Later</button></div>`}
+function home(){const n=Object.keys(S.done).length;let h=`<div class=top><h1>SQL Fundamentals</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>Read and check data with SQL, step by step. ${n} of ${M.length} missions done.</div>`;
+const dv=due();if(dv.length)h+=`<div class="card win"><b>🔁 Review due today (${dv.length})</b><div class=mu>Recall first, then check. Revisit only what you missed.</div>${dv.map(i=>`<button onclick="rev(${i})">${M[i].t}</button>`).join("")}</div>`;else if(Object.keys(S.rv).length)h+=`<div class=card><b>✅ Nothing due today.</b><div class=mu>Next review: ${Object.values(S.rv).map(r=>r.d).sort()[0]}</div></div>`;
+let last="";M.forEach((m,i)=>{if(m.g!=last){h+=`<div class=day>${m.g}</div>`;last=m.g}h+=`<div class="card les ${S.done[i]?"done":""}" onclick="openM(${i})"><div class=dot>${S.done[i]?"✓":i+1}</div><div><b>${m.t}</b>${S.done[i]?`<div class=mu>${dl(i)}</div>`:""}</div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset progress?')){S={xp:0,done:{},rv:{}};save();home()}">Reset progress</button>`;A.innerHTML=h}
+function openM(i){if(i>=M.length)return home();cur=i;won=false;mi=0;msc=0;fi=0;sel=new Set();pl=[];ch=[];const m=M[i];
+let h=`<button class=back onclick="home()">← Missions</button><h2>${m.t}</h2><div class=card>${m.br}</div>`;
+if(m.ty=="order")h+=`<div class=card><div class=mu>Tap the steps in the order they happen.</div><div id=pl></div><div id=ol></div><div id=fb></div></div>`;
+else if(m.ty=="multi")h+=`<div class=card><div class=mu>${m.pr}</div>${m.I.map((it,k)=>`<button class=opt id=i${k} onclick="tg(${k})">${it.x}</button>`).join("")}<button onclick="ckm()">Check</button><div id=fb></div></div>`;
+else if(m.ty=="tri")h+=`<div class=card>${m.I.map((it,k)=>`<div class=f>${it.x}<div class=cats>${m.C.map((c,j)=>`<button class=g id=c${k}_${j} onclick="tr(${k},${j})">${c}</button>`).join("")}</div></div>`).join("")}<button onclick="ckt()">Check</button><div id=fb></div></div>`;
+else h+=`<div id=mq></div>`;
+A.innerHTML=h+`<div id=win></div>`;if(m.ty=="order")ord();if(m.ty=="mc")mq();if(m.ty=="fc")fcs()}
+function ord(){const m=M[cur];$("pl").innerHTML=pl.map((j,k)=>`<div class=pl>${k+1}. ${m.o[j]}</div>`).join("");
+$("ol").innerHTML=m.perm.filter(j=>!pl.includes(j)).map(j=>`<button class=opt onclick="po(${j})">${m.o[j]}</button>`).join("");if(pl.length==m.o.length)win()}
+function po(j){if(j==pl.length){pl.push(j);$("fb").innerHTML="";ord()}else $("fb").innerHTML=`<div class=fb>Not yet. What has to happen before that step?</div>`}
+function tg(k){sel.has(k)?sel.delete(k):sel.add(k);$("i"+k).classList.toggle("sel")}
+function ckm(){const m=M[cur];let ok=true,o="";m.I.forEach((it,k)=>{const s=sel.has(k),c=!!it.c;if(s!=c)ok=false;o+=`<div>${s&&c?"✅ Right:":s?"❌ Shouldn't be selected:":c?"⚠ Missed:":"✓ Correctly left out:"} ${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function tr(k,j){ch[k]=j;M[cur].C.forEach((c,x)=>$(`c${k}_${x}`).classList.toggle("sel",x==j))}
+function ckt(){const m=M[cur];if(m.I.some((_,k)=>ch[k]==null)){$("fb").innerHTML=`<div class=fb>Pick a category for every item.</div>`;return}
+let ok=true,o="";m.I.forEach((it,k)=>{const r=ch[k]==it.a;if(!r)ok=false;o+=`<div>${r?"✅":"❌"} ${r?"":"Should be "+m.C[it.a]+". "}${it.e}</div>`});
+$("fb").innerHTML=`<div class=fb>${o}${ok?"":"<div><b>Adjust and check again.</b></div>"}</div>`;if(ok)win()}
+function mq(){const m=M[cur];if(mi>=m.Q.length){$("mq").innerHTML=`<div class=card>You got ${msc}/${m.Q.length}.</div>`;return win()}
+const q=m.Q[mi];$("mq").innerHTML=`<div class=card><h2>${q.q}</h2>${q.o.map((o,k)=>`<button class=opt onclick="mp(${k},this)">${o}</button>`).join("")}${m.g=="Foundation"?`<button class=g id=hb onclick="hint()">💡 Hint (-5 XP)</button><div id=hn></div>`:""}<div id=fb></div></div>`}
+function hint(){$("hn").innerHTML=`<div class=fb>💡 ${M[cur].why}</div>`;$("hb").remove();S.xp=Math.max(0,S.xp-5);save()}
+function mp(k,el){const q=M[cur].Q[mi];if(document.querySelector(".opt.ok,.opt.no"))return;const ok=k==q.a;if(ok)msc++;el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");$("fb").innerHTML=`<div class=fb>${ok?"✅ Correct.":"❌ Not quite."} ${q.e}${q.r?`<pre>${q.r}</pre>`:""}</div><button onclick="mi++;mq()">Next</button>`}
+function fcs(){const m=M[cur];if(fi>=m.F.length){$("mq").innerHTML=`<div class=card>Deck done.</div>`;return win()}const c=m.F[fi];
+$("mq").innerHTML=`<div class=card style="cursor:pointer" onclick="$('bk').hidden=false"><div class=mu>Card ${fi+1}/${m.F.length}. Answer aloud, then tap to flip.</div><h2>${c.f}</h2><div id=bk hidden><b>${c.b}</b></div></div><button onclick="fi++;fcs()">Next card</button>`}
+function win(){if(won)return;won=true;const first=!S.done[cur];if(first){S.done[cur]=1;S.xp+=50;S.rv[cur]={s:0,d:ad(1)}}save();const m=M[cur];
+$("win").innerHTML=`<div class="card win"><b>✅ Mission complete!${first?" +50 XP":""}</b><p>${m.why}</p>${m.say?`<div class=say>🎤 Say it in the interview: ${m.say}</div>`:""}<button onclick="openM(${cur+1})">${cur+1<M.length?"Next mission":"Back to missions"}</button></div>`;$("win").scrollIntoView({behavior:"smooth"})}
+home();
+</script></body></html>
