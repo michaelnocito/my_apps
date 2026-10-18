@@ -132,6 +132,6 @@ if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");$("fb").innerH
 function fcs(){const m=M[cur];if(fi>=m.F.length){$("mq").innerHTML=`<div class=card>Deck done.</div>`;return win()}const c=m.F[fi];
 $("mq").innerHTML=`<div class=card style="cursor:pointer" onclick="$('bk').hidden=false"><div class=mu>Card ${fi+1}/${m.F.length}. Answer aloud, then tap to flip.</div><h2>${c.f}</h2><div id=bk hidden><b>${c.b}</b></div></div><button onclick="fi++;fcs()">Next card</button>`}
 function win(){if(won)return;won=true;const first=!S.done[cur];if(first){S.done[cur]=1;S.xp+=50;S.rv[cur]={s:0,d:ad(1)}}save();const m=M[cur];
-$("win").innerHTML=`<div class="card win"><b>✅ Mission complete!${first?" +50 XP":""}</b><p>${m.why}</p>${m.say?`<div class=say>🎤 Say it in the interview: ${m.say}</div>`:""}<button onclick="openM(${cur+1})">${cur+1<M.length?"Next mission":"Back to missions"}</button></div>`;$("win").scrollIntoView({behavior:"smooth"})}
+$("win").innerHTML=`<div class="card win"><b>✅ Mission complete!${first?" +50 XP":""}</b><p>${m.why}</p>${m.say?`<div class=say>🎤 Say it out loud: ${m.say}</div>`:""}<button onclick="openM(${cur+1})">${cur+1<M.length?"Next mission":"Back to missions"}</button></div>`;$("win").scrollIntoView({behavior:"smooth"})}
 home();
 </script></body></html>
