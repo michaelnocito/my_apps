@@ -1,6 +1,8 @@
 # My Learning Apps
 
-Free, self-contained learning apps. Each one is a single HTML page that runs in your browser. No account, no install.
+These are all experimental. Desinged to be small, digestable learning apps. 
+Free, self-contained learning apps. 
+Each one is a single HTML page that runs in your browser. No account, no install.
 
 **Start here:** `index.html` (the menu of all apps)
 
