@@ -1,6 +1,6 @@
 # My Learning Apps
 
-These are all experimental. Desinged to be small, digestable learning apps. 
+These are all experimental. Designed to be small, digestible learning apps. 
 Free, self-contained learning apps. 
 Each one is a single HTML page that runs in your browser. No account, no install.
 
