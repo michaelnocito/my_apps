@@ -33,7 +33,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}td{border-bottom:1px so
 const L=[
 {d:"Day 1 · Sunday — Foundations",t:"What an API is",s:[
 ["The big idea","An <b>API</b> (Application Programming Interface) is a set of rules that lets one piece of software ask another for data or actions. Think of a restaurant: you (the <b>client</b>) order from the menu, the kitchen (the <b>server</b>) does the work, and the waiter (the API) carries requests and responses back and forth."],
-["Why it matters for our example Car Dealership","Dealership software lives in many systems: CRM, DMS (dealer management system), inventory, texting/communication tools. APIs are how those systems share customer, vehicle, and appointment data without anyone retyping it. A Technical Setup Specialist connects a dealer's systems and makes sure data flows correctly. <span class=mu>(Check the organization's site tonight for exactly which systems they integrate with.)</span>"],
+["Why it matters for our example Car Dealership","Dealership software lives in many systems: CRM, DMS (dealer management system), inventory, texting/communication tools. APIs are how those systems share customer, vehicle, and appointment data without anyone retyping it. An integration specialist connects a dealer's systems and makes sure data flows correctly. <span class=mu>(Check the organization's site tonight for exactly which systems they integrate with.)</span>"],
 ["Endpoints","An <b>endpoint</b> is a specific URL where one kind of data lives.<pre>https://api.example.com/v1/customers\nhttps://api.example.com/v1/customers/123</pre>The base URL is the building; the endpoint path is the room. <code>/customers</code> = the list, <code>/customers/123</code> = one customer."],
 ["Requests & responses","Every call has two halves.<br><b>Request:</b> method + endpoint + headers (metadata like your auth key) + optional body (data you send).<br><b>Response:</b> status code + headers + body (usually JSON)."]],
 q:[{q:"In the restaurant analogy, what is the API?",o:["The kitchen","The waiter carrying requests and responses","The customer","The menu prices"],a:1,e:"The API is the go-between. The kitchen is the server."},
@@ -42,7 +42,7 @@ q:[{q:"In the restaurant analogy, what is the API?",o:["The kitchen","The waiter
 {d:"Day 1 · Sunday — Foundations",t:"HTTP methods",s:[
 ["The four verbs","Methods say what you want to do. They map to CRUD:<table><tr><td><b>GET</b></td><td>Read data</td></tr><tr><td><b>POST</b></td><td>Create something new</td></tr><tr><td><b>PUT / PATCH</b></td><td>Update (PUT replaces all, PATCH changes some fields)</td></tr><tr><td><b>DELETE</b></td><td>Remove</td></tr></table>"],
 ["Examples","<pre>GET    /customers/123   → fetch customer 123\nPOST   /customers       → create a customer\nPATCH  /customers/123   → change their phone number\nDELETE /customers/123   → remove them</pre>GET never changes data, which is why it's the safe one to use when troubleshooting."],
-["Interview tip","If asked <i>\"what's the difference between GET and POST?\"</i>: GET retrieves data and sends no body; POST sends data in a body to create something. Add that you'd use GET to verify what a system holds before and after a sync."]],
+["Quick tip","If asked <i>\"what's the difference between GET and POST?\"</i>: GET retrieves data and sends no body; POST sends data in a body to create something. Add that you'd use GET to verify what a system holds before and after a sync."]],
 q:[{q:"Which method creates a new record?",o:["GET","POST","DELETE","HEAD"],a:1,e:"POST = create."},
 {q:"A dealer's customer changed only their email. Best method?",o:["POST","GET","PATCH","DELETE"],a:2,e:"PATCH updates just the changed fields."},
 {q:"You want to check what the other system holds without risking changes. Use…",o:["GET","PUT","POST","DELETE"],a:0,e:"GET is read-only."}]},
@@ -50,7 +50,7 @@ q:[{q:"Which method creates a new record?",o:["GET","POST","DELETE","HEAD"],a:1,
 ["Reading JSON","You already read JSON well. The rules: <code>{}</code> object, <code>[]</code> list, keys in quotes, values are text, numbers, true/false, null, or more objects.<pre>{\n \"firstName\": \"Dana\",\n \"phone\": \"856-555-0142\",\n \"vehicle\": {\"make\":\"Honda\",\"year\":2022},\n \"tags\": [\"service\",\"vip\"]\n}</pre>"],
 ["Field mapping","Two systems name things differently. <b>Mapping</b> says which source field feeds which destination field.<pre>{\n \"mappings\": [\n  {\"source\":\"first_name\",\"target\":\"firstName\"},\n  {\"source\":\"cell\",\"target\":\"phone\"}\n ]\n}</pre>This is the skill used for multiple product integration."],
 ["Where mappings break","Common causes: a field name typo or changed name, wrong data type (text vs number), date formats (<code>10/04/2026</code> vs <code>2026-10-04</code>), required field missing or null, a value too long, and extra/missing nesting levels."],
-["Troubleshooting habit","Compare <b>source value → mapping → destination value</b> for one real record. Find the first place it goes wrong. That's the same reconcile-against-source discipline from your migration work, and it's a great thing to say in the interview."]],
+["Troubleshooting habit","Compare <b>source value → mapping → destination value</b> for one real record. Find the first place it goes wrong. That's the same reconcile-against-source discipline from your migration work, and it's a great thing to say out loud."]],
 q:[{q:"Source sends <code>cell</code>, destination expects <code>phone</code>. What fixes it?",o:["Change the status code","A mapping from cell → phone","Use DELETE","Nothing, it's automatic"],a:1,e:"That's exactly what a mapping does."},
 {q:"Destination rejects a date. Source is <code>10/04/2026</code>. Likely issue?",o:["Date format mismatch","Wrong HTTP method","Server is down","Missing API key"],a:0,e:"Formats must match what the destination expects, often ISO <code>YYYY-MM-DD</code>."},
 {q:"A record syncs with an empty phone. First step?",o:["Restart everything","Trace that one record: source → mapping → destination","Delete the record","Ask for a new API key"],a:1,e:"Trace one record end to end to find where it's lost."}]},
@@ -70,14 +70,14 @@ q:[{q:"Valid key, but the user lacks permission for that endpoint:",o:["401","40
 {q:"Sync fires 10,000 calls a minute and fails:",o:["404","422","429","201"],a:2,e:"429 = rate limited."},
 {q:"A 500 error means…",o:["Your JSON is wrong","The server had a problem","Wrong password","Duplicate record"],a:1,e:"5xx = server-side."},
 {q:"Syntax is valid but the phone number fails validation:",o:["422","301","204","401"],a:0,e:"422: understood, but data is invalid."}]},
-{d:"Day 3 · Tuesday — Interview Ready",t:"Troubleshooting scenarios",s:[
+{d:"Day 3 · Tuesday — Practice",t:"Troubleshooting scenarios",s:[
 ["A repeatable method","1) <b>Reproduce</b> with one record. 2) <b>Read</b> the status code and error message. 3) <b>Classify</b>: auth, request, data, or server? 4) <b>Check</b> endpoint, keys, mapping. 5) <b>Fix</b> and retest with that record. 6) <b>Document</b> and tell the customer what happened."],
 ["Say it out loud","\"I start with the status code to see whether it's my side or theirs. Then I trace one record from source through the mapping to the destination.\" That answer shows process, not just terminology."]],
 q:[{q:"A dealer's leads aren't appearing in the CRM. Status is 200 but fields are blank. Most likely?",o:["Auth failure","Mapping/field-name mismatch","Server outage","Rate limit"],a:1,e:"200 means the call worked, so look at the mapping."},
 {q:"Everything returns 401 right after a dealer rotated their password/key.",o:["Update credentials in the integration","Rewrite the mapping","Switch to DELETE","Wait for 5xx to clear"],a:0,e:"Stale credentials. Update and retest."},
 {q:"Intermittent 503 errors for 10 minutes, then fine. Best response?",o:["Rebuild mapping","Retry with backoff, check the provider's status, document","Delete the integration","Blame the customer"],a:1,e:"503 is usually temporary. Retry, verify, document."},
 {q:"A call to <code>/v1/custmers</code> returns 404. What first?",o:["Re-issue keys","Check the endpoint spelling","Restart the server","Add fields"],a:1,e:"A typo in the path gives a 404."}]},
-{d:"Day 3 · Tuesday — Interview Ready",t:"Flashcards & mock interview",fc:[
+{d:"Day 3 · Tuesday — Practice",t:"Flashcards & mock Q&A",fc:[
 ["What is an API?","A set of rules letting one system request data or actions from another, e.g. a CRM sending customer records to another tool."],
 ["What is an endpoint?","A specific URL for one resource, like /customers or /appointments/42."],
 ["401 vs 403?","401: not authenticated (bad or missing credentials). 403: authenticated but not permitted."],
@@ -92,7 +92,7 @@ q:[{q:"A dealer's leads aren't appearing in the CRM. Status is 200 but fields ar
 let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem("apiC"))||S}catch(e){}
 const save=()=>{try{localStorage.setItem("apiC",JSON.stringify(S))}catch(e){}};
 const $=document.getElementById("app");
-function home(){let h=`<div class=top><h1>API Crash Course</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>For interview prep and optimal learning. Do a day at a time: tap a lesson, read the cards, answer the quiz.</div>`;
+function home(){let h=`<div class=top><h1>API Crash Course</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>For focused learning. Do a day at a time: tap a lesson, read the cards, answer the quiz.</div>`;
 const n=Object.keys(S.done).length;h+=`<div class=bar><i style="width:${n/L.length*100}%"></i></div><div class=mu>${n} of ${L.length} lessons complete</div>`;
 let last="";L.forEach((l,i)=>{if(l.d!=last){h+=`<div class=day>${l.d}</div>`;last=l.d}
 h+=`<div class="card les ${S.done[i]!=null?"done":""}" onclick="start(${i})"><div class=dot>${S.done[i]!=null?"✓":i+1}</div><div><b>${l.t}</b><div class=mu>${l.fc?l.fc.length+" flashcards":l.s.length+" cards · "+l.q.length+" questions"}${S.done[i]!=null?" · best "+S.done[i]+"%":""}</div></div></div>`});
