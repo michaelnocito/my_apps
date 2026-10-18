@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Endpoints Deep Dive</title>
+<html lang="en"><head><meta charset="utf-8"><title>Endpoints Deep Dive</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#0891b2;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
@@ -68,26 +68,26 @@ T(`Both calls return 404`,`<pre>GET /v1/customer/310\n→ 404 {"error":"route_no
 {q:`What's the difference?`,o:[`None`,`The first path doesn't exist; the second path is fine but the record doesn't`,`Both are auth errors`,`The second is a server crash`],a:1,e:`Read the body, not just the number. One is a bad route, one is a missing record.`},
 {q:`Fix for the first call?`,o:[`Retry`,`Use the plural: <code>/customers/310</code>`,`New key`,`Switch to POST`],a:1,e:`A typo or singular/plural mistake in the path.`},
 {q:`For the second, what do you check?`,o:[`That ID 99999 exists in this environment (IDs differ between sandbox and production)`,`The mapping`,`The rate limit`,`The color theme`],a:0,e:`Wrong ID, or the right ID in the wrong environment.`},
-[`Say it in the interview`,`"A 404 can mean the route or the record. I read the error body, check the path against the docs, then confirm the ID exists in that environment."`]]},
+[`Say it out loud`,`"A 404 can mean the route or the record. I read the error body, check the path against the docs, then confirm the ID exists in that environment."`]]},
 {d:"Tickets",t:"Ticket 2: Method not allowed",s:[
 T(`Updates fail with 405`,`The integration updates a customer's phone:<pre>POST /v2/customers/310\n→ 405 Method Not Allowed\nAllow: GET, PATCH, DELETE</pre>`),
 {q:`What does 405 mean?`,o:[`The endpoint doesn't exist`,`The endpoint exists but not for that method`,`Bad key`,`Rate limit`],a:1,e:`Right URL, wrong verb.`},
 {q:`Correct fix?`,o:[`Use <code>PATCH /v2/customers/310</code>`,`Use DELETE`,`Add a header`,`Change version`],a:0,e:`The Allow header lists valid methods. PATCH updates a record.`},
 {q:`Where can you confirm allowed methods?`,o:[`The Allow header and the docs`,`Guessing`,`The dealer`,`Logs only`],a:0,e:`Check both.`},
-[`Say it in the interview`,`"A 405 told me the URL was right but the method wasn't. The Allow header listed PATCH, so I switched from POST."`]]},
+[`Say it out loud`,`"A 405 told me the URL was right but the method wasn't. The Allow header listed PATCH, so I switched from POST."`]]},
 {d:"Tickets",t:"Ticket 3: Sandbox go-live",s:[
 T(`"Everything succeeds" but nothing is live`,`Go-live was yesterday. The dealer's live CRM shows no new leads, yet logs are green:<pre>POST https://api-sandbox.dealerco.com/v2/leads\n→ 201 Created</pre>`),
 {q:`What's wrong?`,o:[`The mapping`,`The integration still points at the sandbox base URL`,`Pagination`,`Case`],a:1,e:`201s from sandbox are real responses from the wrong place.`},
 {q:`How do you confirm and fix?`,o:[`Reboot`,`Check the config's base URL and keys, switch both to production, test one live record, and verify in the live UI`,`Retry`,`Wait`],a:1,e:`Switch URL and credentials together, then verify end to end.`},
 {q:`What about leads sent to sandbox since go-live?`,o:[`Forget them`,`Re-send them from the source, watching for duplicates`,`Delete the dealer`,`Edit sandbox`],a:1,e:`Recover the missed records and reconcile counts.`},
-[`Say it in the interview`,`"I never trust a 2xx alone. I verify the base URL is production and confirm the record in the live system."`]]},
+[`Say it out loud`,`"I never trust a 2xx alone. I verify the base URL is production and confirm the record in the live system."`]]},
 {d:"Tickets",t:"Ticket 4: Broken query string",s:[
 T(`Dealer lookup returns the wrong results`,`<pre>GET /v2/dealers?name=Smith &amp; Sons&amp;created_after=10/04/2026</pre>Result: hundreds of unrelated dealers.`),
 {q:`What happened to the name filter?`,o:[`Nothing`,`The & split it: name became "Smith" and " Sons" became its own parameter`,`The key expired`,`It's a POST issue`],a:1,e:`An unencoded ampersand ends the parameter.`},
 {q:`Correct encoding of the name?`,o:[`<code>Smith &amp; Sons</code>`,`<code>Smith%20%26%20Sons</code>`,`<code>Smith&&Sons</code>`,`<code>"Smith"</code>`],a:1,e:`Space is %20 and & is %26.`},
 {q:`What about the date?`,o:[`Fine as is`,`Use ISO: <code>2026-10-04</code>`,`Use words`,`Remove it`],a:1,e:`APIs usually expect ISO 8601 dates.`},
-[`Say it in the interview`,`"The ampersand in the dealer name broke the query string. I URL-encoded it and switched the date to ISO format."`]]},
-{d:"Interview",t:"Rapid-fire flashcards",fc:[
+[`Say it out loud`,`"The ampersand in the dealer name broke the query string. I URL-encoded it and switched the date to ISO format."`]]},
+{d:"Review",t:"Rapid-fire flashcards",fc:[
 [`Base URL vs endpoint?`,`Base URL: server plus version. Endpoint: the path to one resource or collection.`],
 [`Path vs query parameter?`,`Path identifies the resource (/customers/310). Query refines the request (?status=active).`],
 [`404 vs 405?`,`404: not found (route or record). 405: the method isn't allowed on that endpoint.`],
@@ -97,7 +97,7 @@ T(`Dealer lookup returns the wrong results`,`<pre>GET /v2/dealers?name=Smith &am
 [`Common pagination parameters?`,`page, limit, offset, or a cursor/next link. Check the docs.`],
 [`What do you check first when an endpoint call fails?`,`Status code and error body, then the URL (spelling, version, environment), then method, then auth, then the payload.`],
 [`Question: explain an endpoint to a non-technical customer.`,`"It's the specific address in the other system where a certain kind of data lives, like customers or appointments."`],
-[`Ask them`,`Which endpoints do you use most in setups? How do you handle versions and sandbox testing? Where do customers usually get stuck?`]]}
+[`Questions to ask`,`Which endpoints do you use most in setups? How do you handle versions and sandbox testing? Where do customers usually get stuck?`]]}
 ];
 let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};

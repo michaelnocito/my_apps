@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>SaaS Implementation Lab</title>
+<html lang="en"><head><meta charset="utf-8"><title>SaaS Implementation Lab</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#e11d74;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
@@ -43,7 +43,7 @@ const M=[
 {g:"Process",t:"Scope and requirements",ty:"mc",br:`<b>Scope</b> is what's agreed in the statement of work (SOW). New asks go through a <b>change request</b>: describe it, estimate the impact on time, cost, and risk, and let the sponsor decide.`,Q:[
 {q:`Mid-project, the customer asks for a custom report that isn't in the SOW. Best response?`,o:[`Build it quietly`,`Refuse flatly`,`Log a change request with impact, and let the sponsor decide`,`Promise it "later" with no record`],a:2,e:`Change control keeps the project honest and gives the sponsor a real choice.`},
 {q:`The customer demands go-live in 4 weeks. Your plan says 10. Best approach?`,o:[`Agree and hope`,`Show dependencies and what could fit in 4 weeks, such as a phased launch`,`Say it's impossible`,`Quietly cut testing`],a:1,e:`Offer options grounded in the plan. Never cut testing silently.`},
-{q:`A requirement says "reports should be easy". Next step?`,o:[`Start building`,`Ask which reports, for whom, and what "easy" means, then write acceptance criteria`,`Skip it`,`Ask them to re-sign`],a:1,e:`Vague requirements become disputes. Make them testable.`}],why:`Defined scope plus change control protects both sides.`},
+{q:`A requirement says "reports should be easy". Next step?`,o:[`Start building`,`Ask which reports, for whom, and what "easy" means, then write acceptance criteria`,`Skip it`,`Questions to ask to re-sign`],a:1,e:`Vague requirements become disputes. Make them testable.`}],why:`Defined scope plus change control protects both sides.`},
 {g:"Data migration",t:"Migration approach",ty:"mc",br:`Data migration is the highest-risk workstream. The pattern: <b>profile → cleanse → map → trial load → reconcile → repeat → final load</b>.`,Q:[
 {q:`You receive the customer's source data file. First step?`,o:[`Load it`,`Profile it: duplicates, blanks, formats, volumes`,`Delete old rows`,`Email it around`],a:1,e:`Know the data's problems before you map.`},
 {q:`Why run trial loads before the final load?`,o:[`To bill more`,`To find mapping issues early and time the real load`,`They're optional`,`To train users`],a:1,e:`Rehearsals expose problems while they're cheap to fix.`},
@@ -86,7 +86,7 @@ const M=[
 {q:`A deliverable will slip two weeks. Best message?`,o:[`Wait until it's done`,`Status, cause, impact, new plan, and what you need, sent early`,`Blame the customer`,`A vague update`],a:1,e:`Early, specific, and with a plan.`},
 {q:`When do you escalate?`,o:[`Never`,`When a risk threatens date or budget and you can't resolve it at your level, early, with options`,`Only after failure`,`For every small issue`],a:1,e:`Escalate with options, not surprises.`},
 {q:`The customer sends an angry email about a bug. Best first step?`,o:[`Argue`,`Acknowledge, share facts and a plan, and offer a call`,`Ignore it`,`Forward to everyone`],a:1,e:`Lower the temperature, then solve.`}],why:`Specific, early communication builds trust.`},
-{g:"Communication",t:"Vocabulary check",ty:"mc",br:`Quick terms that come up in implementation interviews.`,Q:[
+{g:"Communication",t:"Vocabulary check",ty:"mc",br:`Quick terms that come up in implementation work.`,Q:[
 {q:`UAT is…`,o:[`Customer testing against agreed requirements before go-live`,`A server type`,`A pricing tier`,`Final training`],a:0,e:`User acceptance testing.`},
 {q:`Cutover is…`,o:[`A software bug`,`The switch from the old system to the new one, including the final data load`,`A meeting`,`A contract clause`],a:1,e:`The actual transition moment.`},
 {q:`A SOW defines…`,o:[`Server settings`,`Agreed scope, deliverables, and responsibilities`,`Team salaries`,`User passwords`],a:1,e:`Statement of work.`},

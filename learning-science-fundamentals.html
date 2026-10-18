@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Learning Science: Fundamentals</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#0d9488;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:560px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:19px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+.bar{height:8px;background:var(--code);border-radius:9px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--pr);transition:width .3s}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);margin-top:8px;font-weight:500}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}
+pre,code{background:var(--code);border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+code{padding:1px 5px}pre{padding:10px;overflow-x:auto;margin:8px 0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+.fc{min-height:130px;display:grid;place-items:center;text-align:center;cursor:pointer}
+table{border-collapse:collapse;width:100%;font-size:14px}td{border-bottom:1px solid var(--bd);padding:6px 4px;vertical-align:top}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+</style></head><body><div id="app"></div>
+<script>
+const TITLE="Learning Science: Fundamentals",SUB="The fundamentals of how people learn, from cognition to the brain, with a spotlight on memory and retention. Simplified educational summaries, not medical advice.",KEY="lsFund";
+const L=[
+{d:"Part 1 · Foundations",t:"What learning is",s:[
+["Learning vs performance","<b>Learning</b> is a relatively lasting change in what you know or can do. <b>Performance</b> is how well you do right now. Smooth, fast practice can lift performance today while teaching little that lasts."],
+["Why the difference matters","Conditions that feel hard, such as spacing and self-testing, often slow performance during study but improve long-term retention. Researchers call these <i>desirable difficulties</i>."],
+["Thinking about thinking","<b>Metacognition</b> is awareness and control of your own learning: judging what you know, choosing strategies, and checking results. Strong learners monitor and adjust instead of just logging hours."]],
+q:[{q:"Which best describes learning?",o:["Doing well during practice","A relatively lasting change in knowledge or skill","Feeling confident","Finishing a lesson"],a:1,e:"Learning is durable change, not momentary performance."},
+{q:"Practice feels smooth and fast. What can you conclude?",o:["You learned it well","Performance is good now; retention is unknown","You'll remember it for years","Nothing was learned"],a:1,e:"Easy practice can inflate performance without lasting learning."},
+{q:"Metacognition is…",o:["Memorizing faster","Monitoring and adjusting your own learning","A type of memory","A brain region"],a:1,e:"It is awareness and control of your own learning."}]},
+{d:"Part 1 · Foundations",t:"Working memory & load",s:[
+["A small workspace","<b>Working memory</b> holds and manipulates information for seconds. The classic estimate of 7 items has been revised; many researchers now suggest about 4 chunks, though estimates vary by task."],
+["Chunks and prior knowledge","A <b>chunk</b> is a meaningful unit. Experts handle more because their knowledge packs details into bigger chunks, like a chess master seeing one pattern where a novice sees many pieces."],
+["Cognitive load","<b>Intrinsic load</b> comes from the material's own complexity. <b>Extraneous load</b> comes from poor presentation. Good teaching trims extraneous load and builds in steps so working memory isn't overwhelmed."]],
+q:[{q:"Why do experts handle complex material more easily?",o:["Bigger working memory","Their knowledge packs details into larger chunks","They study longer","Faster neurons"],a:1,e:"Organized prior knowledge works like bigger chunks."},
+{q:"A cluttered, confusing slide mainly adds…",o:["Intrinsic load","Extraneous load","Consolidation","Priming"],a:1,e:"Extraneous load is unneeded effort caused by presentation."},
+{q:"Working memory is best described as…",o:["Permanent storage","A small, short-lived workspace","Sleep memory","Muscle memory"],a:1,e:"It is a limited workspace, not long-term storage."}]},
+{d:"Part 1 · Foundations",t:"Attention & focus",s:[
+["The gateway to memory","What you don't attend to is poorly encoded. Attention is selective and limited, so it acts as the front door to learning."],
+["The cost of switching","Task-switching research shows costs in speed and errors each time you change tasks. Several studies link heavy media multitasking during study with weaker learning, though findings vary."],
+["Working with attention","Try short focused blocks, one task at a time, distractions out of reach, and a specific question to answer while you read. Breaks help, and individuals differ."]],
+q:[{q:"Information you barely attend to is usually…",o:["Well encoded","Poorly encoded","Stored automatically","Consolidated first"],a:1,e:"Attention gates encoding."},
+{q:"Task switching typically…",o:["Saves time","Adds time and errors","Improves memory","Has no cost"],a:1,e:"Switching has measurable costs."},
+{q:"Which is a good focus tactic?",o:["Several tabs at once","One task per block with a question to answer","Background TV","Constant notifications"],a:1,e:"Single-task blocks with a goal support attention."}]},
+{d:"Part 2 · The brain and learning",t:"Neurons, synapses, plasticity",s:[
+["Neurons and synapses","The human brain has on the order of 86 billion neurons. They communicate across <b>synapses</b>, tiny gaps where one neuron releases chemical <b>neurotransmitters</b> that influence the next."],
+["Learning changes connections","<b>Plasticity</b> is the brain's capacity to change. Repeated co-activation can strengthen a synapse, a process called <b>long-term potentiation (LTP)</b>. 'Cells that fire together wire together' is a handy, simplified summary."],
+["Structure follows use","Learning can alter synaptic strength, add or prune connections, and with long practice affect white matter such as myelin, which speeds signals. How much new neuron growth occurs in adult humans is still debated."]],
+q:[{q:"A synapse is…",o:["A type of memory","The junction where neurons communicate chemically","A brain lobe","A hormone"],a:1,e:"Neurotransmitters cross the synaptic gap."},
+{q:"LTP refers to…",o:["Lasting strengthening of a synapse after repeated activation","Loss of neurons","Sleep stage","A memory test"],a:0,e:"LTP is a key model of activity-dependent strengthening."},
+{q:"'Cells that fire together wire together' is…",o:["An exact law","A simplified summary of activity-dependent strengthening","A myth","About sleep"],a:1,e:"Useful shorthand, not the full picture."}]},
+{d:"Part 2 · The brain and learning",t:"Memory systems in the brain",s:[
+["The hippocampus","The <b>hippocampus</b> is crucial for forming new episodic and factual memories. A well-known patient, H.M., lost most of both hippocampi in surgery; he couldn't form new such memories but could still learn motor skills."],
+["Cortex and other regions","Over time, memories are thought to be stored across the <b>cortex</b>. The <b>prefrontal cortex</b> supports working memory and control. The <b>amygdala</b> tags emotional significance. The <b>cerebellum</b> and <b>basal ganglia</b> support skills and habits."],
+["Networks, not boxes","These roles are simplified; regions work as networks. Different memory types depend on different circuits, which is why facts and skills can be affected separately."]],
+q:[{q:"Which structure is most tied to forming new episodic memories?",o:["Cerebellum","Hippocampus","Amygdala only","Spinal cord"],a:1,e:"Hippocampal damage disrupts new episodic and factual memories."},
+{q:"H.M.'s case suggested that…",o:["Memory is one system","Different memory types rely on different systems","Skills can't be learned","Memory lives in one spot"],a:1,e:"Spared motor learning pointed to separate systems."},
+{q:"Which region most supports working memory and control?",o:["Prefrontal cortex","Cerebellum","Hippocampus","Brainstem"],a:0,e:"The prefrontal cortex is central to holding and managing information."}]},
+{d:"Part 2 · The brain and learning",t:"Sleep, consolidation, chemistry",s:[
+["Two kinds of consolidation","<b>Synaptic consolidation</b> stabilizes changes in connections over hours. <b>Systems consolidation</b> gradually shifts memories from hippocampal dependence toward cortical networks over days to years."],
+["What sleep does","Research suggests deep slow-wave sleep supports consolidation, with the hippocampus replaying recent activity. Sleep loss is linked to poorer next-day encoding. Educational summary only; if sleep or memory problems worry you, talk to a clinician."],
+["Chemical signals","<b>Dopamine</b> signals reward and surprise (prediction errors) and supports motivation. <b>Acetylcholine</b> is tied to attention. Stress hormones can boost memory for emotional events, while prolonged stress can impair learning."]],
+q:[{q:"Systems consolidation refers to…",o:["Memory shifting from hippocampus toward cortex","Neurons dying","A study schedule","Forgetting"],a:0,e:"Memories become less hippocampus-dependent over time."},
+{q:"Which statement is best supported by research?",o:["Sleep after learning supports consolidation","Sleep erases learning","Sleep matters only for skills","Sleep has no effect"],a:0,e:"Evidence links sleep to stabilizing new memories."},
+{q:"A prediction error (outcome differs from expectation) is linked to…",o:["Dopamine-related learning signals","Vision only","Muscle growth","Nothing"],a:0,e:"Surprise drives learning updates, and dopamine is involved."}]},
+{d:"Part 3 · Memory & retention",t:"Types of memory",s:[
+["From senses to storage","Information moves from <b>sensory memory</b> (a fraction of a second) to working memory, and some becomes <b>long-term memory</b>, which has no known practical capacity limit."],
+["Explicit memory","<b>Episodic</b> memory is personal events (your last birthday dinner). <b>Semantic</b> memory is facts and concepts (Paris is in France). Both are explicit: you can consciously state them."],
+["Implicit memory","<b>Procedural</b> memory covers skills like riding a bike and often works without conscious recall. <b>Priming</b> is another implicit effect. Skills need practice, not just explanation."]],
+q:[{q:"Knowing that Paris is in France is…",o:["Episodic","Semantic","Procedural","Priming"],a:1,e:"Facts and concepts are semantic memory."},
+{q:"Remembering your last birthday dinner is…",o:["Episodic","Semantic","Procedural","Sensory"],a:0,e:"Personal events are episodic."},
+{q:"Riding a bike relies mostly on…",o:["Semantic memory","Procedural memory","Sensory memory","Episodic memory"],a:1,e:"Skills are procedural and often implicit."}]},
+{d:"Part 3 · Memory & retention",t:"Encoding & forgetting",s:[
+["Encoding depth","Thinking about <b>meaning</b> (why, how, what it connects to) produces stronger memories than surface processing like copying wording. This is the levels-of-processing idea."],
+["The forgetting curve","Ebbinghaus's 1880s experiments showed fast early forgetting that slows over time. Exact rates vary by material, but the shape is robust."],
+["Why we forget","Causes include weak encoding, <b>decay</b> of unused traces, <b>interference</b> (similar memories compete), and <b>retrieval failure</b> (stored, but the cue is missing). Not recalling something doesn't always mean it's gone."]],
+q:[{q:"Which approach encodes more deeply?",o:["Copying notes word for word","Explaining how an idea connects to what you know","Rereading once","Highlighting"],a:1,e:"Meaning-based processing builds stronger memories."},
+{q:"Interference means…",o:["Similar memories compete","Neurons fade","Sleep loss","No encoding"],a:0,e:"Similar items can disrupt recall of each other."},
+{q:"You can't recall a name but recognize it in a list. This likely shows…",o:["Total loss","A retrieval problem, not total loss","No encoding","Priming only"],a:1,e:"Recognition success suggests the memory exists."}]},
+{d:"Part 3 · Memory & retention",t:"Retrieval & spacing",s:[
+["Retrieval practice","Pulling information out of memory strengthens it more than restudying. This is the <b>testing effect</b>, and it helps even when answers are wrong, if feedback follows."],
+["Spacing and interleaving","The <b>spacing effect</b>: spreading practice over time beats cramming for long-term retention. <b>Interleaving</b> mixes related problem types, which feels harder but improves choosing the right method."],
+["Why it may work","Retrieval after a delay is effortful, which is thought to strengthen the memory and its cues. Retrieved memories may also become briefly flexible before re-stabilizing (<b>reconsolidation</b>), an area still under study."]],
+q:[{q:"The testing effect says…",o:["Tests cause anxiety","Retrieving beats restudying for retention","Rereading is best","Notes are enough"],a:1,e:"Active retrieval strengthens memory."},
+{q:"Which schedule fits spacing?",o:["One long session","Reviews at growing gaps (day 1, 3, 7, 14)","Only the night before","Daily rereading"],a:1,e:"Growing gaps spread retrieval over time."},
+{q:"Interleaving mostly improves…",o:["Speed on one problem type","Choosing the right method across problem types","Sleep","Attention span"],a:1,e:"Mixed practice builds discrimination."}]},
+{d:"Part 4 · Putting it to work",t:"Illusions & your plan",s:[
+["The fluency illusion","Rereading and highlighting feel productive because material becomes familiar. <b>Familiarity is not recall.</b> People often overestimate what they know, so test yourself to calibrate."],
+["Myths to treat carefully","Matching teaching to a self-reported 'learning style' (visual, auditory) has weak evidence; using several formats can help everyone. 'We use only 10% of our brain' is a myth."],
+["A simple learning loop","<b>1</b> Set a specific goal. <b>2</b> Learn in small, focused chunks. <b>3</b> Recall from a blank page. <b>4</b> Check and fix. <b>5</b> Space your reviews. <b>6</b> Sleep. <b>7</b> Apply it to a real problem."]],
+q:[{q:"Rereading feels effective mostly because of…",o:["Deep learning","The fluency illusion","Spacing","Interleaving"],a:1,e:"Familiarity masquerades as knowing."},
+{q:"Best-supported approach regardless of preferred 'style'?",o:["Teach only in the preferred style","Retrieval practice with feedback","Highlighting","Skipping review"],a:1,e:"Retrieval practice works broadly."},
+{q:"Calibration means…",o:["How well confidence matches actual performance","Speed of recall","Hours studied","Sleep length"],a:0,e:"Good calibration means knowing what you do and don't know."}]},
+{d:"Part 4 · Putting it to work",t:"Reviewing old while learning new",s:[
+["One queue, not many schedules","Put every item in a single list (a spreadsheet or flashcard app) with a <b>next review</b> date. Each day, open the list and do everything due today. One queue replaces a separate schedule per topic."],
+["Cheap reviews, capped new material","A review is roughly 2 to 5 minutes of recall: answer from memory, then check. It is not re-studying. Add new items only after today's reviews are done, and if the queue backs up, pause new learning until it clears."],
+["Drop what sticks, reset what slips","If you recall an item effortlessly at day 14, push its next review out (skip day 30 or go to 60). Items you miss go back to a short interval. Once you pass about 10 active items, let software handle the intervals. Reviews get sparser over time, so the load grows slowly. Exact intervals are examples, not laws."]],
+q:[{q:"How should you organize reviews across many topics?",o:["A separate schedule per topic","One queue with next-review dates, doing what's due today","Review everything every day","Only before exams"],a:1,e:"A single dated queue keeps the routine simple."},
+{q:"A review session is best described as…",o:["Re-studying the whole lesson","A few minutes of recall, then checking","Rereading notes","Watching the material again"],a:1,e:"Reviews are short retrieval attempts, not re-study."},
+{q:"Your queue is backing up. Best move?",o:["Add more new material","Pause new learning until the queue clears","Skip reviews","Review only easy items"],a:1,e:"Protect reviews first; new items wait."},
+{q:"You recalled an item with no effort at day 14. What next?",o:["Reset it to day 1","Push the next review further out","Review it daily","Delete it"],a:1,e:"Easy recall earns a longer gap; misses go back to short gaps."}]},
+{d:"Part 4 · Putting it to work",t:"Flashcards",fc:[
+["Learning vs performance","Learning is lasting change. Performance is how you do right now, and it can mislead."],
+["Working memory capacity","A small workspace, roughly 4 chunks by many estimates."],
+["What is a synapse?","The junction where one neuron signals another using neurotransmitters."],
+["What is LTP?","Long-term potentiation: lasting strengthening of a synapse after repeated activation."],
+["Role of the hippocampus","Forming new episodic and factual memories."],
+["Systems consolidation","Gradual shift of memories from hippocampal dependence toward cortical networks."],
+["Episodic vs semantic","Episodic: personal events. Semantic: facts and concepts."],
+["Why we forget","Weak encoding, decay, interference, or retrieval failure."],
+["The testing effect","Retrieving information beats restudying for long-term retention."],
+["Spacing vs cramming","Spread practice at growing gaps beats cramming for retention."],
+["Dopamine and learning","Linked to reward and prediction errors that drive learning updates."],
+["The fluency illusion","Familiar material feels known, but familiarity is not recall."],
+["One-queue rule","Keep every item in one list with a next-review date, and do what's due today before adding new material."],
+["Drop or reset?","Effortless recall: push the next review out. A miss: back to a short interval."]]}
+];
+let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=document.getElementById("app");
+function home(){let h=`<div class=top><h1>${TITLE}</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=mu>${SUB}</div>`;
+const n=Object.keys(S.done).length;h+=`<div class=bar><i style="width:${n/L.length*100}%"></i></div><div class=mu>${n} of ${L.length} lessons complete</div>`;
+let last="";L.forEach((l,i)=>{if(l.d!=last){h+=`<div class=day>${l.d}</div>`;last=l.d}
+h+=`<div class="card les ${S.done[i]!=null?"done":""}" onclick="start(${i})"><div class=dot>${S.done[i]!=null?"✓":i+1}</div><div><b>${l.t}</b><div class=mu>${l.fc?l.fc.length+" flashcards":l.s.length+" cards · "+l.q.length+" questions"}${S.done[i]!=null?" · best "+S.done[i]+"%":""}</div></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset progress?')){S={xp:0,done:{}};save();home()}">Reset progress</button>`;$.innerHTML=h}
+let cur,step,score,ans;
+function start(i){cur=i;step=0;score=0;ans=false;card()}
+function card(){const l=L[cur];if(l.fc)return fc(0);
+if(step<l.s.length){const c=l.s[step];$.innerHTML=`<button class=back onclick="home()">← Back</button><div class=bar><i style="width:${step/(l.s.length+l.q.length)*100}%"></i></div><div class=card><h2>${c[0]}</h2>${c[1]}</div><button onclick="step++;card()">Continue</button>`;return}
+const qi=step-l.s.length;if(qi>=l.q.length)return fin();
+const q=l.q[qi];ans=false;
+$.innerHTML=`<button class=back onclick="home()">← Quit</button><div class=bar><i style="width:${step/(l.s.length+l.q.length)*100}%"></i></div><div class=card><div class=mu>Question ${qi+1} of ${l.q.length}</div><h2>${q.q}</h2>${q.o.map((o,k)=>`<button class=opt onclick="pick(${k},this)">${o}</button>`).join("")}<div id=fb></div></div>`}
+function pick(k,el){if(ans)return;ans=true;const q=L[cur].q[step-L[cur].s.length];
+const ok=k==q.a;if(ok){score++;S.xp+=10}el.classList.add(ok?"ok":"no");
+if(!ok)document.querySelectorAll(".opt")[q.a].classList.add("ok");
+document.getElementById("fb").innerHTML=`<div class=fb>${ok?"✅ Correct! +10 XP":"❌ Not quite."} ${q.e}</div><button onclick="step++;card()">Next</button>`;save()}
+function fin(){const l=L[cur],p=Math.round(score/l.q.length*100);S.done[cur]=Math.max(S.done[cur]||0,p);S.xp+=20;save();
+$.innerHTML=`<div class=card style="text-align:center"><h1>${p==100?"🏆":"🎉"} Lesson complete</h1><p>You scored ${score}/${l.q.length} (${p}%). +20 XP bonus.</p>${p<100?`<p class=mu>Retake it to lock it in.</p>`:""}</div><button onclick="start(${cur})" class=g>Retry</button><button onclick="home()">Back to course</button>`}
+function fc(i,flip){const l=L[cur],c=l.fc[i];if(i>=l.fc.length){S.done[cur]=100;S.xp+=30;save();return $.innerHTML=`<div class=card style="text-align:center"><h1>🏆 Course finished</h1><p>Come back to these flashcards in 1, 3, and 7 days. That's spaced repetition in action.</p></div><button onclick="home()">Back to course</button>`}
+$.innerHTML=`<button class=back onclick="home()">← Back</button><div class=bar><i style="width:${i/l.fc.length*100}%"></i></div><div class="card fc" onclick="fc(${i},${!flip})">${flip?`<div>${c[1]}</div>`:`<h2>${c[0]}</h2>`}</div><div class=mu style="text-align:center">${flip?"Did you recall it first?":"Say or write your answer, then tap to reveal."} Card ${i+1}/${l.fc.length}</div><button onclick="fc(${i+1})">${flip?"Next card":"Skip"}</button>`}
+home();
+</script></body></html>

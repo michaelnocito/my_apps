@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>SNES SQL Practice: Total Beginner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#e11d74;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7;--ck:#0000ff;--cs:#a31515;--cn:#098658;--cf:#795e26;--cc:#001080}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40;--ck:#569cd6;--cs:#ce9178;--cn:#b5cea8;--cf:#dcdcaa;--cc:#9cdcfe}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40;--ck:#569cd6;--cs:#ce9178;--cn:#b5cea8;--cf:#dcdcaa;--cc:#9cdcfe}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
+.mu{color:var(--mu);font-size:14px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);font-weight:500;margin-top:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}.opt.sel{border-color:var(--pr);background:rgba(225,29,116,.1)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cats button{width:auto;margin:0;padding:6px 10px;font-size:13px}.cats button.sel{background:var(--pr);color:#fff}
+.win{border:2px solid var(--ok)}.f{margin:12px 0;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+.fb div{margin:4px 0}.pl{padding:8px;margin:6px 0;border-radius:10px;background:var(--code);font-size:15px}
+.say{margin-top:8px;padding:10px;border-radius:10px;background:rgba(22,163,74,.14);border:1px solid var(--ok);font-size:15px}
+pre{background:var(--code);padding:8px;border-radius:8px;font-size:13px;overflow-x:auto;white-space:pre-wrap;margin:6px 0}code{background:var(--code);padding:1px 5px;border-radius:5px}table{width:100%;border-collapse:collapse;font-size:14px}td,th{border:1px solid var(--bd);padding:5px;text-align:left}
+textarea{width:100%;min-height:96px;font:14px/1.4 ui-monospace,Menlo,monospace;background:var(--card);color:var(--tx);border:2px solid var(--bd);border-radius:10px;padding:8px}.rs{overflow-x:auto;margin-top:8px}.rs table{font-size:13px;white-space:nowrap}.rs th{background:var(--code)}.ed{position:relative;background:var(--card);border:2px solid var(--bd);border-radius:10px}.ed pre,.ed textarea{margin:0;padding:10px;font:15px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-word;border:0;min-height:96px;background:none;box-sizing:border-box}.ed pre{position:relative;pointer-events:none;color:var(--tx)}.ed textarea{position:absolute;inset:0;width:100%;height:100%;resize:none;color:transparent;caret-color:var(--tx);outline:none;overflow:hidden;border-radius:10px}.tk{color:var(--ck);font-weight:600}.ts{color:var(--cs)}.tn{color:var(--cn)}.tf{color:var(--cf)}.tc{color:var(--cc)}.cats button{font-size:14px;padding:8px 11px}</style></head><body><div id="app"></div>
+<script>
+const KEY="snesSqlBeginner";
+const RAW=`ActRaiser	Action-Adventure	1991	5	5	2	2	1	5	N	Y
+ActRaiser 2	Platformer	1993	3	4	2	3	1	2	N	N
+Aero the Acro-Bat 2	Platformer	1994	3	3	1	2	1	2	N	N
+Aladdin	Platformer	1993	4	4	1	2	1	2	N	N
+Animaniacs	Platformer	1994	3	3	1	2	1	2	N	N
+Ardy Lightfoot	Platformer	1993	4	4	1	2	1	3	Y	Y
+Art of Fighting	Fighting	1994	3	3	2	3	1-2	2	N	N
+Axelay	Shooter	1992	5	5	2	3	1	1	N	Y
+Batman & Robin	Run & Gun	1995	4	4	1	2	1	2	Y	N
+Batman Returns	Beat 'em Up	1993	3	3	1	2	1	1	N	N
+Battletoads & Double Dragon	Beat 'em Up	1993	3	3	2	3	1-2	1	N	N
+Battletoads in Battlemaniacs	Beat 'em Up	1993	3	3	3	3	1-2	1	N	Y
+Blackthorne	Action-Adventure	1994	4	3	2	3	1	4	Y	Y
+Boogerman	Platformer	1994	3	4	1	2	1	3	N	Y
+Brandish	RPG	1994	4	3	3	3	1	20	Y	Y
+Brawl Brothers	Beat 'em Up	1993	3	3	1	2	1-2	1	N	Y
+Breath of Fire	RPG	1994	3	3	1	2	1	20	N	N
+Breath of Fire II	RPG	1996	4	4	2	2	1	25	Y	Y
+Bugs Bunny: Rabbit Rampage	Platformer	1994	3	3	1	2	1	2	N	N
+Bust-A-Move	Puzzle	1995	4	4	1	2	1-2	1	N	N
+Captain Commando	Beat 'em Up	1995	4	4	1	2	1-2	1	Y	Y
+Castlevania: Dracula X	Platformer	1995	3	4	2	3	1	2	N	Y
+Chrono Trigger	RPG	1995	5	5	2	2	1	25	N	Y
+Clay Fighter	Fighting	1993	3	3	1	2	1-2	2	N	Y
+Claymates	Platformer	1993	3	3	1	2	1	2	Y	Y
+Congo's Caper	Platformer	1993	3	3	1	2	1	2	Y	N
+Contra III	Run & Gun	1992	5	5	2	3	1-2	1	N	Y
+Cool Spot	Platformer	1993	3	4	1	2	1	2	N	N
+Cybernator	Run & Gun	1992	4	4	2	3	1	2	Y	Y
+Demon's Crest	Platformer	1994	5	5	2	3	1	4	Y	Y
+Doom	Run & Gun	1995	3	3	1	2	1	5	N	N
+Dungeon Master	RPG	1993	4	3	3	3	1	20	Y	Y
+E.V.O.: Search for Eden	Action-Adventure	1993	4	4	2	2	1	6	Y	Y
+Earth Defense Force (Super E.D.F.)	Shooter	1991	4	4	2	2	1	1	Y	Y
+EarthBound	RPG	1995	5	5	2	2	1	30	N	Y
+Earthworm Jim	Platformer	1994	4	4	2	3	1	3	N	Y
+Earthworm Jim 2	Platformer	1995	5	5	2	3	1	3	N	Y
+Equinox	Action-Adventure	1993	4	4	2	3	1	8	Y	Y
+Eye of the Beholder	RPG	1994	4	3	3	3	1	20	Y	Y
+F-Zero	Racing	1991	5	5	2	2	1	3	N	Y
+Fatal Fury Special	Fighting	1995	4	3	2	2	1-2	2	N	N
+Final Fantasy IV (FF2 US)	RPG	1991	4	5	1	2	1	25	N	N
+Final Fantasy VI (FF3 US)	RPG	1994	5	5	2	2	1	35	N	Y
+Final Fantasy: Mystic Quest	RPG	1992	3	3	1	1	1-2	10	N	Y
+Final Fight	Beat 'em Up	1991	4	4	1	2	1	1	N	N
+Final Fight 2	Beat 'em Up	1993	4	4	1	2	1-2	1	N	N
+Final Fight 3	Beat 'em Up	1995	4	4	1	2	1-2	1	N	N
+Flashback	Action-Adventure	1993	4	4	2	3	1	4	N	Y
+Ghoul Patrol	Run & Gun	1994	3	3	1	2	1-2	3	N	N
+Gokujou Parodius	Shooter	1994	5	5	2	2	1-2	1	Y	Y
+Goof Troop	Action-Adventure	1993	4	4	1	2	1-2	3	Y	Y
+Gradius III	Shooter	1991	4	4	2	3	1-2	1	N	N
+Great Circus Mystery	Platformer	1994	4	4	1	1	1-2	2	Y	N
+Hagane	Run & Gun	1995	4	4	2	3	1	2	Y	Y
+Harvest Moon	Strategy/Sim	1997	4	4	1	1	1	40	Y	Y
+Illusion of Gaia	RPG	1994	4	4	1	2	1	12	N	Y
+Indiana Jones' Greatest Adventures	Platformer	1994	4	4	2	3	1	3	Y	N
+ISS Deluxe	Sports	1995	5	3	2	2	1-2	2	Y	Y
+Joe & Mac	Platformer	1992	4	4	1	1	1-2	2	N	Y
+Joe & Mac 2	Platformer	1994	3	4	1	2	1-2	2	N	N
+Jurassic Park	Action-Adventure	1993	3	3	1	2	1	3	N	N
+Ken Griffey Jr. MLB	Sports	1994	4	3	1	1	1-2	3	N	N
+Killer Instinct	Fighting	1995	4	4	3	3	1-2	2	N	Y
+King of Dragons	Beat 'em Up	1994	4	4	1	2	1-2	1	Y	Y
+Kirby Super Star	Platformer	1996	5	5	1	1	1-2	10	N	Y
+Kirby's Avalanche	Puzzle	1995	3	3	1	2	1-2	1	N	N
+Kirby's Dream Course	Sports	1994	4	4	2	2	1-2	3	Y	N
+Kirby's Dream Land 3	Platformer	1997	4	4	1	1	1-2	5	N	N
+Knights of the Round	Beat 'em Up	1994	4	4	1	2	1-2	1	N	Y
+Lagoon	RPG	1993	3	3	2	3	1	10	Y	Y
+Lemmings	Puzzle	1992	4	4	2	2	1-2	8	N	Y
+Lemmings 2	Puzzle	1994	3	4	2	2	1	8	N	N
+Lost Vikings 2	Puzzle	1997	4	4	2	2	1-2	4	Y	Y
+Lufia & the Fortress of Doom	RPG	1993	3	3	2	2	1	20	N	N
+Lufia II	RPG	1995	5	4	2	3	1	30	Y	Y
+Magical Drop II	Puzzle	1996	4	4	1	2	1-2	1	Y	Y
+Magical Quest (Mickey)	Platformer	1992	4	4	1	1	1	2	Y	Y
+Mario Paint	Creative	1992	4	4	1	1	1	2	N	Y
+Maui Mallard	Platformer	1996	4	4	1	2	1	3	Y	Y
+Maximum Carnage	Beat 'em Up	1994	3	4	1	2	1	2	N	Y
+Mega Man 7	Platformer	1995	3	4	1	2	1	3	N	N
+Mega Man X	Platformer	1993	5	5	2	2	1	3	N	Y
+Mega Man X2	Platformer	1994	4	5	2	2	1	3	N	N
+Mega Man X3	Platformer	1995	4	4	2	2	1	3	N	N
+Metal Warriors	Run & Gun	1995	4	4	2	2	1-2	3	Y	Y
+Micro Machines	Racing	1994	4	3	1	2	1-2	2	Y	Y
+Might and Magic III	RPG	1993	4	3	3	3	1	40	Y	Y
+Mortal Kombat II	Fighting	1994	4	4	2	2	1-2	2	N	N
+Mr. Nutz	Platformer	1994	3	3	1	2	1	2	N	N
+NBA Jam	Sports	1994	5	3	1	1	1-2	1	N	Y
+NBA Jam: Tournament Edition	Sports	1995	5	3	1	1	1-2	1	N	Y
+NHL '94	Sports	1993	5	3	1	1	1-2	2	N	Y
+Ogre Battle	Strategy/Sim	1993	4	5	3	3	1	20	Y	Y
+Operation Thunderbolt	Run & Gun	1994	3	3	1	2	1-2	1	N	N
+Out of This World	Action-Adventure	1992	4	4	2	3	1	2	N	Y
+Panel de Pon	Puzzle	1995	5	5	1	2	1-2	1	Y	Y
+Pilotwings	Action-Adventure	1991	4	4	2	2	1	3	Y	N
+Pinball Dreams	Pinball	1994	4	3	1	1	1-4	1	N	N
+Pinball Fantasies	Pinball	1995	4	3	1	1	1-4	1	N	N
+Pitfall: The Mayan Adventure	Platformer	1994	3	3	1	2	1	3	N	N
+Plok	Platformer	1993	4	4	1	2	1	4	Y	Y
+Pocky & Rocky	Run & Gun	1993	4	4	1	2	1-2	2	Y	Y
+Pocky & Rocky 2	Run & Gun	1994	4	4	1	2	1-2	2	Y	Y
+Pop'n TwinBee	Shooter	1993	4	4	1	2	1-2	1	Y	Y
+Populous	Strategy/Sim	1991	3	3	3	3	1	10	N	Y
+Primal Rage	Fighting	1995	3	3	2	2	1-2	2	N	Y
+Prince of Persia	Action-Adventure	1992	4	3	2	3	1	3	N	Y
+R-Type III	Shooter	1994	4	4	3	3	1	1	N	N
+Radical Rex	Platformer	1994	3	3	1	2	1	2	N	N
+Rise of the Robots	Fighting	1994	1	2	1	3	1-2	1	N	Y
+River City Girls Zero	Beat 'em Up	1994	4	4	1	2	1-2	5	Y	Y
+Rock 'n Roll Racing	Racing	1993	5	5	1	2	1-2	4	Y	Y
+Run Saber	Run & Gun	1993	4	4	2	3	1-2	1	Y	Y
+Samurai Shodown	Fighting	1994	4	4	2	2	1-2	2	N	Y
+Saturday Night Slam Masters	Fighting	1994	4	4	1	2	1-2	2	Y	Y
+Secret of Evermore	RPG	1995	3	3	2	2	1	20	Y	Y
+Secret of Mana	RPG	1993	5	5	1	2	1-3	20	N	Y
+Shadowrun	RPG	1993	4	4	2	3	1	15	Y	Y
+Shaq-Fu	Fighting	1994	1	2	1	3	1-2	1	N	Y
+SimCity	Strategy/Sim	1991	4	4	2	1	1	20	N	Y
+SimCity 2000	Strategy/Sim	1996	4	4	2	2	1	20	N	Y
+Skyblazer	Platformer	1994	4	4	1	2	1	3	Y	Y
+Soul Blazer	RPG	1992	4	4	1	2	1	10	Y	Y
+Space Megaforce	Shooter	1991	4	4	2	2	1	1	Y	Y
+Sparkster	Platformer	1994	4	4	1	2	1	2	Y	Y
+Spike McFang	RPG	1994	3	3	1	1	1	8	Y	Y
+Star Fox	Shooter	1993	5	5	1	2	1	1	N	Y
+Star Fox 2	Shooter	1995	4	4	2	2	1	2	Y	Y
+Street Fighter Alpha 2	Fighting	1996	4	4	2	2	1-2	2	N	N
+Street Fighter II Turbo	Fighting	1993	5	5	2	2	1-2	2	N	N
+Street Racer	Racing	1994	4	4	1	2	1-4	2	Y	Y
+Strike Gunner S.T.G	Shooter	1992	3	3	2	2	1	1	N	N
+Stunt Race FX	Racing	1994	3	3	1	2	1	2	Y	N
+Sunset Riders	Run & Gun	1993	4	4	1	2	1-2	1	N	Y
+Super Aleste (Space Megaforce JP)	Shooter	1992	4	4	2	3	1	1	Y	Y
+Super Baseball Simulator	Sports	1993	4	3	1	2	1-2	2	Y	Y
+Super Bomberman	Arcade	1993	5	4	1	1	1-4	1	N	Y
+Super Bomberman 2	Arcade	1994	5	4	1	1	1-4	1	N	Y
+Super Bonk	Platformer	1994	4	4	1	1	1	3	Y	Y
+Super Buster Bros.	Arcade	1992	4	3	1	2	1-2	1	N	N
+Super Castlevania IV	Platformer	1991	5	5	2	2	1	3	N	Y
+Super Double Dragon	Beat 'em Up	1992	3	3	1	2	1-2	1	N	N
+Super Empire Strikes Back	Run & Gun	1993	4	4	2	3	1	3	N	N
+Super Ghouls 'N Ghosts	Platformer	1991	5	5	2	3	1	2	N	Y
+Super Mario All-Stars	Platformer	1993	5	4	1	2	1-2	20	N	N
+Super Mario Kart	Racing	1992	5	4	1	2	1-2	6	N	N
+Super Mario RPG	RPG	1996	5	5	1	1	1	15	N	Y
+Super Mario World	Platformer	1991	5	5	1	1	1-2	10	N	N
+Super Metroid	Action-Adventure	1994	5	5	2	2	1	8	N	Y
+Super Ninja Boy	RPG	1993	3	3	1	2	1-2	10	Y	Y
+Super Off Road	Racing	1992	3	3	1	2	1-2	2	N	N
+Super Punch-Out!!	Fighting	1994	5	4	1	2	1	3	N	Y
+Super Puyo Puyo 2	Puzzle	1995	5	4	1	2	1-2	1	Y	Y
+Super R-Type	Shooter	1991	4	4	3	3	1	1	N	N
+Super Return of the Jedi	Run & Gun	1994	4	4	2	3	1	3	N	N
+Super Smash T.V.	Run & Gun	1992	4	3	1	2	1-2	1	N	N
+Super Soccer	Sports	1992	3	3	1	1	1-2	2	N	N
+Super Star Wars	Run & Gun	1992	4	4	2	3	1	3	N	Y
+Super Street Fighter II	Fighting	1994	5	5	2	2	1-2	2	N	N
+Super Tennis	Sports	1991	4	3	1	1	1-2	2	N	N
+Super Turrican	Run & Gun	1993	4	5	2	2	1	2	Y	Y
+Super Turrican 2	Run & Gun	1995	4	5	2	3	1	2	Y	Y
+Taz-Mania	Platformer	1993	3	3	1	2	1	2	N	N
+Tecmo Super Bowl	Sports	1994	5	3	2	2	1-2	5	N	Y
+Terranigma	RPG	1995	5	5	2	2	1	20	Y	Y
+Tetris & Dr. Mario	Puzzle	1994	4	3	1	2	1-2	1	N	N
+Tetris Attack	Puzzle	1996	5	5	1	2	1-2	1	N	Y
+The 7th Saga	RPG	1993	3	3	2	3	1	15	N	Y
+The Combatribes	Beat 'em Up	1992	3	3	1	2	1-2	1	N	N
+The Jungle Book	Platformer	1994	3	4	1	2	1	2	N	N
+The Lion King	Platformer	1994	4	4	2	3	1	2	N	N
+The Lost Vikings	Puzzle	1993	5	4	2	2	1-2	4	Y	Y
+Thunder Spirits	Shooter	1991	3	3	2	3	1	1	N	N
+Tiny Toon: Buster Busts Loose	Platformer	1993	4	4	1	1	1	2	N	N
+TMNT IV: Turtles in Time	Beat 'em Up	1992	5	5	1	2	1-2	1	N	Y
+TMNT: Tournament Fighters	Fighting	1994	4	4	2	2	1-2	2	Y	Y
+Top Gear	Racing	1992	4	4	1	2	1-2	2	N	N
+Top Gear 2	Racing	1993	4	4	1	2	1-2	2	N	N
+Total Carnage	Run & Gun	1993	3	3	1	3	1-2	1	N	Y
+Toy Story	Platformer	1995	4	4	1	2	1	2	N	N
+Trials of Mana	RPG	1995	5	5	1	2	1-2	25	Y	Y
+U.N. Squadron	Shooter	1991	4	4	2	3	1-2	1	N	N
+Ultimate Mortal Kombat 3	Fighting	1996	4	4	2	2	1-2	2	N	N
+Umihara Kawase	Platformer	1994	4	4	3	3	1	3	Y	Y
+Uniracers	Racing	1994	4	4	1	2	1-2	1	Y	Y
+Wario's Woods	Puzzle	1994	3	3	1	2	1-2	1	N	N
+WeaponLord	Fighting	1995	3	3	3	3	1-2	2	Y	Y
+Wild Guns	Run & Gun	1994	5	4	2	3	1-2	1	Y	Y
+Wolfenstein 3D	Run & Gun	1994	3	2	1	2	1	3	N	N
+WWF Super WrestleMania	Fighting	1992	3	3	1	1	1-2	2	N	N
+X-Men: Mutant Apocalypse	Beat 'em Up	1994	3	3	2	3	1	3	N	N
+Yoshi's Cookie	Puzzle	1993	3	3	1	2	1-2	1	N	N
+Yoshi's Island	Platformer	1995	5	5	1	2	1	8	N	N
+Zelda: A Link to the Past	Action-Adventure	1992	5	5	2	2	1	15	N	N
+Zero the Kamikaze Squirrel	Platformer	1994	3	3	1	2	1	3	Y	Y
+Zombies Ate My Neighbors	Run & Gun	1993	5	4	1	2	1-2	4	Y	Y
+Zoop	Puzzle	1995	3	3	1	2	1-2	1	Y	N`;
+const COLS=["name","category","year","quality","music","learning","difficulty","players","hours","hidden","cult"],NUM=["year","quality","music","learning","difficulty","hours"];
+const D=RAW.split("\n").map(l=>{const f=l.split("\t"),r={};COLS.forEach((c,i)=>r[c]=NUM.includes(c)?+f[i]:f[i]);return r});
+const ck=a=>{a=a.toLowerCase();if(!COLS.includes(a))throw "Unknown column: "+a;return a};
+const G=rs=>({count:a=>(a=="*"?rs.length:(ck(a),rs.length)),sum:a=>rs.reduce((s,r)=>s+r[ck(a)],0),avg:a=>+(rs.reduce((s,r)=>s+r[ck(a)],0)/rs.length).toFixed(2),min:a=>Math.min(...rs.map(r=>r[ck(a)])),max:a=>Math.max(...rs.map(r=>r[ck(a)]))});
+const AG="(count|avg|sum|min|max)\\(\\s*(\\*|\\w+)\\s*\\)";
+function conv(e,hv){const bad=e.replace(new RegExp("'[^']*'|"+AG+"|[A-Za-z_]\\w*|<>|!=|>=|<=|[=<>()]|\\d+(\\.\\d+)?|\\s+","gi"),"");if(bad)throw "Can't read: "+bad.trim().slice(0,12);
+return e.replace(new RegExp("'([^']*)'|"+AG+"|([A-Za-z_]\\w*)|(<>|!=)|(=)|(\\d+(?:\\.\\d+)?)|([<>]=?|[()])","gi"),(m,s,fn,ar,w,ne,eq,n,op)=>{if(s!==undefined)return JSON.stringify(s);if(fn){if(!hv)throw "COUNT, AVG and similar go in SELECT or HAVING, not WHERE.";return `g.${fn.toLowerCase()}("${ar}")`}if(w){const l=w.toLowerCase();if(l=="and")return"&&";if(l=="or")return"||";if(l=="not")return"!";if(hv)throw "HAVING uses totals like COUNT(*), not columns.";return "r."+ck(l)}if(ne)return"!=";if(eq)return"==";return m})}
+function ev(e,rs,g){const a=e.match(new RegExp("^"+AG+"$","i"));if(a)return g[a[1].toLowerCase()](a[2]);return rs[0]?rs[0][ck(e)]:null}
+function fx(a,b){try{return new Function(a,"return "+b)}catch(e){throw "That condition isn't valid SQL. Check the operators (use = not ==, and >= not =>) and the quotes."}}
+function run(q){q=q.trim().replace(/;+\s*$/,"").replace(/\s+/g," ");
+const m=q.match(/^select (.+?) from games(?: where (.+?))?(?: group by (.+?))?(?: having (.+?))?(?: order by (.+?))?(?: limit (\d+))?$/i);
+if(!m)throw "Use this shape: SELECT ... FROM games WHERE ... GROUP BY ... ORDER BY ... LIMIT n (keep clauses in that order).";
+const [,sel,wh,gb,hv,ob,lm]=m;let rows=D;
+if(wh){const f=fx("r",conv(wh));rows=rows.filter(r=>f(r))}
+let items=[];sel.split(",").map(s=>s.trim()).forEach(s=>{if(s=="*")COLS.forEach(c=>items.push({e:c,l:c,t:c}));else{const a=s.match(/^(.+?) as (\w+)$/i),e=a?a[1]:s;items.push({e:e,l:(a?a[2]:e).toLowerCase().replace(/\s/g,""),t:a?a[2]:e})}});
+let out;
+if(items.some(i=>/\(/.test(i.e))||gb){const keys=gb?gb.split(",").map(x=>ck(x.trim())):[],grp=new Map();rows.forEach(r=>{const k=keys.map(c=>r[c]).join("|");if(!grp.has(k))grp.set(k,[]);grp.get(k).push(r)});if(!keys.length&&!grp.size)grp.set("",[]);
+out=[...grp.values()].map(rs=>({rs,vals:items.map(i=>ev(i.e,rs,G(rs)))}));
+if(hv){const f=fx("g",conv(hv,1));out=out.filter(o=>f(G(o.rs)))}}
+else out=rows.map(r=>({rs:[r],vals:items.map(i=>ev(i.e,[r],null))}));
+if(ob){const ks=ob.split(",").map(x=>{const p=x.trim().match(/^(.+?)(?: (asc|desc))?$/i);return{k:p[1].toLowerCase().replace(/\s/g,""),d:/desc/i.test(p[2]||"")?-1:1}});
+ks.forEach(o=>{if(!items.some(t=>t.l==o.k||t.e.toLowerCase().replace(/\s/g,"")==o.k))ck(o.k)});
+out.sort((a,b)=>{for(const {k,d} of ks){const i=items.findIndex(t=>t.l==k||t.e.toLowerCase().replace(/\s/g,"")==k);let x,y;if(i>=0){x=a.vals[i];y=b.vals[i]}else{x=a.rs[0][k];y=b.rs[0][k]}if(x<y)return -d;if(x>y)return d}return 0})}
+if(lm)out=out.slice(0,+lm);
+return{cols:items.map(i=>i.t),rows:out.map(o=>o.vals)}}
+const W="WHERE learning = 1 AND quality >= 4";
+const ST=[
+{t:"Look at the data",x:["=","TOP","FROM game","WHERE","COUNT(*)","10"],k:"Show the first 5 rows, all columns.",h:"SELECT ___ FROM games LIMIT ___;",a:"SELECT * FROM games LIMIT 5;",w:"Always look at the data before you filter it."},
+{t:"Easy to learn",x:["==","level","learning curve","IS","easy","'easy'"],k:"Show name and category for games with learning = 1 (pick up and play).",h:"SELECT name, ___ FROM games WHERE learning = ___;",a:"SELECT name, category FROM games WHERE learning = 1;",w:"WHERE keeps only the rows that match."},
+{t:"Count them",x:["COUNT","SUM(*)","TOTAL(*)","COUNT()","AVG(","name"],k:"How many games have learning = 1?",h:"SELECT COUNT(*) FROM games WHERE ___ = ___;",a:"SELECT COUNT(*) FROM games WHERE learning = 1;",w:"COUNT(*) turns many rows into one number."},
+{t:"Add quality",x:["=>","=<","&&","OR",">",","],k:"Show name, category, quality for games with learning = 1 AND quality >= 4.",h:"SELECT name, category, quality FROM games WHERE learning = 1 AND ___ >= ___;",a:"SELECT name, category, quality FROM games "+W+";",w:"AND needs both conditions to be true."},
+{t:"Sort the best first",x:["SORT BY","ORDER","ASC","GROUP BY","BY","HIGHEST"],k:"Show name, category, quality for games with learning = 1 AND quality >= 4, sorted by quality highest first, then by name A to Z.",h:"SELECT name, category, quality FROM games WHERE learning = 1 AND quality >= 4 ORDER BY ___ DESC, ___;",o:1,a:"SELECT name, category, quality FROM games "+W+" ORDER BY quality DESC, name;",w:"ORDER BY goes after WHERE. DESC means highest first."},
+{t:"Relaxed and solo",x:["TOP","<","=>","'1-2'","'Single'","5"],k:"A beginner pick has learning = 1, difficulty <= 2, quality >= 4 and players = '1'. Show name, quality, hours, sorted by quality DESC then name, top 10.",h:"SELECT name, quality, hours FROM games WHERE learning = 1 AND difficulty <= ___ AND quality >= 4 AND players = ___ ORDER BY quality DESC, name LIMIT ___;",o:1,a:"SELECT name, quality, hours FROM games WHERE learning = 1 AND difficulty <= 2 AND quality >= 4 AND players = '1' ORDER BY quality DESC, name LIMIT 10;",w:"LIMIT trims the result to the top rows after sorting."},
+{t:"Picks per category",x:["HAVING","GROUP","COUNT","SUM(*)","ASC","BY"],k:"How many beginner picks (learning = 1 AND quality >= 4) are in each category? Show category and the count, biggest first, ties A to Z.",h:"SELECT category, COUNT(*) FROM games WHERE learning = 1 AND quality >= 4 GROUP BY ___ ORDER BY COUNT(*) DESC, ___;",o:1,a:"SELECT category, COUNT(*) FROM games "+W+" GROUP BY category ORDER BY COUNT(*) DESC, category;",w:"GROUP BY gives one row per category."},
+{t:"Final answer",ft:1,x:["Y","'y'","'Yes'","true","<","OR"],k:"Free type this one (keyboard is on). Short hidden gems for beginners: learning = 1, quality >= 4, hours <= 3, hidden = 'Y'. Show name, category, year, sorted by name.",h:"SELECT name, category, year FROM games WHERE learning = 1 AND quality >= 4 AND hours <= ___ AND hidden = ___ ORDER BY ___;",o:1,a:"SELECT name, category, year FROM games "+W+" AND hours <= 3 AND hidden = 'Y' ORDER BY name;",w:"Filters stack: each AND narrows the list."}];
+let S={xp:0,done:{},shown:{}};try{S=Object.assign(S,JSON.parse(localStorage.getItem(KEY)))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}},$=id=>document.getElementById(id),A=$("app"),esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+let cur=0;
+function home(){const n=Object.keys(S.done).length;let h=`<div class=top><h1>SNES SQL Practice</h1><span class=xp>⚡ ${S.xp} XP</span></div><div class=card><b>Question:</b> which SNES games are best for a total beginner?<div class=mu>Table <code>games</code> has ${D.length} rows. Type queries yourself and run them. Reading data only: nothing can be changed. ${n} of ${ST.length} steps done.</div></div>`;
+ST.forEach((s,i)=>{h+=`<div class="card les ${S.done[i]?"done":""}" onclick="openS(${i})"><div class=dot>${S.done[i]?"✓":i+1}</div><div><b>${s.t}</b></div></div>`});
+h+=`<button class=g onclick="if(confirm('Reset progress?')){S={xp:0,done:{},shown:{}};save();home()}">Reset progress</button>`;A.innerHTML=h}
+const KW=/^(select|from|where|and|or|not|group|by|having|order|limit|desc|asc|as)$/i,FN=/^(count|avg|sum|min|max)$/i;
+function hl(v){return v.replace(/('[^']*'?)|([A-Za-z_]\w*)(?=\s*\()|([A-Za-z_]\w*)|(\d+(?:\.\d+)?)|([\s\S])/g,(m,q,fn,w,n,o)=>{if(q)return `<span class=ts>${esc(q)}</span>`;if(fn)return FN.test(fn)?`<span class=tf>${fn}</span>`:KW.test(fn)?`<span class=tk>${fn}</span>`:esc(fn);if(w){const l=w.toLowerCase();return KW.test(w)?`<span class=tk>${w}</span>`:(COLS.includes(l)||l=="games")?`<span class=tc>${w}</span>`:esc(w)}if(n)return `<span class=tn>${n}</span>`;return esc(o)})}
+let hist=[];
+function toks(a){return a.match(/'[^']*'|FROM games|ORDER BY|GROUP BY|(?:COUNT|AVG|SUM|MIN|MAX)\(\*?\)|\d+|[A-Za-z_]\w*|>=|<=|!=|[=<>,;()*]/gi)}
+const KO=["SELECT","FROM games","FROM game","WHERE","GROUP BY","GROUP","HAVING","ORDER BY","ORDER","SORT BY","BY","LIMIT","TOP","AND","OR","NOT","IS","ASC","DESC","AS"],SY=["=","==","!=",">","<",">=","<=","=>","=<","&&",",","(",")","*",";"],COLISH=["level","learning curve"];
+const cmp=(a,b)=>{a=a.toLowerCase();b=b.toLowerCase();return a<b?-1:a>b?1:0},nm=x=>/^\d+$/.test(x);
+function gr(t){if(KO.includes(t))return 0;if(/^(count|avg|sum|min|max|total)\b/i.test(t))return 1;if(COLS.includes(t.toLowerCase())||COLISH.includes(t))return 2;if(/^[,;()*=<>!&]+$/.test(t))return 4;return 3}
+function mk(i){const sol=[...new Set(toks(ST[i].a))],g=[[],[],[],[],[]];sol.concat((ST[i].x||[]).filter(x=>!sol.includes(x))).forEach(t=>g[gr(t)].push(t));
+g[0].sort((a,b)=>KO.indexOf(a)-KO.indexOf(b));g[1].sort(cmp);g[2].sort(cmp);g[3].sort((a,b)=>nm(a)!=nm(b)?nm(a)-nm(b):nm(a)?a-b:cmp(a,b));g[4].sort((a,b)=>SY.indexOf(a)-SY.indexOf(b));return g}
+function sync(){$("hl").innerHTML=hl($("q").value)+"\n"}
+function add(t){const q=$("q");let v=q.value.replace(/\s+$/,"");hist.push(q.value);if(/^\d$/.test(t)&&/\d$/.test(v))v+=t;else v+=((!v||/\($/.test(v)||/^[,;)]$/.test(t))?"":" ")+t;q.value=v;sync()}
+function kb(){const q=$("q"),on=q.hasAttribute("readonly");if(on){q.removeAttribute("readonly");q.removeAttribute("inputmode");q.focus()}else{q.setAttribute("readonly","");q.setAttribute("inputmode","none");q.blur()}$("kb").textContent=on?"⌨ Hide keyboard":"⌨ Keyboard"}
+function undo(){const q=$("q");q.value=hist.length?hist.pop():q.value.slice(0,-1);sync()}
+function clr(){hist.push($("q").value);$("q").value="";sync()}
+function pal(i){$("pal").innerHTML=mk(i).filter(g=>g.length).map(g=>g.map(t=>`<button class=g data-t="${t.replace(/"/g,"&quot;")}" onclick="add(this.dataset.t)">${hl(t)}</button>`).join("")).join('<div style="flex-basis:100%;height:0"></div>')}
+function openS(i){if(i>=ST.length)return home();cur=i;hist=[];const s=ST[i];
+A.innerHTML=`<button class=back onclick="home()">← Steps</button><h2>${i+1}. ${s.t}</h2><div class=card>${esc(s.k)}<div class=mu style="margin-top:6px">${s.ft?"✍️ Free type: use the keyboard or the buttons.":"Tap the buttons to build your query. Tap ⌨ Keyboard if you get stuck."}</div></div><div class=card><div class=ed><pre id=hl></pre><textarea id=q ${s.ft?"":"readonly inputmode=none"} autocapitalize=off autocorrect=off spellcheck=false oninput="sync()"></textarea></div><div class=cats style="margin-top:8px"><button class=g onclick="undo()">⌫ Undo</button><button class=g onclick="clr()">Clear</button><button class=g id=kb onclick="kb()">${s.ft?"⌨ Hide keyboard":"⌨ Keyboard"}</button></div><div class=cats id=pal style="margin-top:6px"></div><button onclick="doRun()">Run and check</button><button class=g onclick="$('hn').innerHTML='<div class=fb>💡 '+esc(ST[cur].h)+'</div>'">Hint</button><button class=g onclick="showA()">Show answer (no XP)</button><div id=hn></div></div><div id=win></div><div id=res></div>`;sync();pal(i)}
+function tbl(r){const n=r.rows.length;return `<div class=card><div class=mu>${n} row${n==1?"":"s"}${n>20?", showing 20":""}</div><div class=rs><table><tr>${r.cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr>${r.rows.slice(0,20).map(x=>`<tr>${x.map(v=>`<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</table></div></div>`}
+function doRun(){const st=ST[cur];let r;try{r=run($("q").value)}catch(e){$("win").innerHTML="";$("res").innerHTML=`<div class=card><div class=fb>⚠ ${esc(e)}</div></div>`;return}
+$("res").innerHTML=tbl(r);let x=run(st.a);const f=t=>{let l=t.rows.map(v=>v.join("¦"));return (st.o?l:l.sort()).join("\n")};
+if(f(r)==f(x)){const first=!S.done[cur];if(first){S.done[cur]=1;if(!S.shown[cur])S.xp+=50}save();
+$("win").innerHTML=`<div class="card win"><b>✅ Correct! Step complete.${first&&!S.shown[cur]?" +50 XP":""}</b><p>${st.w}</p><button onclick="openS(${cur+1})">${cur+1<ST.length?"Next step":"Back to steps"}</button></div>`;$("win").scrollIntoView({block:"nearest"})}
+else $("win").innerHTML=`<div class=mu style="margin-top:8px">Not the expected result yet${st.o?" (order matters here)":""}. Try the hint.</div>`}
+function showA(){S.shown[cur]=1;save();hist=[];$("q").value=ST[cur].a;sync()}
+home();
+</script></body></html>

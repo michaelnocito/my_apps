@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>JSON Arrays Deep Dive</title>
+<html lang="en"><head><meta charset="utf-8"><title>JSON Arrays Deep Dive</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#7c3aed;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
@@ -57,7 +57,7 @@ const L=[
 {q:`How many vehicles does this customer have?`,o:[`1`,`2`,`3`,`4`],a:1,e:`The vehicles array holds two objects.`}]},
 {d:"Foundations",t:"One-to-many into flat fields",s:[
 [`The core problem`,`The source has a list. The destination has a single field (or a different structure). You must choose a strategy:<table><tr><td><b>Pick one</b></td><td>Primary, most recent, or first of a type. Simple, but loses the others.</td></tr><tr><td><b>Join</b></td><td>Combine into one text field ("555-0100; 555-0142"). Keeps everything, hard to search.</td></tr><tr><td><b>Numbered fields</b></td><td>phone1, phone2, phone3. Fixed limit.</td></tr><tr><td><b>Explode</b></td><td>One output record per item, linked by an ID. Most complete.</td></tr></table>`],
-[`Get the rule from the business`,`This is a business decision, not a technical one. Ask: which one matters, what happens with the rest, and what if there are none? Write the rule down and have the dealer sign off. It's your UAT habit applied to arrays.`],
+[`Get the rule from the business`,`This is a business decision, not a technical one. Ask: which one matters, what happens with the rest, and what if there are none? Write the rule down and have the dealer sign off. It's the UAT habit applied to arrays.`],
 {q:`Destination has only a "Primary Phone" field. Best strategy?`,o:[`Explode`,`Pick one (the primary)`,`Join all`,`Skip phones`],a:1,e:`One field, one value: choose by a stable rule.`},
 {q:`Each vehicle needs its own record in a Vehicles table. Strategy?`,o:[`Pick one`,`Explode into child records linked by customer ID`,`Join into one text`,`Ignore`],a:1,e:`Explode creates one record per item.`},
 {q:`Risk of exploding a customer's vehicles into customer rows?`,o:[`None`,`Duplicate customers unless linked by a unique ID`,`Faster sync`,`Smaller data`],a:1,e:`Without a key, you get one customer row per vehicle.`}]},
@@ -66,26 +66,26 @@ T(`Sync stops on certain customers`,`Log:<pre>ERROR record 5521: cannot read 'nu
 {q:`Why does it fail?`,o:[`Bad key`,`There is no item 0 in an empty array`,`Auth`,`Rate limit`],a:1,e:`The mapping assumes at least one phone exists.`},
 {q:`Best fix?`,o:[`Delete such customers`,`Handle empty: skip the field or set a default, per the dealer's rule`,`Ignore the error`,`Make phones a string`],a:1,e:`Edge cases need an explicit rule, not a crash.`},
 {q:`How do you prevent this next time?`,o:[`Hope`,`Test with records that have zero, one, and many items`,`Only test perfect data`,`Reduce logging`],a:1,e:`Test the empties and the extremes.`},
-[`Say it in the interview`,`"The mapping assumed every customer has a phone. I added handling for empty arrays and now test zero, one, and many items."`]]},
+[`Say it out loud`,`"The mapping assumed every customer has a phone. I added handling for empty arrays and now test zero, one, and many items."`]]},
 {d:"Tickets",t:"Ticket 2: Triple customers",s:[
 T(`Each customer appears three times`,`Dealer: "Dana Ortiz is in our CRM three times." Source:<pre>{"id":77,"name":"Dana Ortiz",\n "vehicles":[{"vin":"V1"},{"vin":"V2"},{"vin":"V3"}]}</pre>The mapping creates a customer row for every vehicle.`),
 {q:`What's the cause?`,o:[`Duplicate API call`,`Exploding vehicles produced one customer row per vehicle`,`Auth`,`Case`],a:1,e:`Three vehicles, so three parent rows.`},
 {q:`Best fix?`,o:[`Delete vehicles`,`Create one customer, plus child vehicle records linked by customer ID 77`,`Join everything`,`Pick one vehicle`],a:1,e:`Parent once, children linked by ID.`},
 {q:`Cleanup first step?`,o:[`Delete randomly`,`Back up, choose a survivor rule (like lowest ID), merge, then verify counts`,`Ignore`,`Rerun`],a:1,e:`Back up and define the rule before touching data.`},
-[`Say it in the interview`,`"Exploding a child array without a parent key duplicated customers. I mapped vehicles as linked child records keyed to the customer ID."`]]},
+[`Say it out loud`,`"Exploding a child array without a parent key duplicated customers. I mapped vehicles as linked child records keyed to the customer ID."`]]},
 {d:"Tickets",t:"Ticket 3: Order changed",s:[
 T(`Mobile numbers in the Home field, again`,`It worked for months. After the provider's update, the same customer's payload changed:<pre>BEFORE: [mobile, home]\nAFTER:  [home, mobile]</pre>Mapping: <code>phones[0].number → mobile</code>`),
 {q:`What changed?`,o:[`Your mapping`,`The API's array order`,`The dealer's data`,`Your key`],a:1,e:`The provider changed ordering. Nothing in your file changed.`},
 {q:`Proper fix?`,o:[`Use <code>phones[1]</code> now`,`Select by <code>type</code> (mobile) instead of position`,`Switch to joining`,`Complain`],a:1,e:`Switching to [1] just repeats the bug.`},
 {q:`How could you have caught it sooner?`,o:[`Never`,`Monitor for spot-check mismatches and read provider changelogs`,`Turn off logs`,`Retry more`],a:1,e:`Spot checks and release notes catch silent changes.`},
-[`Say it in the interview`,`"The provider reordered the array, so a position-based path broke silently. I switched to selecting by type and added a spot-check after provider updates."`]]},
+[`Say it out loud`,`"The provider reordered the array, so a position-based path broke silently. I switched to selecting by type and added a spot-check after provider updates."`]]},
 {d:"Tickets",t:"Ticket 4: Object or array?",s:[
 T(`Only single-phone customers fail`,`Customers with several phones work. Customers with one fail. Payloads:<pre>MANY: "phones":[{"number":"555-0100"},\n               {"number":"555-0142"}]\nONE:  "phones":{"number":"555-0100"}</pre>Mapping expects an array: <code>phones[0].number</code>`),
 {q:`What's going on?`,o:[`Expired token`,`The API returns an object for one item and an array for many`,`Pagination`,`Rate limit`],a:1,e:`A common quirk. The shape changes with the count.`},
 {q:`Best fix?`,o:[`Delete single-phone customers`,`Normalize: wrap a lone object in an array before mapping`,`Ask customers to add phones`,`Ignore`],a:1,e:`Normalize to one consistent shape first.`},
 {q:`Best long-term step?`,o:[`Nothing`,`Report it to the provider and document the workaround`,`Hide errors`,`Remove arrays`],a:1,e:`Raise it, and write the workaround down.`},
-[`Say it in the interview`,`"The shape changed with item count. I normalized single objects into arrays and tested one, many, and zero."`]]},
-{d:"Interview",t:"Rapid-fire flashcards",fc:[
+[`Say it out loud`,`"The shape changed with item count. I normalized single objects into arrays and tested one, many, and zero."`]]},
+{d:"Review",t:"Rapid-fire flashcards",fc:[
 [`Array vs object?`,`Array: ordered list in [ ]. Object: key-value pairs in { }.`],
 [`First index?`,`0.`],
 [`Empty array vs null vs missing?`,`[] means zero items. null means no value. Missing means not sent. Handle all three.`],
@@ -95,7 +95,7 @@ T(`Only single-phone customers fail`,`Customers with several phones work. Custom
 [`When to explode?`,`When each item needs its own record, linked to the parent by an ID.`],
 [`Edge cases to test?`,`Zero items, one item, many items, a single object instead of an array, and reordered lists.`],
 [`Question: how would you map multiple phone numbers?`,`Ask the business what the destination needs. Usually pick by type or a primary flag, handle empties, test zero, one, and many.`],
-[`Ask them`,`How do your mappings handle lists like multiple phones or vehicles? Do providers announce changes to payloads?`]]}
+[`Questions to ask`,`How do your mappings handle lists like multiple phones or vehicles? Do providers announce changes to payloads?`]]}
 ];
 let S={xp:0,done:{}};try{S=JSON.parse(localStorage.getItem(KEY))||S}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
