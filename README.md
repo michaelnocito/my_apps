@@ -17,6 +17,8 @@ Each one is a single HTML page that runs in your browser. No account, no install
 - API Practice Lab: a simulated API to send and fix requests
 
 **SQL**
+- SQL Fundamentals: core SQL: tables, SELECT, WHERE, JOINs, grouping
+- SQL Fundamentals 2: smarter filters, CASE, joins, subqueries, data checks
 - SNES SQL Practice: hands-on queries, one step at a time
 
 **Implementation**
