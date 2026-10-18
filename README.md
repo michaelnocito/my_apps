@@ -19,8 +19,8 @@ Each one is a single HTML page that runs in your browser. No account, no install
 **SQL**
 - SQL Fundamentals: core SQL: tables, SELECT, WHERE, JOINs, grouping
 - SQL Fundamentals 2: smarter filters, CASE, joins, subqueries, data checks
-- SNES SQL Practice: hands-on queries, one step at a time, using a data set of SNES games. Practicing on a topic you enjoy keeps you engaged and helps you remember more. Future versions will add more SQL levels and a wider variety of topics.
-  
+- SNES SQL Practice: hands-on queries, one step at a time
+
 **Implementation**
 - SaaS Implementation Lab: process, migration, UAT, go-live
 - Fast-Track Implementation Lab: right-sizing a long implementation
@@ -30,7 +30,7 @@ Each one is a single HTML page that runs in your browser. No account, no install
 - Learn Faster, Remember Longer: memory science for tech learning
 - Learning Science: Fundamentals: memory, attention, and retention
 - Anticipation Lab: anticipation, avoidance, and practical tools
-- Study Dashboard: one syllabus with daily review scheduling.  
+- Study Dashboard: one syllabus with daily review scheduling
 - Five Rings: Musashi's strategy for daily life
 
 ## Notes
