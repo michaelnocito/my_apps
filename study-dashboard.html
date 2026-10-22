@@ -41,39 +41,48 @@ mk("Implementation",w(["Right-sizing: the big idea","Where the time goes","Intak
 mk("Technical implementation",[["API scenarios (whole app)",GH+"api-scenarios.html"],["JSON course (whole app)",GH+"json-course.html"],["JSON arrays deep dive (whole app)",GH+"json-arrays-deep-dive.html"],["Endpoints deep dive (whole app)",GH+"endpoints-deep-dive.html"],["API practice lab (whole app)",GH+"api-practice-lab.html"]]),
 mk("Immovable mind",[["Five Rings course (whole app)",GH+"five-rings-course.html"],"Fudoshin: the immovable mind (concept)"]),
 mk("Music",["Beat and tempo","Rhythm and time signatures","Notes and the staff","The major scale","Intervals","Major and minor chords","Chord progressions","Key signatures","Ear training: intervals","Building a practice routine"])];
-let P=defaults();try{const x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x)&&x.length)P=x}catch(e){}
+let P=defaults(),LOG=[];try{const x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x)&&x.length)P=x;else if(x&&x.v==2&&Array.isArray(x.paths)){P=x.paths;LOG=Array.isArray(x.log)?x.log:[]}}catch(e){}
+const uid=()=>Math.random().toString(36).slice(2,10),ids=()=>P.forEach(p=>{p.id=p.id||uid();p.i.forEach(it=>{it.id=it.id||uid()})});ids();
 const REL=l=>{if(!l)return l;for(const k in AMAP)if(l.includes(k))return AMAP[k];const m=l.match(/\.github\.io\/[^\/]+\/([\w-]+\.html)$/);return m?m[1]:l};
 P.forEach(p=>p.i.forEach(it=>{it.l=REL(it.l)}));
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({v:2,paths:P,log:LOG}))}catch(e){}};
 const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),td=()=>dk(new Date()),ad=n=>{const d=new Date();d.setDate(d.getDate()+n);return dk(d)},fd=d=>new Date(d+"T00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"});
 const $=id=>document.getElementById(id),A=$("app"),esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
 let V="t",pi=0,cj={a:0,b:0},nsk=0,more=false;
 const flat=()=>P.flatMap((p,a)=>p.i.map((it,b)=>({a,b,it}))),dueL=()=>flat().filter(x=>x.it.s!=null&&x.it.d<=td()).sort((x,y)=>x.it.d<y.it.d?-1:x.it.d>y.it.d?1:x.a-y.a);
-const nav=()=>`<div class=cats style="margin:8px 0"><button class="g ${V=="t"?"sel":""}" onclick="V='t';R()">Today</button><button class="g ${V!="t"?"sel":""}" onclick="V='p';R()">Paths</button></div>`;
+const nav=()=>`<div class=cats style="margin:8px 0"><button class="g ${V=="t"||V=="r"?"sel":""}" onclick="V='t';R()">Today</button><button class="g ${"pxb".includes(V)?"sel":""}" onclick="V='p';R()">Paths</button><button class="g ${V=="h"?"sel":""}" onclick="V='h';R()">History</button></div>`;
 const lk=(it,t)=>it.l?`<a class=lk href="${esc(it.l)}" data-t="${esc(it.t)}" onclick="return openApp(this.getAttribute('href'),this.dataset.t)">${t} →</a>`:"";
-function R(){({t:today,p:paths,x:path,r:rev,b:bk})[V]()}
+function R(){({t:today,p:paths,x:path,r:rev,b:bk,h:histView})[V]()}
 function nextNew(){const ps=P.map((p,i)=>({i,l:p.last||"",n:p.i.findIndex(x=>x.s==null)})).filter(x=>x.n>=0).sort((a,b)=>a.l<b.l?-1:a.l>b.l?1:a.i-b.i);return ps.length?ps[nsk%ps.length]:null}
 function today(){const d=dueL(),f=flat(),t=td();let h=`<div class=top><h1>Learning Dashboard</h1></div>`+nav();
-h+=`<div class=mu>${d.length} due · ${f.filter(x=>x.it.d==ad(1)).length} tomorrow · ${f.filter(x=>x.it.s!=null).length} of ${f.length} lessons started</div>`;
+h+=`<div class=mu>${d.length} due · ${f.filter(x=>x.it.d==ad(1)).length} tomorrow · ${f.filter(x=>x.it.s!=null).length} of ${f.length} lessons started</div>`+(LOG.length?`<div class=cats style="margin-top:8px"><button class=g onclick="undo()">↩ Undo: ${esc(lab(LOG[LOG.length-1]))}</button></div>`:"");
 h+=d.length?`<div class=day>Review first (${d.length})</div>`+d.map(x=>`<div class="card les" onclick="cj={a:${x.a},b:${x.b}};V='r';R()"><div class=dot>🔁</div><div><b>${esc(x.it.t)}</b><div class=mu>${esc(P[x.a].n)}</div></div></div>`).join(""):`<div class=card>✅ Nothing due today.</div>`;
 h+=`<div class=day>New today</div>`;
 if(d.length>10)h+=`<div class=card>⏸ Pause new lessons: ${d.length} reviews are waiting. Clear them first.</div>`;
 else if(P.some(p=>p.last==t)&&!more)h+=`<div class="card win"><b>✅ New lesson done today.</b><button class=g onclick="more=true;R()">Add another anyway</button></div>`;
 else{const n=nextNew();if(!n)h+=`<div class=card>No unstarted lessons. Add some under Paths.</div>`;else{const it=P[n.i].i[n.n];h+=`<div class=card><div class=mu>${esc(P[n.i].n)}</div><b>${esc(it.t)}</b>${lk(it,"Open the lesson")}<button onclick="learn(${n.i},${n.n})">✅ Learned it today</button><button class=g onclick="nsk++;R()">Different path</button></div>`}}
 A.innerHTML=h}
-function learn(a,b,v){const it=P[a].i[b];it.s=0;it.d=ad(1);P[a].last=td();nsk=0;more=false;save();V=v||"t";R()}
+const AL={learned:"Learned",got:"Got it",missed:"Missed"},lab=e=>AL[e.a]+" · "+e.t;
+function ev(p,it,a,f){const e={d:td(),ts:new Date().toISOString(),i:it.id,t:it.t,pn:p.n,a,ps:it.s,pd:it.d,pl:p.last};f();e.s=it.s;LOG.push(e)}
+function learn(a,b,v){const p=P[a],it=p.i[b];ev(p,it,"learned",()=>{it.s=0;it.d=ad(1);p.last=td()});nsk=0;more=false;save();V=v||"t";R()}
+function undo(){const e=LOG.pop();if(!e)return;const p=P.find(p=>p.i.some(x=>x.id==e.i)),it=p&&p.i.find(x=>x.id==e.i);if(it){it.s=e.ps;it.d=e.pd;if(e.a=="learned")p.last=e.pl}save();R()}
 function rev(){const {a,b}=cj,it=P[a].i[b];A.innerHTML=`<button class=back onclick="V='t';R()">← Today</button><div class=mu>${esc(P[a].n)}</div><h2>${esc(it.t)}</h2><div class=card><b>Recall first.</b> Write or say everything you remember about this. Then check.${lk(it,"Open the lesson to check")}<div class=mu style="margin-top:6px">If you missed parts, redo only those parts.</div></div><div class=card>How did it go?<button onclick="grade(1)">✅ Got it</button><button class=g onclick="grade(0)">❌ Missed some</button></div>`}
-function grade(ok){const it=P[cj.a].i[cj.b];if(ok){it.s=Math.min(it.s+1,INT.length-1);it.d=ad(INT[it.s])}else{it.s=0;it.d=ad(1)}save();V="t";R()}
+function grade(ok){const p=P[cj.a],it=p.i[cj.b];ev(p,it,ok?"got":"missed",()=>{if(ok){it.s=Math.min(it.s+1,INT.length-1);it.d=ad(INT[it.s])}else{it.s=0;it.d=ad(1)}});save();V="t";R()}
+function histView(){const t=td(),te=LOG.filter(e=>e.d==t);let h=`<div class=top><h1>History</h1></div>`+nav()+`<div class=mu>Today: ${te.filter(e=>e.a=="learned").length} learned · ${te.filter(e=>e.a=="got").length} recalled · ${te.filter(e=>e.a=="missed").length} missed · ${LOG.length} events in total</div>`;
+if(LOG.length)h+=`<div class=cats style="margin-top:8px"><button class=g onclick="undo()">↩ Undo: ${esc(lab(LOG[LOG.length-1]))}</button></div>`;
+let last="";LOG.slice(-50).reverse().forEach(e=>{if(e.d!=last){h+=`<div class=day>${e.d==t?"Today":fd(e.d)}</div>`;last=e.d}h+=`<div class=card><b>${esc(e.t)}</b><div class=mu>${esc(e.pn)} · ${AL[e.a]} · stage ${e.s+1} of 6</div></div>`});
+if(!LOG.length)h+=`<div class=card>No history yet. Learn or review a lesson and it appears here.</div>`;A.innerHTML=h}
 function paths(){let h=`<div class=top><h1>Paths</h1></div>`+nav();P.forEach((p,i)=>{const n=p.i.filter(x=>x.s!=null).length,du=p.i.filter(x=>x.s!=null&&x.d<=td()).length;h+=`<div class="card les" onclick="pi=${i};V='x';R()"><div class=dot>${i+1}</div><div><b>${esc(p.n)}</b><div class=mu>${n} of ${p.i.length} started${du?" · "+du+" due":""}</div></div></div>`});
 h+=`<div class=card><b>Add a path</b><input id=np placeholder="Path name"><button onclick="addP()">Add path</button></div><button class=g onclick="V='b';R()">Backup / restore</button>`;A.innerHTML=h}
 function path(){const p=P[pi];let h=`<button class=back onclick="V='p';R()">← Paths</button><h2>${esc(p.n)}</h2>`;p.i.forEach((it,j)=>{h+=`<div class=card><b>${esc(it.t)}</b><div class=mu>${it.s==null?"Not started":"Next review "+fd(it.d)+" · review "+(it.s+1)}</div><div class=cats>${it.s==null?`<button onclick="learn(${pi},${j},'x')">✅ Learned today</button>`:""}${it.l?`<button class=g onclick="openApp(P[${pi}].i[${j}].l,P[${pi}].i[${j}].t)">Open</button>`:""}<button class=g onclick="delI(${j})">Delete</button></div></div>`});
 h+=`<div class=card><b>Add lessons</b><div class=mu>One per line. Paste a whole syllabus if you like.</div><textarea id=nl rows=4></textarea><button onclick="addI()">Add</button></div><button class=g onclick="delP()">Delete this path</button>`;A.innerHTML=h}
-function addP(){const n=$("np").value.trim();if(!n)return;P.push(mk(n,[]));pi=P.length-1;save();V="x";R()}
-function addI(){const l=$("nl").value.split("\n").map(x=>x.trim()).filter(Boolean);l.forEach(t=>P[pi].i.push({t,l:"",s:null,d:null}));save();R()}
+function addP(){const n=$("np").value.trim();if(!n)return;P.push(mk(n,[]));ids();pi=P.length-1;save();V="x";R()}
+function addI(){const l=$("nl").value.split("\n").map(x=>x.trim()).filter(Boolean);l.forEach(t=>P[pi].i.push({t,l:"",s:null,d:null}));ids();save();R()}
 function delI(j){if(confirm("Delete this lesson?")){P[pi].i.splice(j,1);save();R()}}
 function delP(){if(confirm("Delete this whole path?")){P.splice(pi,1);save();V="p";R()}}
-function bk(){A.innerHTML=`<button class=back onclick="V='p';R()">← Paths</button><h2>Backup / restore</h2><div class=card><div class=mu>Data lives only on this device. Copy this text somewhere safe.</div><textarea rows=6 readonly onclick="this.select()">${esc(JSON.stringify(P))}</textarea></div><div class=card><b>Restore</b><textarea id=rt rows=4 placeholder="Paste backup text"></textarea><button onclick="rs()">Restore</button><div id=rm></div></div><button class=g onclick="if(confirm('Reset everything to the starting lists?')){P=defaults();save();V='p';R()}">Reset to starting lists</button>`}
-function rs(){try{const x=JSON.parse($("rt").value);if(!Array.isArray(x)||!x.every(p=>p.n&&Array.isArray(p.i)))throw 0;P=x;P.forEach(p=>p.i.forEach(it=>{it.l=REL(it.l)}));save();V="p";R()}catch(e){$("rm").innerHTML=`<div class=fb>That text isn't a valid backup.</div>`}}
+function bk(){A.innerHTML=`<button class=back onclick="V='p';R()">← Paths</button><h2>Backup / restore</h2><div class=card><div class=mu>Data lives only on this device. Copy this text somewhere safe.</div><textarea rows=6 readonly onclick="this.select()">${esc(JSON.stringify({v:2,paths:P,log:LOG}))}</textarea></div><div class=card><b>Restore</b><textarea id=rt rows=4 placeholder="Paste backup text"></textarea><button onclick="rs()">Restore</button><div id=rm></div></div><button class=g onclick="if(confirm('Reset everything to the starting lists?')){P=defaults();save();V='p';R()}">Reset to starting lists</button>`}
+function rs(){try{const x=JSON.parse($("rt").value),ps=Array.isArray(x)?x:(x&&x.v==2?x.paths:null),lg=Array.isArray(x)?[]:(Array.isArray(x.log)?x.log:[]);if(!Array.isArray(ps)||!ps.every(p=>p&&p.n&&Array.isArray(p.i)))throw 0;P=ps;LOG=lg;P.forEach(p=>p.i.forEach(it=>{it.l=REL(it.l)}));ids();save();V="p";R()}catch(e){$("rm").innerHTML=`<div class=fb>That text isn't a valid backup.</div>`}}
+
 let sy=0;
 function openApp(l,t){if(/^https?:/i.test(l)){window.open(l,"_blank","noopener");return false}
 sy=window.scrollY;let sh=$("sh");if(!sh){sh=document.createElement("div");sh.id="sh";sh.innerHTML=`<div id=sb><button onclick="closeApp()">← Dashboard</button><span id=st></span><a id=so target=_blank rel=noopener title="Open in a new tab">↗</a></div><iframe id=fr title="Learning app"></iframe>`;document.body.appendChild(sh)}
