@@ -1,74 +1,84 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Study Dashboard</title>
+<html lang="en"><head><meta name="robots" content="noindex,nofollow"><meta charset="utf-8"><title>Learning Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
-:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#e11d74;--ok:#16a34a;--bd:#e3e6ef;--code:#eef0f7;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
-@media (prefers-color-scheme:dark){:root{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f7fb;--card:#fff;--tx:#1d2330;--mu:#6b7385;--pr:#e11d74;--ok:#16a34a;--bad:#dc2626;--bd:#e3e6ef;--code:#eef0f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1c2030;--tx:#e8eaf2;--mu:#98a0b5;--bd:#2b3046;--code:#262b40}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
-#app{max-width:560px;margin:0 auto;padding:16px 16px 100px}
-h1{font-size:26px;margin:4px 0 2px}h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--pr);margin:22px 0 6px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+#app{max-width:600px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.xp{background:var(--pr);color:#fff;border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:10px 0}
+.day{font-size:12px;font-weight:700;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-top:18px}
+.les{display:flex;gap:12px;align-items:center;cursor:pointer}
+.dot{width:34px;height:34px;border-radius:50%;background:var(--code);display:grid;place-items:center;font-weight:700;flex:none}
+.done .dot{background:var(--ok);color:#fff}
 .mu{color:var(--mu);font-size:14px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin:8px 0}
-.win{border:2px solid var(--ok)}.tap{cursor:pointer}
-button,.btn{display:block;width:100%;font:inherit;font-weight:700;text-align:center;text-decoration:none;border:0;border-radius:14px;padding:14px 16px;margin-top:10px;background:var(--pr);color:#fff;cursor:pointer}
-.g{background:var(--code);color:var(--tx)}
-.skip,.back{background:none;color:var(--mu);font-weight:600;padding:10px;margin-top:6px}.back{width:auto;padding:4px 0}
-.row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--bd);cursor:pointer}.row:first-of-type{margin-top:8px}
-summary{cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}summary::after{content:"+";float:right;color:var(--mu);font-size:20px}details[open]>summary::after{content:"\2212"}
-input,select,textarea{display:block;width:100%;font:inherit;padding:12px;border:2px solid var(--bd);border-radius:12px;background:var(--card);color:var(--tx);margin-top:8px}
-input[type=checkbox]{width:auto;padding:0;margin:5px 0 0}label.card{display:flex;gap:12px;align-items:flex-start}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
-nav button{flex:1;margin:0;border-radius:0;background:none;color:var(--mu);padding:10px 4px;font-size:13px}nav button.on{color:var(--pr)}
-</style></head><body><div id="app"></div><nav id="nav"></nav>
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:11px 16px;background:var(--pr);color:#fff;cursor:pointer;width:100%;margin-top:10px}
+button.g{background:var(--code);color:var(--tx)}
+.opt{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:2px solid var(--bd);font-weight:500;margin-top:8px}
+.opt.ok{border-color:var(--ok);background:rgba(22,163,74,.12)}.opt.no{border-color:var(--bad);background:rgba(220,38,38,.12)}.opt.sel{border-color:var(--pr);background:rgba(225,29,116,.1)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cats button{width:auto;margin:0;padding:6px 10px;font-size:13px}.cats button.sel{background:var(--pr);color:#fff}
+.win{border:2px solid var(--ok)}.f{margin:12px 0;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.back{background:none;color:var(--mu);width:auto;padding:4px 0;margin:0}
+.fb{margin-top:10px;padding:10px;border-radius:10px;background:var(--code);font-size:15px}
+.fb div{margin:4px 0}.pl{padding:8px;margin:6px 0;border-radius:10px;background:var(--code);font-size:15px}
+.say{margin-top:8px;padding:10px;border-radius:10px;background:rgba(22,163,74,.14);border:1px solid var(--ok);font-size:15px}
+pre{background:var(--code);padding:8px;border-radius:8px;font-size:13px;overflow-x:auto;white-space:pre-wrap;margin:6px 0}code{background:var(--code);padding:1px 5px;border-radius:5px}table{width:100%;border-collapse:collapse;font-size:14px}td,th{border:1px solid var(--bd);padding:5px;text-align:left}
+input,textarea{width:100%;font:inherit;padding:10px;border:2px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);margin-top:8px}.lk{display:block;margin:8px 0 0;color:var(--pr);font-weight:600}#sh{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column}#sh.on{display:flex}#sb{display:flex;align-items:center;gap:10px;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px;background:var(--card);border-bottom:1px solid var(--bd)}#sb button{width:auto;margin:0;padding:8px 12px}#st{flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#so{color:var(--pr);font-weight:700;text-decoration:none;padding:6px}#fr{flex:1;width:100%;border:0;background:var(--bg);margin-bottom:env(safe-area-inset-bottom,0px)}</style></head><body><div id="app"></div>
 <script>
-const KEY="studyDash",INT=[1,3,7,14,30,60];
-const LIBD=[["API and integrations",[["API Crash Course","Foundations, endpoints, JSON, status codes","api-course.html"],["API Support Tickets","Realistic troubleshooting scenarios","api-scenarios.html"],["JSON for Field Mappers","Types, nesting, syntax, tickets","json-course.html"],["JSON Arrays Deep Dive","Arrays and nested data","json-arrays-deep-dive.html"],["Endpoints Deep Dive","URLs, methods, parameters, environments","endpoints-deep-dive.html"],["API Practice Lab","Simulated API to send and fix requests","api-practice-lab.html"]]],["SQL",[["SQL Fundamentals","Core SQL: tables, SELECT, WHERE, JOINs, grouping","sql-fundamentals-course.html"],["SQL Fundamentals 2","Smarter filters, CASE, joins, subqueries, data checks","sql-fundamentals-2.html"],["SNES SQL Practice","Hands-on queries, one step at a time","snes-sql-practice.html"]]],["Implementation",[["SaaS Implementation Lab","Process, migration, UAT, go-live","saas-implementation-lab.html"],["Fast-Track Implementation Lab","Right-sizing a long implementation","fast-track-implementation-lab.html"],["Project Momentum Lab","Unresponsive customers and records","project-momentum-lab.html"]]],["Learning",[["Learn Faster, Remember Longer","Memory science for tech learning","memory-course.html"],["Learning Science: Fundamentals","Memory, attention, and retention","learning-science-fundamentals.html"],["Anticipation Lab","Anticipation, avoidance, and practical tools","anticipation-lab.html"],["Five Rings","Musashi's strategy for daily life","five-rings-course.html"]]]];
-let P=[];try{const x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x))P=x.filter(p=>p&&p.n&&Array.isArray(p.i))}catch(e){}
+const KEY="studyDash",GH="",INT=[1,3,7,14,30,60];
+const U={sql:"sql-fundamentals-course.html",snes:"snes-sql-practice.html",ls:"learning-science-fundamentals.html",ft:"fast-track-implementation-lab.html"},AMAP={"1J5xMZ6NoWPiKJWi6CAD2S":U.sql,"JgeUeuqiyFdmCQEddYUitC":U.snes,"VeAYC9NhjvDx7cVLHbhEo9":U.ls,"Uv1ouUTb1NA6gxVJ9CQTzK":U.ft};
+const mk=(n,a)=>({n,last:"",i:a.map(t=>Array.isArray(t)?{t:t[0],l:t[1],s:null,d:null}:{t,l:"",s:null,d:null})});
+const w=(a,l)=>a.map(t=>[t,l]);
+const defaults=()=>[
+mk("SQL",w(["Start here: what is SQL?","Tables, rows, columns","SELECT and FROM","WHERE filters rows","Clause order","NULL: the missing value","Counting and grouping","WHERE vs HAVING","JOINs","Safe habits","Ticket: Duplicate records","Ticket: Missing matches","Ticket: Counts don't match","SQL flashcards"],U.sql).concat(w(["SNES 1: Look at the data","SNES 2: Easy to learn","SNES 3: Count them","SNES 4: Add quality","SNES 5: Sort the best first","SNES 6: Relaxed and solo","SNES 7: Picks per category","SNES 8: Final answer"],U.snes))),
+mk("Learning science",w(["What learning is","Working memory and load","Attention and focus","Neurons, synapses, plasticity","Memory systems in the brain","Sleep, consolidation, chemistry","Types of memory","Encoding and forgetting","Retrieval and spacing","Illusions and your plan","Reviewing old while learning new","Learning science flashcards"],U.ls)),
+mk("Implementation",w(["Right-sizing: the big idea","Where the time goes","Intake before kickoff","Standard patterns","Third parties set the pace","Right-sized data","Test sequence","Minimum launch gates","One-page handoff","Ticket: Stalled approval","Ticket: Custom asks at kickoff","Ticket: Test fails on day 9","Fast-track flashcards"],U.ft).concat(w(["SaaS Implementation Lab (whole app)"],GH+"saas-implementation-lab.html"),w(["Project Momentum Lab (whole app)"],GH+"project-momentum-lab.html"))),
+mk("Technical implementation",[["API scenarios (whole app)",GH+"api-scenarios.html"],["JSON course (whole app)",GH+"json-course.html"],["JSON arrays deep dive (whole app)",GH+"json-arrays-deep-dive.html"],["Endpoints deep dive (whole app)",GH+"endpoints-deep-dive.html"],["API practice lab (whole app)",GH+"api-practice-lab.html"]]),
+mk("Immovable mind",[["Five Rings course (whole app)",GH+"five-rings-course.html"],"Fudoshin: the immovable mind (concept)"]),
+mk("Music",["Beat and tempo","Rhythm and time signatures","Notes and the staff","The major scale","Intervals","Major and minor chords","Chord progressions","Key signatures","Ear training: intervals","Building a practice routine"])];
+let P=defaults();try{const x=JSON.parse(localStorage.getItem(KEY));if(Array.isArray(x)&&x.length)P=x}catch(e){}
+const REL=l=>{if(!l)return l;for(const k in AMAP)if(l.includes(k))return AMAP[k];const m=l.match(/\.github\.io\/[^\/]+\/([\w-]+\.html)$/);return m?m[1]:l};
+P.forEach(p=>p.i.forEach(it=>{it.l=REL(it.l)}));
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
 const dk=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),td=()=>dk(new Date()),ad=n=>{const d=new Date();d.setDate(d.getDate()+n);return dk(d)},fd=d=>new Date(d+"T00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"});
-const $=id=>document.getElementById(id),A=$("app"),esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;"),ok=u=>/^https?:\/\//i.test(u)||/^[\w\-.\/]+$/.test(u),base=u=>String(u||"").split("?")[0].split("#")[0].split("/").pop().toLowerCase();
-let V="t",cj={a:0,b:0},nsk=0,more=false,op=-1,LIB=null,busy=false;
-const mk=n=>({n,last:"",i:[]}),flat=()=>P.flatMap((p,a)=>p.i.map((it,b)=>({a,b,it}))),dueL=()=>flat().filter(x=>x.it.s!=null&&x.it.d<=td()).sort((x,y)=>x.it.d<y.it.d?-1:x.it.d>y.it.d?1:x.a-y.a);
-const lk=(it,t,c)=>it.l&&ok(it.l)?`<a class="btn ${c||""}" href="${esc(it.l)}" target=_blank rel=noopener>${t} ↗</a>`:"";
-const st=it=>it.s==null?"New":it.d<=td()?"Due":"Next "+fd(it.d),TAB={t:"t",r:"t",l:"l",d:"l",b:"l",a:"a",i:"a"};
-function R(){$("nav").innerHTML=[["t","📅","Today"],["l","📚","My list"],["a","➕","Add"]].map(x=>`<button class="${TAB[V]==x[0]?"on":""}" onclick="V='${x[0]}';R()">${x[1]}<br>${x[2]}</button>`).join("");({t:today,r:rev,l:list,d:item,b:bk,a:add,i:imp})[V]();scrollTo(0,0)}
-function openLib(){LIB=null;V="i";R()}
-const how=()=>`<details class=card><summary><b>How this works</b></summary><div class=mu style="margin-top:8px">1. Each day, learn one new thing from Today.<br>2. Tap "I learned it". Your first review is set for tomorrow.<br>3. When something is due, try to recall it first, then check.<br>4. Tap "Got it" and the next review moves further out (1, 3, 7, 14, 30, 60 days). Tap "Missed some" and it comes back tomorrow.</div></details>`;
+const $=id=>document.getElementById(id),A=$("app"),esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+let V="t",pi=0,cj={a:0,b:0},nsk=0,more=false;
+const flat=()=>P.flatMap((p,a)=>p.i.map((it,b)=>({a,b,it}))),dueL=()=>flat().filter(x=>x.it.s!=null&&x.it.d<=td()).sort((x,y)=>x.it.d<y.it.d?-1:x.it.d>y.it.d?1:x.a-y.a);
+const nav=()=>`<div class=cats style="margin:8px 0"><button class="g ${V=="t"?"sel":""}" onclick="V='t';R()">Today</button><button class="g ${V!="t"?"sel":""}" onclick="V='p';R()">Paths</button></div>`;
+const lk=(it,t)=>it.l?`<a class=lk href="${esc(it.l)}" data-t="${esc(it.t)}" onclick="return openApp(this.getAttribute('href'),this.dataset.t)">${t} →</a>`:"";
+function R(){({t:today,p:paths,x:path,r:rev,b:bk})[V]()}
 function nextNew(){const ps=P.map((p,i)=>({i,l:p.last||"",n:p.i.findIndex(x=>x.s==null)})).filter(x=>x.n>=0).sort((a,b)=>a.l<b.l?-1:a.l>b.l?1:a.i-b.i);return ps.length?ps[nsk%ps.length]:null}
-function today(){const d=dueL(),f=flat(),t=td();
-if(!f.length){A.innerHTML=`<h1>Welcome</h1><div class=mu>Learn one small thing a day. This app schedules reviews so it sticks.</div><div class=card><b>Get started</b><div class=mu>Choose the apps you want to study.</div><button onclick="openLib()">Choose apps</button><button class=g onclick="V='a';R()">Or add my own</button></div>`+how();return}
-let h=`<h1>Today</h1><div class=mu>${d.length} to review · ${f.filter(x=>x.it.s!=null).length} of ${f.length} started</div><h2>Review</h2>`;
-h+=d.length?d.map(x=>`<div class="card tap" onclick="cj={a:${x.a},b:${x.b}};V='r';R()"><b>${esc(x.it.t)}</b><div class=mu>${esc(P[x.a].n)} · tap to review ›</div></div>`).join(""):`<div class=card>✅ Nothing to review today.</div>`;
-h+=`<h2>Learn next</h2>`;
-if(d.length>10)h+=`<div class=card>⏸ ${d.length} reviews are waiting. Clear them before learning new things.</div>`;
-else if(P.some(p=>p.last==t)&&!more)h+=`<div class="card win"><b>✅ You learned something new today.</b><div class=mu>That is enough. Come back tomorrow.</div><button class=g onclick="more=true;R()">Learn another anyway</button></div>`;
-else{const n=nextNew();if(!n)h+=`<div class=card>You have started everything. Add more under Add.</div>`;else{const it=P[n.i].i[n.n];h+=`<div class=card><div class=mu>${esc(P[n.i].n)}</div><b>${esc(it.t)}</b>${lk(it,"Open")}<button class=g onclick="learn(${n.i},${n.n})">I learned it ✓</button><button class=skip onclick="nsk++;R()">Skip for now</button></div>`}}
-A.innerHTML=h+how()}
+function today(){const d=dueL(),f=flat(),t=td();let h=`<div class=top><h1>Learning Dashboard</h1></div>`+nav();
+h+=`<div class=mu>${d.length} due · ${f.filter(x=>x.it.d==ad(1)).length} tomorrow · ${f.filter(x=>x.it.s!=null).length} of ${f.length} lessons started</div>`;
+h+=d.length?`<div class=day>Review first (${d.length})</div>`+d.map(x=>`<div class="card les" onclick="cj={a:${x.a},b:${x.b}};V='r';R()"><div class=dot>🔁</div><div><b>${esc(x.it.t)}</b><div class=mu>${esc(P[x.a].n)}</div></div></div>`).join(""):`<div class=card>✅ Nothing due today.</div>`;
+h+=`<div class=day>New today</div>`;
+if(d.length>10)h+=`<div class=card>⏸ Pause new lessons: ${d.length} reviews are waiting. Clear them first.</div>`;
+else if(P.some(p=>p.last==t)&&!more)h+=`<div class="card win"><b>✅ New lesson done today.</b><button class=g onclick="more=true;R()">Add another anyway</button></div>`;
+else{const n=nextNew();if(!n)h+=`<div class=card>No unstarted lessons. Add some under Paths.</div>`;else{const it=P[n.i].i[n.n];h+=`<div class=card><div class=mu>${esc(P[n.i].n)}</div><b>${esc(it.t)}</b>${lk(it,"Open the lesson")}<button onclick="learn(${n.i},${n.n})">✅ Learned it today</button><button class=g onclick="nsk++;R()">Different path</button></div>`}}
+A.innerHTML=h}
 function learn(a,b,v){const it=P[a].i[b];it.s=0;it.d=ad(1);P[a].last=td();nsk=0;more=false;save();V=v||"t";R()}
-function rev(){const {a,b}=cj,it=P[a]&&P[a].i[b];if(!it){V="t";return R()}
-A.innerHTML=`<button class=back onclick="V='t';R()">← Today</button><div class=mu>${esc(P[a].n)}</div><h1>${esc(it.t)}</h1><div class=card><b>1. Recall</b><div class=mu>Say or write what you remember. Do not peek yet.</div></div><div class=card><b>2. Check</b><div class=mu>Open it and compare.</div>${lk(it,"Open to check","g")}</div><div class=card><b>3. How did it go?</b><button onclick="grade(1)">Got it ✓</button><button class=g onclick="grade(0)">Missed some</button><div class=mu style="margin-top:8px">Missed items come back tomorrow.</div></div>`}
-function grade(o){const it=P[cj.a].i[cj.b];if(o){it.s=Math.min(it.s+1,INT.length-1);it.d=ad(INT[it.s])}else{it.s=0;it.d=ad(1)}save();V="t";R()}
-function list(){let h=`<h1>My list</h1>`;if(!flat().length)h+=`<div class=card>Nothing here yet.<button onclick="V='a';R()">Add something</button></div>`;
-P.forEach((p,i)=>{const n=p.i.filter(x=>x.s!=null).length,du=p.i.filter(x=>x.s!=null&&x.d<=td()).length;h+=`<details class=card ${op==i?"open":""}><summary><b>${esc(p.n)}</b><div class=mu>${n} of ${p.i.length} started${du?" · "+du+" due":""}</div></summary>${p.i.map((it,j)=>`<div class=row onclick="cj={a:${i},b:${j}};op=${i};V='d';R()"><span>${esc(it.t)}</span><span class=mu>${st(it)} ›</span></div>`).join("")}<button class=skip onclick="delP(${i})">Delete this topic</button></details>`});
-A.innerHTML=h+`<button class=g onclick="V='b';R()">Backup / restore</button>`}
-function item(){const {a,b}=cj,p=P[a],it=p&&p.i[b];if(!it){V="l";return R()}
-A.innerHTML=`<button class=back onclick="V='l';R()">← My list</button><div class=mu>${esc(p.n)}</div><h1>${esc(it.t)}</h1><div class=mu>${it.s==null?"Not started yet":"Next review "+fd(it.d)+" · review "+(it.s+1)}</div>${lk(it,"Open")}${it.s==null?`<button onclick="learn(${a},${b},'d')">I learned it today ✓</button>`:""}<button class=g onclick="setL()">${it.l?"Change link":"Add a link"}</button><button class=skip onclick="delI()">Delete this item</button>`}
-function setL(){const it=P[cj.a].i[cj.b],u=prompt("Link (https://...). Leave blank to remove.",it.l||"");if(u===null)return;const v=u.trim();if(v&&!ok(v)){alert("Start the link with https://");return}it.l=v;save();R()}
-function delI(){if(confirm("Delete this item?")){P[cj.a].i.splice(cj.b,1);save();V="l";R()}}
-function delP(i){if(confirm("Delete this whole topic?")){P.splice(i,1);op=-1;save();R()}}
-function add(){A.innerHTML=`<h1>Add</h1><div class=card><b>From the app library</b><div class=mu>Choose from the apps on this site.</div><button onclick="openLib()">Browse apps</button></div><div class=card><b>My own</b><div class=mu>An outside app, site, book or video. The link is optional.</div><input id=ni placeholder="Name"><input id=nu placeholder="Link (https://...)"><select id=ns onchange="$('nt').style.display=this.value=='n'?'block':'none'">${P.map((p,i)=>`<option value=${i}>${esc(p.n)}</option>`).join("")}<option value=n>New topic...</option></select><input id=nt placeholder="New topic name" style="display:${P.length?"none":"block"}"><button onclick="addOne()">Add to my list</button><details style="margin-top:12px"><summary class=mu>Add several at once</summary><div class=mu style="margin-top:6px">One per line. Put a link after a | like: Scales | https://example.com</div><textarea id=nl rows=4></textarea><button class=g onclick="addMany()">Add all</button></details></div>`}
-function topicFor(){const v=$("ns").value;if(v!="n")return P[+v];const n=$("nt").value.trim()||"My items";let p=P.find(x=>x.n.toLowerCase()==n.toLowerCase());if(!p){p=mk(n);P.push(p)}return p}
-function addOne(){const t=$("ni").value.trim(),u=$("nu").value.trim();if(!t){alert("Give it a name.");return}if(u&&!ok(u)){alert("Start the link with https://");return}const p=topicFor();p.i.push({t,l:u,s:null,d:null});op=P.indexOf(p);save();V="l";R()}
-function addMany(){const l=$("nl").value.split("\n").map(x=>x.trim()).filter(Boolean);if(!l.length)return;const p=topicFor();l.forEach(x=>{const q=x.split("|"),t=q[0].trim(),u=(q[1]||"").trim();if(t)p.i.push({t,l:ok(u)?u:"",s:null,d:null})});op=P.indexOf(p);save();V="l";R()}
-async function loadLib(){try{const r=await fetch("index.html",{cache:"no-store"});if(!r.ok)throw 0;const dc=new DOMParser().parseFromString(await r.text(),"text/html"),L=[];let s=null;dc.querySelectorAll("main h2, main a").forEach(e=>{if(e.tagName=="H2"){s={n:e.textContent.trim(),a:[]};L.push(s)}else if(s){const h=e.getAttribute("href"),sp=e.querySelector("span"),t=[...e.childNodes].filter(n=>n.nodeType==3).map(n=>n.textContent).join("").trim();if(h&&t&&ok(h)&&base(h)!="study-dashboard.html")s.a.push({t,h,d:sp?sp.textContent.trim():""})}});LIB=L.filter(x=>x.a.length);if(!LIB.length)throw 0}catch(e){LIB=LIBD.map(([n,a])=>({n,a:a.map(([t,d,h])=>({t,d,h}))}))}}
-function imp(){let h=`<button class=back onclick="V='a';R()">← Add</button><h1>App library</h1><div class=mu>Tick the apps you want. Each goes into a topic named for its section.</div>`;
-if(!LIB){A.innerHTML=h+`<div class=card>Loading...</div>`;if(!busy){busy=true;loadLib().then(()=>{busy=false;if(V=="i")R()})}return}
-const hv=new Set(P.flatMap(p=>p.i.map(x=>base(x.l))).filter(Boolean));
-LIB.forEach((s,si)=>{h+=`<h2>${esc(s.n)}</h2>`;s.a.forEach((a,ai)=>{const dn=hv.has(base(a.h));h+=`<label class=card><input type=checkbox id="c${si}_${ai}" ${dn?"disabled":""}><span><b>${esc(a.t)}</b>${dn?' <span class=mu>· added</span>':""}<br><span class=mu>${esc(a.d)}</span></span></label>`})});
-A.innerHTML=h+`<button onclick="doImp()">Add selected</button><button class=g onclick="document.querySelectorAll('input[type=checkbox]:not(:disabled)').forEach(c=>c.checked=true)">Select all new</button>`}
-function doImp(){let n=0,last=null;LIB.forEach((s,si)=>{const pick=s.a.filter((a,ai)=>{const c=$("c"+si+"_"+ai);return c&&c.checked&&!c.disabled});if(!pick.length)return;let p=P.find(x=>x.n.toLowerCase()==s.n.toLowerCase());if(!p){p=mk(s.n);P.push(p)}pick.forEach(a=>{p.i.push({t:a.t,l:a.h,s:null,d:null});n++});last=p});if(!n){alert("Tick at least one app.");return}op=P.indexOf(last);save();V="t";R()}
-function bk(){A.innerHTML=`<button class=back onclick="V='l';R()">← My list</button><h1>Backup / restore</h1><div class=card><div class=mu>Your list lives only on this device. Copy this text and keep it somewhere safe.</div><textarea rows=6 readonly onclick="this.select()">${esc(JSON.stringify(P))}</textarea></div><div class=card><b>Restore</b><div class=mu>Paste a backup to replace your list.</div><textarea id=rt rows=4 placeholder="Paste backup text"></textarea><button onclick="rs()">Restore</button><div id=rm></div></div><button class=skip onclick="if(confirm('Delete everything and start over?')){P=[];op=-1;save();V='t';R()}">Start over</button>`}
-function rs(){try{const x=JSON.parse($("rt").value);if(!Array.isArray(x)||!x.every(p=>p&&p.n&&Array.isArray(p.i)))throw 0;P=x;save();V="l";R()}catch(e){$("rm").innerHTML=`<div class=mu>That text is not a valid backup.</div>`}}
+function rev(){const {a,b}=cj,it=P[a].i[b];A.innerHTML=`<button class=back onclick="V='t';R()">← Today</button><div class=mu>${esc(P[a].n)}</div><h2>${esc(it.t)}</h2><div class=card><b>Recall first.</b> Write or say everything you remember about this. Then check.${lk(it,"Open the lesson to check")}<div class=mu style="margin-top:6px">If you missed parts, redo only those parts.</div></div><div class=card>How did it go?<button onclick="grade(1)">✅ Got it</button><button class=g onclick="grade(0)">❌ Missed some</button></div>`}
+function grade(ok){const it=P[cj.a].i[cj.b];if(ok){it.s=Math.min(it.s+1,INT.length-1);it.d=ad(INT[it.s])}else{it.s=0;it.d=ad(1)}save();V="t";R()}
+function paths(){let h=`<div class=top><h1>Paths</h1></div>`+nav();P.forEach((p,i)=>{const n=p.i.filter(x=>x.s!=null).length,du=p.i.filter(x=>x.s!=null&&x.d<=td()).length;h+=`<div class="card les" onclick="pi=${i};V='x';R()"><div class=dot>${i+1}</div><div><b>${esc(p.n)}</b><div class=mu>${n} of ${p.i.length} started${du?" · "+du+" due":""}</div></div></div>`});
+h+=`<div class=card><b>Add a path</b><input id=np placeholder="Path name"><button onclick="addP()">Add path</button></div><button class=g onclick="V='b';R()">Backup / restore</button>`;A.innerHTML=h}
+function path(){const p=P[pi];let h=`<button class=back onclick="V='p';R()">← Paths</button><h2>${esc(p.n)}</h2>`;p.i.forEach((it,j)=>{h+=`<div class=card><b>${esc(it.t)}</b><div class=mu>${it.s==null?"Not started":"Next review "+fd(it.d)+" · review "+(it.s+1)}</div><div class=cats>${it.s==null?`<button onclick="learn(${pi},${j},'x')">✅ Learned today</button>`:""}${it.l?`<button class=g onclick="openApp(P[${pi}].i[${j}].l,P[${pi}].i[${j}].t)">Open</button>`:""}<button class=g onclick="delI(${j})">Delete</button></div></div>`});
+h+=`<div class=card><b>Add lessons</b><div class=mu>One per line. Paste a whole syllabus if you like.</div><textarea id=nl rows=4></textarea><button onclick="addI()">Add</button></div><button class=g onclick="delP()">Delete this path</button>`;A.innerHTML=h}
+function addP(){const n=$("np").value.trim();if(!n)return;P.push(mk(n,[]));pi=P.length-1;save();V="x";R()}
+function addI(){const l=$("nl").value.split("\n").map(x=>x.trim()).filter(Boolean);l.forEach(t=>P[pi].i.push({t,l:"",s:null,d:null}));save();R()}
+function delI(j){if(confirm("Delete this lesson?")){P[pi].i.splice(j,1);save();R()}}
+function delP(){if(confirm("Delete this whole path?")){P.splice(pi,1);save();V="p";R()}}
+function bk(){A.innerHTML=`<button class=back onclick="V='p';R()">← Paths</button><h2>Backup / restore</h2><div class=card><div class=mu>Data lives only on this device. Copy this text somewhere safe.</div><textarea rows=6 readonly onclick="this.select()">${esc(JSON.stringify(P))}</textarea></div><div class=card><b>Restore</b><textarea id=rt rows=4 placeholder="Paste backup text"></textarea><button onclick="rs()">Restore</button><div id=rm></div></div><button class=g onclick="if(confirm('Reset everything to the starting lists?')){P=defaults();save();V='p';R()}">Reset to starting lists</button>`}
+function rs(){try{const x=JSON.parse($("rt").value);if(!Array.isArray(x)||!x.every(p=>p.n&&Array.isArray(p.i)))throw 0;P=x;P.forEach(p=>p.i.forEach(it=>{it.l=REL(it.l)}));save();V="p";R()}catch(e){$("rm").innerHTML=`<div class=fb>That text isn't a valid backup.</div>`}}
+let sy=0;
+function openApp(l,t){if(/^https?:/i.test(l)){window.open(l,"_blank","noopener");return false}
+sy=window.scrollY;let sh=$("sh");if(!sh){sh=document.createElement("div");sh.id="sh";sh.innerHTML=`<div id=sb><button onclick="closeApp()">← Dashboard</button><span id=st></span><a id=so target=_blank rel=noopener title="Open in a new tab">↗</a></div><iframe id=fr title="Learning app"></iframe>`;document.body.appendChild(sh)}
+$("st").textContent=t||"";$("so").href=l;$("fr").src=l;sh.classList.add("on");document.body.style.overflow="hidden";try{history.pushState({app:1},"")}catch(e){}return false}
+function closeApp(fromPop){const sh=$("sh");if(!sh||!sh.classList.contains("on"))return;sh.classList.remove("on");$("fr").src="about:blank";document.body.style.overflow="";if(!fromPop){try{if(history.state&&history.state.app)history.back()}catch(e){}}R();window.scrollTo(0,sy)}
+addEventListener("popstate",()=>closeApp(true));
 R();
 </script></body></html>
